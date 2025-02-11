@@ -1,6 +1,7 @@
 {
   "name": "characters.api",
   "version": "1.0.0",
+<<<<<<< HEAD
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -18,5 +19,24 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
+=======
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mssql": "^9.1.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1"
+>>>>>>> 08f52ef919813b0e64dd1429e7e23fc459da78af
   }
 }
