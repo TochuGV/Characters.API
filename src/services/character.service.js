@@ -51,13 +51,13 @@ export default new class CharacterService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id ?? 0)
+            //.input('pID', sql.Int, id ?? 0)
             .input('pImage', sql.VarChar, character?.Image ?? '')
             .input('pName', sql.VarChar, character?.Name ?? '')
             .input('pAge', sql.Int, character?.Age ?? 0)
             .input('pWeight', sql.Int, character?.Weight ?? 0)
             .input('pStory', sql.VarChar, character?.Story ?? '')
-            .query(`UPDATE ${characterTable} SET Image = @pImage, Name = @pName, Age = @pAge, Weight = @pWeight, Story = @pStory WHERE ID = @pID`);
+            .query(`UPDATE ${characterTable} SET Image = @pImage, Name = @pName, Age = @pAge, Weight = @pWeight, Story = @pStory WHERE ID = ${id}`);
         console.log(result);
         return result.recordset;
     };

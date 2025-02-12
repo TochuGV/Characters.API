@@ -47,12 +47,12 @@ export default new class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id ?? 0)
+            //.input('pID', sql.Int, id ?? 0)
             .input('pImage', sql.VarChar, movie?.Image ?? '')
             .input('pTitle', sql.VarChar, movie?.Title ?? '')
             .input('pCreationDate', sql.Date, movie?.CreationDate ?? 0)
             .input('pRating', sql.Int, movie?.Rating ?? 0)
-            .query(`UPDATE ${movieTable} SET Image = @pImage, Title = @pTitle, CreationDate = @pCreationDate, Rating = @pRating WHERE ID = @pID`);
+            .query(`UPDATE ${movieTable} SET Image = @pImage, Title = @pTitle, CreationDate = @pCreationDate, Rating = @pRating WHERE ID = ${id}`);
         console.log(result);
         return result.recordset;
     };
