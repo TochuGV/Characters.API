@@ -2,21 +2,21 @@ import characterService from "../services/character.service.js"
 
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
-    const {name, age, weight, movies} = req.query
-    const characters = await characterService.getAllCharacters(name, age, weight, movies)
+    const {name, age, weight, movies} = req.query;
+    const characters = await characterService.getAllCharacters(name, age, weight, movies);
     return res.status(200).json(characters);
 };
 
 export const getCharacterById = async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
-    const character = await characterService.getCharacterById(req.params.id)
+    const character = await characterService.getCharacterById(req.params.id);
     return res.status(200).json(character);
 };
 
 export const createCharacter = async (req, res) => {
     console.log("This is a post operation");
-    const character = await characterService.createCharacter(req.body)
+    const character = await characterService.createCharacter(req.body);
     return res.status(200).json(character);
 };
 

@@ -13,7 +13,7 @@ export default new class CharacterService {
         let conditions = [];
         let query = `SELECT ID, Image, Name from ${characterTable}`;
         if(movies){
-            query += ` INNER JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID`;
+            query += ` LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID`;
             conditions.push(`${charactersXMoviesTable}.MovieID = @pID`);
         };
         
@@ -37,8 +37,8 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.Int, id)
-            .query(`SELECT * FROM ${characterTable} INNER JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID
-            INNER JOIN ${movieTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID WHERE ${characterTable}.ID = @pID`);
+            .query(`SELECT * FROM ${characterTable} LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID
+            LEFT JOIN ${movieTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID WHERE ${characterTable}.ID = @pID`);
         console.log(result);
         return result.recordset;
     };
