@@ -1,4 +1,5 @@
-import {getConnection, sql} from "../database/config.js"
+import { getConnection, sql } from "../database/config.js"
+import { buildGetAllCharactersQuery } from "../utils/character.utils.js";
 import "dotenv/config";
 
 const characterTable = process.env.DB_CHARACTER_TABLE;
@@ -10,18 +11,7 @@ export default new class CharacterService {
     getAllCharacters = async (name, age, weight, movies) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
-        let conditions = [];
-        let query = `SELECT ID, Image, Name from ${characterTable}`;
-        if(movies){
-            query += ` LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID`;
-            conditions.push(`${charactersXMoviesTable}.MovieID = @pID`);
-        };
-        
-        name ? conditions.push(`Name = @pName`) : null;
-        age ? conditions.push(`Age = @pAge`) : null;
-        weight ? conditions.push(`Weight = @pWeight`) : null;
-
-        query += conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
+        const query = buildGetAllCharactersQuery();
         const result = await pool.request()
                 .input('pName', sql.VarChar, name)
                 .input('pAge', sql.Int, age)
