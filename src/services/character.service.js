@@ -11,7 +11,7 @@ export default new class CharacterService {
     getAllCharacters = async (name, age, weight, movies) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
-        const query = buildGetAllCharactersQuery();
+        const query = buildGetAllCharactersQuery(name, age, weight, movies);
         const result = await pool.request()
                 .input('pName', sql.VarChar, name)
                 .input('pAge', sql.Int, age)

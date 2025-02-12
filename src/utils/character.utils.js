@@ -5,7 +5,7 @@ const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
 
 export const buildGetAllCharactersQuery = (name, age, weight, movies) => {
     let conditions = [];
-    let query = `SELECT ID, Image, Name from ${characterTable}`;
+    let query = `SELECT ID, Image, Name FROM ${characterTable}`;
     if(movies){
         query += ` LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID`;
         conditions.push(`${charactersXMoviesTable}.MovieID = @pID`);
