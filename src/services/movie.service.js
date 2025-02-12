@@ -1,4 +1,5 @@
-import {getConnection, sql} from "../database/config.js"
+import { getConnection, sql } from "../database/config.js"
+import { buildGetAllMoviesQuery } from "../utils/movie.utils.js";
 import "dotenv/config";
 
 const characterTable = process.env.DB_CHARACTER_TABLE;
@@ -10,12 +11,7 @@ export default new class MovieService {
     getAllMovies = async (title, order) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
-        let query;
-        if(!title){
-            query = `SELECT ID, Image, Title, CreationDate FROM ${movieTable} ORDER BY CreationDate ${order??'ASC'}`;
-        } else {
-            query = `SELECT * FROM ${movieTable} WHERE Title = @pTitle ORDER BY CreationDate ${order??'ASC'}`;
-        };
+        const query = buildGetAllMoviesQuery(title, order); 
         const result = await pool.request()
             .input('pTitle', sql.VarChar, title ?? '')
             .query(query);
