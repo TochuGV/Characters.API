@@ -2,7 +2,8 @@ import characterService from "../services/character.service.js"
 
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
-    const characters = await characterService.getAllCharacters()
+    const {name, age, weight, movies} = req.query
+    const characters = await characterService.getAllCharacters(name, age, weight, movies)
     return res.status(200).json(characters);
 };
 

@@ -2,27 +2,46 @@ import {getConnection, sql} from "../database/config.js"
 import "dotenv/config";
 
 const characterTable = process.env.DB_CHARACTER_TABLE;
+const movieTable = process.env.DB_MOVIE_TABLE;
+const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
 
 export default new class CharacterService {
 
-    getAllCharacters = async () => {
+    getAllCharacters = async (name, age, weight, movies) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
+        let conditions = [];
+        let query = `SELECT ID, Image, Name from ${characterTable}`;
+        if(movies){
+            query += ` INNER JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID`;
+            conditions.push(`${charactersXMoviesTable}.MovieID = @pID`);
+        };
+        
+        name ? conditions.push(`Name = @pName`) : null;
+        age ? conditions.push(`Age = @pAge`) : null;
+        weight ? conditions.push(`Weight = @pWeight`) : null;
+
+        query += conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
         const result = await pool.request()
-            .query(`SELECT * FROM ${characterTable}`);
+                .input('pName', sql.VarChar, name)
+                .input('pAge', sql.Int, age)
+                .input('pWeight', sql.Float, weight)
+                .input('pID', sql.Int, movies)
+                .query(query);
         console.log(result);
         return result.recordset;
-    }
+    };
 
     getCharacterById = async (id) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.Int, id)
-            .query(`SELECT * FROM ${characterTable} WHERE ID = @pID`);
+            .query(`SELECT * FROM ${characterTable} INNER JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID
+            INNER JOIN ${movieTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID WHERE ${characterTable}.ID = @pID`);
         console.log(result);
         return result.recordset;
-    }
+    };
 
     createCharacter = async (character) => {
         console.log("This is a function on the service");
@@ -36,7 +55,7 @@ export default new class CharacterService {
             .query(`INSERT INTO ${characterTable}(Image, Name, Age, Weight, Story) VALUES (@pImage, @pName, @pAge, @pWeight, @pStory)`);
         console.log(result);
         return result.recordset;
-    }
+    };
 
     updateCharacterById = async (id, character) => {
         console.log("This is a function on the service");
@@ -51,7 +70,7 @@ export default new class CharacterService {
             .query(`UPDATE ${characterTable} SET Image = @pImage, Name = @pName, Age = @pAge, Weight = @pWeight, Story = @pStory WHERE ID = @pID`);
         console.log(result);
         return result.recordset;
-    }
+    };
 
     deleteCharacterById = async (id) => {
         console.log("This is a function on the service");
