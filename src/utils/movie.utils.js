@@ -8,3 +8,8 @@ export const buildGetAllMoviesQuery = (title, order) => {
              : query = `SELECT * FROM ${movieTable} WHERE Title = @pTitle ORDER BY CreationDate ${order??'ASC'}`;
     return query;
 };
+
+export const getCurrentCreationDate = () => {
+    const currentDate = new Date();
+    return currentDate.toISOString().split('T')[0];
+}
