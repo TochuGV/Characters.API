@@ -1,4 +1,5 @@
 import characterService from "../services/character.service.js"
+import { validateCharacter } from "../schemas/character.schema.js";
 
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
@@ -28,6 +29,13 @@ export const getCharacterById = async (req, res) => {
 
 export const createCharacter = async (req, res) => {
     console.log("This is a post operation");
+    const validationResult = validateCharacter(req.body);
+    if(!validationResult.success){
+        return res.status(422).json({ 
+            error: "Unprocessable Entity", 
+            details: JSON.parse(validationResult.error.message) 
+        });
+    };
     try {
         const result = await characterService.createCharacter(req.body);
         if(result.rowsAffected[0] > 0) return res.status(201).send("Character created succesfully");
@@ -41,6 +49,13 @@ export const createCharacter = async (req, res) => {
 export const updateCharacterById = async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a put operation");
+    const validationResult = validateCharacter(req.body);
+    if(!validationResult.success){
+        return res.status(422).json({ 
+            error: "Unprocessable Entity", 
+            details: JSON.parse(validationResult.error.message) 
+        });
+    };
     try {
         const result = await characterService.updateCharacterById(req.params.id, req.body);
         if(result.rowsAffected[0] > 0) return res.status(200).send("Character updated succesfully");

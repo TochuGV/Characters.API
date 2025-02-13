@@ -1,3 +1,4 @@
+import { validateMovie } from "../schemas/movie.schema.js";
 import movieService from "../services/movie.service.js";
 
 export const getAllMovies = async (req, res) => {
@@ -28,6 +29,13 @@ export const getMovieById = async (req, res) => {
 
 export const createMovie = async (req, res) => {
     console.log("This is a get operation");
+    const validationResult = validateMovie(req.body);
+    if(!validationResult.success){
+        return res.status(422).json({ 
+            error: "Unprocessable Entity", 
+            details: JSON.parse(validationResult.error.message) 
+        });
+    };
     try {
         const result = await movieService.createMovie(req.body);
         if(result.rowsAffected[0] > 0) return res.status(201).send("Movie created succesfully");
@@ -41,6 +49,13 @@ export const createMovie = async (req, res) => {
 export const updateMovieById = async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a update operation");
+    const validationResult = validateMovie(req.body);
+    if(!validationResult.success){
+        return res.status(422).json({ 
+            error: "Unprocessable Entity", 
+            details: JSON.parse(validationResult.error.message) 
+        });
+    };
     try {
         const result = await movieService.updateMovieById(req.params.id, req.body);
         if(result.rowsAffected[0] > 0) return res.status(200).send("Movie updated succesfully");
