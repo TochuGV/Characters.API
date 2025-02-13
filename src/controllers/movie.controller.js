@@ -29,11 +29,11 @@ export const getMovieById = async (req, res) => {
 
 export const createMovie = async (req, res) => {
     console.log("This is a get operation");
-    const validationResult = validateMovie(req.body);
-    if(!validationResult.success){
+    const validation = validateMovie(req.body);
+    if(!validation.success){
         return res.status(422).json({ 
             error: "Unprocessable Entity", 
-            details: JSON.parse(validationResult.error.message) 
+            details: JSON.parse(validation.error.message) 
         });
     };
     try {
@@ -49,11 +49,11 @@ export const createMovie = async (req, res) => {
 export const updateMovieById = async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a update operation");
-    const validationResult = validateMovie(req.body);
-    if(!validationResult.success){
+    const validation = validateMovie(req.body);
+    if(!validation.success){
         return res.status(422).json({ 
             error: "Unprocessable Entity", 
-            details: JSON.parse(validationResult.error.message) 
+            details: JSON.parse(validation.error.message) 
         });
     };
     try {

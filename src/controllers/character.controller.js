@@ -1,5 +1,5 @@
-import characterService from "../services/character.service.js"
 import { validateCharacter } from "../schemas/character.schema.js";
+import characterService from "../services/character.service.js"
 
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
@@ -29,11 +29,11 @@ export const getCharacterById = async (req, res) => {
 
 export const createCharacter = async (req, res) => {
     console.log("This is a post operation");
-    const validationResult = validateCharacter(req.body);
-    if(!validationResult.success){
+    const validation = validateCharacter(req.body);
+    if(!validation.success){
         return res.status(422).json({ 
             error: "Unprocessable Entity", 
-            details: JSON.parse(validationResult.error.message) 
+            details: JSON.parse(validation.error.message) 
         });
     };
     try {
@@ -49,11 +49,11 @@ export const createCharacter = async (req, res) => {
 export const updateCharacterById = async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a put operation");
-    const validationResult = validateCharacter(req.body);
-    if(!validationResult.success){
+    const validation = validateCharacter(req.body);
+    if(!validation.success){
         return res.status(422).json({ 
             error: "Unprocessable Entity", 
-            details: JSON.parse(validationResult.error.message) 
+            details: JSON.parse(validation.error.message) 
         });
     };
     try {
