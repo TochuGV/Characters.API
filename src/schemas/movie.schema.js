@@ -14,6 +14,15 @@ export const movieSchema = z.object({
     rating: z.number().int().min(1).max(5).optional()
 });
 
-export const validateMovie = (input) =>{
+export const movieQuerySchema = z.object({
+    title: z.string().max(100).optional(),
+    order: z.enum(["ASC", "DESC"]).optional()
+});
+
+export const validateMovie = (input) => {
     return movieSchema.safeParse(input);
+};
+
+export const validateMovieQuery = (input) => {
+    return movieQuerySchema.safeParse(input);
 };

@@ -1,4 +1,5 @@
 import z from "zod";
+import { parseNumericQueryParam } from "../utils/character.utils.js";
 
 export const characterSchema = z.object({
     //id: z.number().int().positive(), --> No debería utilizarlo acá porque en ningún momento interactúo con este campo
@@ -13,6 +14,17 @@ export const characterSchema = z.object({
     story: z.string().optional()
 });
 
-export const validateCharacter = (input) =>{
+export const characterQuerySchema = z.object({
+    name: z.string().max(100).optional(),
+    age: z.preprocess(parseNumericQueryParam, z.number().int().min(0).optional()),
+    weight: z.preprocess(parseNumericQueryParam, z.number().positive().optional()),
+    movies: z.preprocess(parseNumericQueryParam, z.number().int().positive().optional())
+});
+
+export const validateCharacter = (input) => {
     return characterSchema.safeParse(input);
+};
+
+export const validateCharacterQuery = (input) => {
+    return characterQuerySchema.safeParse(input);
 };

@@ -1,8 +1,16 @@
-import { validateCharacter } from "../schemas/character.schema.js";
+import { validateCharacter, validateCharacterQuery } from "../schemas/character.schema.js";
 import characterService from "../services/character.service.js"
 
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
+    const validation = validateCharacterQuery(req.query);
+    console.log(validation.data?.age)
+    if(!validation.success){
+        return res.status(400).json({ 
+            error: "Bad Request", 
+            details: JSON.parse(validation.error.message) 
+        });
+    };
     try {
         const {name, age, weight, movies} = req.query;
         const characters = await characterService.getAllCharacters(name, age, weight, movies);

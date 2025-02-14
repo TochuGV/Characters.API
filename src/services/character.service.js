@@ -14,7 +14,7 @@ export default new class CharacterService {
         const query = buildGetAllCharactersQuery(name, age, weight, movies);
         const result = await pool.request()
                 .input('pName', sql.VarChar, name)
-                .input('pAge', sql.Int, age)
+                .input('pAge', sql.Int, age !== undefined ? age : null)
                 .input('pWeight', sql.Float, weight)
                 .input('pID', sql.Int, movies)
                 .query(query);

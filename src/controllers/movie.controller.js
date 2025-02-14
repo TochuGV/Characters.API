@@ -1,8 +1,15 @@
-import { validateMovie } from "../schemas/movie.schema.js";
+import { validateMovie, validateMovieQuery } from "../schemas/movie.schema.js";
 import movieService from "../services/movie.service.js";
 
 export const getAllMovies = async (req, res) => {
     console.log("This is a get operation");
+    const validation = validateMovieQuery(req.query);
+    if(!validation.success){
+        return res.status(400).json({ 
+            error: "Bad Request", 
+            details: JSON.parse(validation.error.message) 
+        });
+    };
     try {
         const {title, order} = req.query;
         const movies = await movieService.getAllMovies(title, order);

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import z from "zod";
 
 const characterTable = process.env.DB_CHARACTER_TABLE;
 const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
@@ -16,4 +17,10 @@ export const buildGetAllCharactersQuery = (name, age, weight, movies) => {
     weight ? conditions.push(`Weight = @pWeight`) : null;
     query += conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
     return query;
+};
+
+export const parseNumericQueryParam = (val) => {
+    if(typeof val !== "string") return undefined;
+    const num = Number(val);
+    return (isNaN(num)) ? z.NEVER : num;
 };
