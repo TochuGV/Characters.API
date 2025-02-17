@@ -4,7 +4,6 @@ import characterService from "../services/character.service.js"
 export const getAllCharacters = async (req, res) => {
     console.log("This is a get operation");
     const validation = validateCharacterQuery(req.query);
-    console.log(validation.data?.age)
     if(!validation.success){
         return res.status(400).json({ 
             error: "Bad Request", 
