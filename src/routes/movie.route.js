@@ -7,13 +7,14 @@ import {
     deleteMovieById 
 } from "../controllers/movie.controller.js";
 import { validateIdMiddleware } from "../middlewares/validateId.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js"
 
 const router = Router();
 
-router.get('/', getAllMovies);
-router.get('/:id', validateIdMiddleware, getMovieById);
-router.post('', createMovie);
-router.put('/:id', validateIdMiddleware, updateMovieById);
-router.delete('/:id', validateIdMiddleware, deleteMovieById);
+router.get('/', authMiddleware, getAllMovies);
+router.get('/:id', authMiddleware, validateIdMiddleware, getMovieById);
+router.post('', authMiddleware, createMovie);
+router.put('/:id', authMiddleware, validateIdMiddleware, updateMovieById);
+router.delete('/:id', authMiddleware, validateIdMiddleware, deleteMovieById);
 
 export default router;
