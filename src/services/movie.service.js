@@ -23,7 +23,7 @@ export default new class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .query(`SELECT * FROM ${movieTable} LEFT JOIN ${charactersXMoviesTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID 
                     LEFT JOIN ${characterTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID WHERE ${movieTable}.ID = @pID`);
         console.log(result);
@@ -47,7 +47,7 @@ export default new class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .input('pImage', sql.VarChar, movie?.Image ?? null) //No puede ser NULL 
             .input('pTitle', sql.VarChar, movie?.Title ?? null) //No puede ser NULL 
             .input('pCreationDate', sql.Date, movie?.CreationDate ?? getCurrentCreationDate()) //Tendría que mostrar solo YYYY-MM-DD pero muestra el tiempo también
@@ -61,7 +61,7 @@ export default new class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .query(`DELETE FROM ${movieTable} WHERE ID = @pID`);
         console.log(result);
         return result;

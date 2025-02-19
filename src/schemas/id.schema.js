@@ -1,5 +1,5 @@
 import z from "zod";
 
 export const idSchema = z.object({
-    id: z.number().int().positive()
+    id: z.string().uuid({ message: "Invalid UUID format" })
 });

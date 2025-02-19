@@ -16,7 +16,7 @@ export default new class CharacterService {
                 .input('pName', sql.VarChar, name)
                 .input('pAge', sql.Int, age !== undefined ? age : null)
                 .input('pWeight', sql.Float, weight)
-                .input('pID', sql.Int, movies)
+                .input('pID', sql.UniqueIdentifier, movies)
                 .query(query);
         console.log(result);
         return result.recordset.length > 0 ? result.recordset : null;
@@ -26,7 +26,7 @@ export default new class CharacterService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .query(`SELECT * FROM ${characterTable} LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID
             LEFT JOIN ${movieTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID WHERE ${characterTable}.ID = @pID`);
         console.log(result);
@@ -51,7 +51,7 @@ export default new class CharacterService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .input('pImage', sql.VarChar, character?.Image ?? null) //No puede ser NULL 
             .input('pName', sql.VarChar, character?.Name ?? null) //No puede ser NULL
             .input('pAge', sql.Int, character?.Age ?? null)
@@ -66,7 +66,7 @@ export default new class CharacterService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pID', sql.Int, id)
+            .input('pID', sql.UniqueIdentifier, id)
             .query(`DELETE FROM ${characterTable} WHERE ID = @pID`);
         console.log(result);
         return result;
