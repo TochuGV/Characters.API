@@ -6,6 +6,7 @@ import { jwtStrategy } from "./config/jwt.strategy.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
+import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 
 const app = express();
 app.use(cors())
@@ -16,5 +17,6 @@ app.use(passport.initialize());
 app.use('/auth', authRouter);
 app.use('/characters', characterRouter);
 app.use('/movies', movieRouter);
+app.use(errorHandler);
 
 export default app;

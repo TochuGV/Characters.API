@@ -1,87 +1,49 @@
 import { validateMovie, validateMovieQuery } from "../schemas/movie.schema.js";
 import movieService from "../services/movie.service.js";
+import { tryCatch } from "../utils/try-catch.js";
+import { BadRequestError, NotFoundError, ValidationError } from "../utils/errors.js";
 
 export const getAllMovies = async (req, res) => {
     console.log("This is a get operation");
     const validation = validateMovieQuery(req.query);
-    if(!validation.success){
-        return res.status(400).json({ 
-            error: "Bad Request", 
-            details: JSON.parse(validation.error.message) 
-        });
-    };
-    try {
-        const {title, order} = req.query;
-        const movies = await movieService.getAllMovies(title, order);
-        if(!movies) return res.status(200).send("Movies not found");
-        return res.status(200).json(movies);
-    } catch(error){
-        console.error(error);
-        return res.status(500).send("Internal server error");
-    };
+    if(!validation.success) throw new BadRequestError(JSON.parse(validation.error.message));
+    const {title, order} = req.query;
+    const movies = await movieService.getAllMovies(title, order);
+    if(!movies) return res.status(200).send("Movies not found");
+    return res.status(200).json(movies);
 };
 
-export const getMovieById = async (req, res) => {
+export const getMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
-    try {
-        const movie = await movieService.getMovieById(req.params.id);
-        if(movie) return res.status(200).json(movie);
-        return res.status(404).send("Movie not found");
-    } catch(error){
-        console.error(error);
-        return res.status(500).send("Internal server error");
-    };
-};
+    const movie = await movieService.getMovieById(req.params.id);
+    if(!movie) throw new NotFoundError("Movie not found"); 
+    return res.status(200).json(movie);
+});
 
 export const createMovie = async (req, res) => {
     console.log("This is a get operation");
     const validation = validateMovie(req.body);
-    if(!validation.success){
-        return res.status(422).json({ 
-            error: "Unprocessable Entity", 
-            details: JSON.parse(validation.error.message) 
-        });
-    };
-    try {
-        const result = await movieService.createMovie(req.body);
-        if(result.rowsAffected[0] > 0) return res.status(201).send("Movie created succesfully");
+    if(!validation.success) throw new ValidationError(JSON.parse(validation.error.message));
+    const result = await movieService.createMovie(req.body);
+    if(result.rowsAffected[0] > 0) return res.status(201).send("Movie created succesfully");
         return res.status(400).send("Bad request"); //Hay que manejar bien los errores porque es imposible que llegue acá
-    } catch(error){
-        console.error(error);
-        return res.status(500).send("Internal server error");
-    };
 };
 
-export const updateMovieById = async (req, res) => {
+export const updateMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a update operation");
     const validation = validateMovie(req.body);
-    if(!validation.success){
-        return res.status(422).json({ 
-            error: "Unprocessable Entity", 
-            details: JSON.parse(validation.error.message) 
-        });
-    };
-    try {
-        const result = await movieService.updateMovieById(req.params.id, req.body);
-        if(result.rowsAffected[0] > 0) return res.status(200).send("Movie updated succesfully");
-        return res.status(404).send("Movie not found");
-    } catch(error){
-        console.error(error);
-        return res.status(500).send("Internal server error");
-    };
-};
+    if(!validation.success) throw new ValidationError(JSON.parse(validation.error.message))
+    const result = await movieService.updateMovieById(req.params.id, req.body);
+    if(!(result.rowsAffected[0] > 0)) throw new NotFoundError("Movie not found");
+    return res.status(200).send("Movie updated succesfully");
+});
 
-export const deleteMovieById = async (req, res) => {
+export const deleteMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a delete operation");
-    try {
-        const result = await movieService.deleteMovieById(req.params.id);
-        if(result.rowsAffected[0] > 0) return res.status(204).send();
-        return res.status(404).send("Movie not found");
-    } catch(error){
-        console.error(error);
-        return res.status(500).send("Internal server error");
-    };
-};
+    const result = await movieService.deleteMovieById(req.params.id);
+    if(!(result.rowsAffected[0] > 0)) throw new NotFoundError("Movie not found");
+    return res.status(204).send();
+});
