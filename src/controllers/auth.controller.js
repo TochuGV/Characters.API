@@ -34,3 +34,12 @@ export const loginUser = tryCatch(async (req, res) => {
     });
     return res.status(200).send("Login successful");
 });
+
+export const logoutUser = (req, res) => {
+    console.log("This is a post operation");
+    res.clearCookie("jwt", {
+        httpOnly: true,
+        //secure: false,
+        //sameSite: strict
+    }).send("Logout successful");
+};
