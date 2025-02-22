@@ -37,3 +37,9 @@ export class InternalServerError extends AppError{
         super(message, 500);
     };
 };
+
+export class DatabaseError extends AppError{
+    constructor(message = "Service unavailable"){
+        super(message, 503);
+    };
+};
