@@ -4,6 +4,7 @@ import userService from "../services/user.service.js";
 import { BadRequestError } from "../utils/errors.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
+import { cookieOptions } from "../config/cookie.config.js";
 
 export const registerUser = tryCatch(async (req, res) => {
     console.log("This is a post operation");
@@ -27,19 +28,12 @@ export const loginUser = tryCatch(async (req, res) => {
     const isValidPassword = await comparePasswords(password, user.Password);
     if(!isValidPassword) throw new BadRequestError("Invalid credentials, wrong password");
     const token = generateToken(user);
-    res.cookie("jwt", token, {
-        httpOnly: true,
-        //secure: false,
-        //sameSite: strict
-    });
+    res.cookie("jwt", token, cookieOptions);
     return res.status(200).send("Login successful");
 });
 
 export const logoutUser = (req, res) => {
     console.log("This is a post operation");
-    res.clearCookie("jwt", {
-        httpOnly: true,
-        //secure: false,
-        //sameSite: strict
-    }).send("Logout successful");
+    res.clearCookie("jwt", cookieOptions);
+    return res.status(200).send("Logout successful");
 };
