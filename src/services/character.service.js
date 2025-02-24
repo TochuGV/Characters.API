@@ -2,23 +2,12 @@ import { getConnection, sql } from "../database/config.js"
 import { buildGetAllCharactersQuery } from "../utils/character.utils.js";
 import "dotenv/config";
 
-const characterTable = process.env.DB_CHARACTER_TABLE;
-const movieTable = process.env.DB_MOVIE_TABLE;
-const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
-
 export default new class CharacterService {
 
     getAllCharacters = async (name, age, weight, movies, page = 1, limit = 10) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const offset = (page - 1) * limit;
-        const query = `SELECT c.ID, c.Image, c.Name FROM ${characterTable} c WHERE
-                        (@pName IS NULL OR c.Name LIKE '%' + @pName + '%') AND
-                        (@pAge IS NULL OR c.Age = @pAge) AND
-                        (@pWeight IS NULL OR c.Weight = @pWeight) AND
-                        (@pMovieID IS NULL OR EXISTS (
-                        SELECT 1 FROM ${charactersXMoviesTable} cxm WHERE cxm.CharacterID = c.ID AND cxm.MovieID = @pMovieID))
-                        ORDER BY c.ID OFFSET @pOffset ROWS FETCH NEXT @pLimit ROWS ONLY;`
         const result = await pool.request()
             .input('pName', sql.VarChar, name)
             .input('pAge', sql.Int, age !== undefined ? age : null)
@@ -26,20 +15,14 @@ export default new class CharacterService {
             .input('pMovieID', sql.UniqueIdentifier, movies)
             .input('pOffset', sql.Int, offset)
             .input('pLimit', sql.Int, limit)
-            .query(query);
+            .execute('GetCharacters');
         
-        const countQuery = `SELECT COUNT(*) AS Total FROM ${characterTable} c
-                            LEFT JOIN ${charactersXMoviesTable} cxm ON c.ID = cxm.CharacterID WHERE
-                            (@pName IS NULL OR c.Name LIKE '%' + @pName + '%') AND
-                            (@pAge IS NULL OR c.Age = @pAge) AND
-                            (@pWeight IS NULL OR c.Weight = @pWeight) AND
-                            (@pMovieID IS NULL OR cxm.MovieID = @pMovieID);`;
         const totalResult = await pool.request()
             .input('pName', sql.VarChar, name)
             .input('pAge', sql.Int, age !== undefined ? age : null)
             .input('pWeight', sql.Float, weight)
             .input('pMovieID', sql.UniqueIdentifier, movies)
-            .query(countQuery);
+            .execute('GetCharactersCount');
         const total = totalResult.recordset[0].Total;
         console.log(result);
         return {
@@ -55,8 +38,7 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .query(`SELECT * FROM ${characterTable} LEFT JOIN ${charactersXMoviesTable} ON ${characterTable}.ID = ${charactersXMoviesTable}.CharacterID
-            LEFT JOIN ${movieTable} ON ${movieTable}.ID = ${charactersXMoviesTable}.MovieID WHERE ${characterTable}.ID = @pID`);
+            .execute('GetCharacterByID');
         console.log(result);
         return result.recordset.length > 0 ? result.recordset : null;
     };
@@ -70,7 +52,7 @@ export default new class CharacterService {
             .input('pAge', sql.Int, character?.Age ?? 0) //Mayor o igual a 0
             .input('pWeight', sql.Float, character?.Weight ?? 0.001) //Mayor a 0
             .input('pStory', sql.VarChar, character?.Story ?? '')
-            .query(`INSERT INTO ${characterTable}(Image, Name, Age, Weight, Story) VALUES (@pImage, @pName, @pAge, @pWeight, @pStory)`);
+            .execute('CreateCharacter');
         console.log(result);
         return result;
     };
@@ -85,7 +67,7 @@ export default new class CharacterService {
             .input('pAge', sql.Int, character?.Age ?? null)
             .input('pWeight', sql.Int, character?.Weight ?? null)
             .input('pStory', sql.VarChar, character?.Story ?? null)
-            .query(`UPDATE ${characterTable} SET Image = @pImage, Name = @pName, Age = @pAge, Weight = @pWeight, Story = @pStory WHERE ID = @pID`);
+            .execute('UpdateCharacterByID');
         console.log(result);
         return result;
     };
@@ -95,7 +77,7 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .query(`DELETE FROM ${characterTable} WHERE ID = @pID`);
+            .execute('DeleteCharacterByID');
         console.log(result);
         return result;
     };
