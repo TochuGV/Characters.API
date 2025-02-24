@@ -6,11 +6,13 @@ import { BadRequestError, NotFoundError, ValidationError } from "../utils/errors
 export const getAllCharacters = tryCatch(async (req, res) => {
     console.log("This is a get operation");
     const validation = validateCharacterQuery(req.query);
-    if(!validation.success) throw new BadRequestError(JSON.parse(validation.error.message))
-        const {name, age, weight, movies} = req.query;
-        const characters = await characterService.getAllCharacters(name, age, weight, movies);
-        if(!characters) return res.status(200).send("Characters not found");
-        return res.status(200).json(characters);
+    if(!validation.success) throw new BadRequestError(validation.error.format())
+    const {name, age, weight, movies} = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const characters = await characterService.getAllCharacters(name, age, weight, movies, page, limit);
+    if(!characters || characters.characters.length === 0) return res.status(200).send("Characters not found");
+    return res.status(200).json(characters);
 });
 
 export const getCharacterById = tryCatch(async (req, res) => {

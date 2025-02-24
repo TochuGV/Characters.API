@@ -8,18 +8,46 @@ const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
 
 export default new class CharacterService {
 
-    getAllCharacters = async (name, age, weight, movies) => {
+    getAllCharacters = async (name, age, weight, movies, page = 1, limit = 10) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
-        const query = buildGetAllCharactersQuery(name, age, weight, movies);
+        const offset = (page - 1) * limit;
+        const query = `SELECT c.ID, c.Image, c.Name FROM ${characterTable} c WHERE
+                        (@pName IS NULL OR c.Name LIKE '%' + @pName + '%') AND
+                        (@pAge IS NULL OR c.Age = @pAge) AND
+                        (@pWeight IS NULL OR c.Weight = @pWeight) AND
+                        (@pMovieID IS NULL OR EXISTS (
+                        SELECT 1 FROM ${charactersXMoviesTable} cxm WHERE cxm.CharacterID = c.ID AND cxm.MovieID = @pMovieID))
+                        ORDER BY c.ID OFFSET @pOffset ROWS FETCH NEXT @pLimit ROWS ONLY;`
         const result = await pool.request()
-                .input('pName', sql.VarChar, name)
-                .input('pAge', sql.Int, age !== undefined ? age : null)
-                .input('pWeight', sql.Float, weight)
-                .input('pID', sql.UniqueIdentifier, movies)
-                .query(query);
+            .input('pName', sql.VarChar, name)
+            .input('pAge', sql.Int, age !== undefined ? age : null)
+            .input('pWeight', sql.Float, weight)
+            .input('pMovieID', sql.UniqueIdentifier, movies)
+            .input('pOffset', sql.Int, offset)
+            .input('pLimit', sql.Int, limit)
+            .query(query);
+        
+        const countQuery = `SELECT COUNT(*) AS Total FROM ${characterTable} c
+                            LEFT JOIN ${charactersXMoviesTable} cxm ON c.ID = cxm.CharacterID WHERE
+                            (@pName IS NULL OR c.Name LIKE '%' + @pName + '%') AND
+                            (@pAge IS NULL OR c.Age = @pAge) AND
+                            (@pWeight IS NULL OR c.Weight = @pWeight) AND
+                            (@pMovieID IS NULL OR cxm.MovieID = @pMovieID);`;
+        const totalResult = await pool.request()
+            .input('pName', sql.VarChar, name)
+            .input('pAge', sql.Int, age !== undefined ? age : null)
+            .input('pWeight', sql.Float, weight)
+            .input('pMovieID', sql.UniqueIdentifier, movies)
+            .query(countQuery);
+        const total = totalResult.recordset[0].Total;
         console.log(result);
-        return result.recordset.length > 0 ? result.recordset : null;
+        return {
+            characters: result.recordset,
+            total: total,
+            currentPage: page,
+            totalPages: Math.ceil(total/limit)
+        };
     };
 
     getCharacterById = async (id) => {

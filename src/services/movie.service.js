@@ -8,15 +8,33 @@ const charactersXMoviesTable = process.env.DB_CHARACTERSXMOVIES_TABLE;
 
 export default new class MovieService {
 
-    getAllMovies = async (title, order) => {
+    getAllMovies = async (title, order, page = 1, limit = 10) => {
         console.log("This is a function on the service");
         const pool = await getConnection();
-        const query = buildGetAllMoviesQuery(title, order); 
+        const offset = (page - 1) * limit;
+        const query = `SELECT ID, Image, Title, CreationDate
+                        ${title ? ', Rating' : ''}
+                        FROM ${movieTable}
+                        WHERE (@pTitle IS NULL OR Title LIKE '%' + @pTitle + '%')
+                        ORDER BY CreationDate ${order??'ASC'} 
+                        OFFSET @pOffset ROWS FETCH NEXT @pLimit ROWS ONLY;`
         const result = await pool.request()
             .input('pTitle', sql.VarChar, title)
+            .input('pOffset', sql.Int, offset)
+            .input('pLimit', sql.Int, limit)
             .query(query);
+        const countQuery = `SELECT COUNT(*) AS Total FROM ${movieTable} WHERE (@pTitle IS NULL OR Title LIKE '%' + @pTitle + '%');`;
+        const totalResult = await pool.request()
+            .input('pTitle', sql.VarChar, title)
+            .query(countQuery);
+        const total = totalResult.recordset[0].Total;
         console.log(result);
-        return result.recordset.length > 0 ? result.recordset : null;
+        return {
+            movies: result.recordset,
+            total: total,
+            currentPage: page,
+            totalPages: Math.ceil(total/limit)
+        };
     };
 
     getMovieById = async (id) => {

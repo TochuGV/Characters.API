@@ -6,10 +6,12 @@ import { BadRequestError, NotFoundError, ValidationError } from "../utils/errors
 export const getAllMovies = async (req, res) => {
     console.log("This is a get operation");
     const validation = validateMovieQuery(req.query);
-    if(!validation.success) throw new BadRequestError(JSON.parse(validation.error.message));
+    if(!validation.success) throw new BadRequestError(validation.error.format());
     const {title, order} = req.query;
-    const movies = await movieService.getAllMovies(title, order);
-    if(!movies) return res.status(200).send("Movies not found");
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const movies = await movieService.getAllMovies(title, order, page, limit);
+    if(!movies || movies.movies.length === 0) return res.status(200).send("Movies not found");
     return res.status(200).json(movies);
 };
 
