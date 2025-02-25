@@ -1,7 +1,7 @@
 import { AppError } from "./appError.js";
 
 export class BadRequestError extends AppError{
-    constructor(details = null, message = "Bad request"){
+    constructor(details = null, message = "Bad Request"){
         super(message, 400);
         if(details) this.details = details;
     };
@@ -15,8 +15,9 @@ export class UnauthorizedError extends AppError{
 };
 
 export class NotFoundError extends AppError{
-    constructor(message = "Resource not found"){
+    constructor(details = null, message = "Not Found"){
         super(message, 404);
+        if(details) this.details = details;
     };
 };
 
@@ -28,20 +29,20 @@ export class ConflictError extends AppError{
 };
 
 export class ValidationError extends AppError{
-    constructor(details = null, message = "Unprocessable entity"){
+    constructor(details = null, message = "Unprocessable Entity"){
         super(message, 422);
         if(details) this.details = details;
     };
 };
 
 export class InternalServerError extends AppError{
-    constructor(message = "Internal server error"){
+    constructor(message = "Internal Server Error"){
         super(message, 500);
     };
 };
 
 export class DatabaseError extends AppError{
-    constructor(message = "Service unavailable"){
+    constructor(message = "Service Unavailable"){
         super(message, 503);
     };
 };

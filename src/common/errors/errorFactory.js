@@ -16,7 +16,7 @@ export class ErrorFactory {
             case "UNAUTHORIZED":
                 return new UnauthorizedError(details, message);
             case "NOT_FOUND":
-                return new NotFoundError(message);
+                return new NotFoundError(details, message);
             case "CONFLICT":
                 return new ConflictError(details, message);
             case "VALIDATION":
