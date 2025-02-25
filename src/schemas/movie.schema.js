@@ -1,4 +1,5 @@
 import z from "zod";
+import { parseNumericQueryParam } from "../utils/character.utils.js";
 
 export const movieSchema = z.object({
     image: z.string({
@@ -38,5 +39,7 @@ export const movieQuerySchema = z.object({
     }).max(100, { 
         message: "Must be 100 or fewer characters long" 
     }).optional(),
-    order: z.enum(["ASC", "DESC"]).optional()
+    order: z.enum(["ASC", "DESC"]).optional(),
+    page: z.preprocess(parseNumericQueryParam, z.number().int().min(1).optional().default(1)),
+    limit: z.preprocess(parseNumericQueryParam, z.number().int().min(1).max(100).optional().default(10))
 });
