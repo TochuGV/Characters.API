@@ -44,7 +44,7 @@ export default new class MovieService {
         const result = await pool.request()
             .input('pImage', sql.VarChar, movie?.Image)
             .input('pTitle', sql.VarChar, movie?.Title)
-            .input('pCreationDate', sql.Date, movie?.CreationDate ?? getCurrentCreationDate()) //Tendría que mostrar solo YYYY-MM-DD pero muestra el tiempo también
+            .input('pCreationDate', sql.Date, movie?.CreationDate)
             .input('pRating', sql.Int, movie?.Rating)
             .execute('CreateMovie');
         console.log(result);
@@ -58,7 +58,7 @@ export default new class MovieService {
             .input('pID', sql.UniqueIdentifier, id)
             .input('pImage', sql.VarChar, movie?.Image)
             .input('pTitle', sql.VarChar, movie?.Title)
-            .input('pCreationDate', sql.Date, movie?.CreationDate ?? getCurrentCreationDate()) //Tendría que mostrar solo YYYY-MM-DD pero muestra el tiempo también
+            .input('pCreationDate', sql.Date, movie?.CreationDate)
             .input('pRating', sql.Int, movie?.Rating)
             .execute('UpdateMovieByID');
         console.log(result);
