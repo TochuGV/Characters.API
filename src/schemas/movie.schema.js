@@ -40,11 +40,3 @@ export const movieQuerySchema = z.object({
     }).optional(),
     order: z.enum(["ASC", "DESC"]).optional()
 });
-
-export const validateMovie = (input) => {
-    return movieSchema.safeParse(input);
-};
-
-export const validateMovieQuery = (input) => {
-    return movieQuerySchema.safeParse(input);
-};

@@ -45,11 +45,3 @@ export const characterQuerySchema = z.object({
     weight: z.preprocess(parseNumericQueryParam, z.number().positive().optional()),
     movies: z.preprocess(parseNumericQueryParam, z.string().uuid({ message: "Invalid UUID format" }).optional())
 });
-
-export const validateCharacter = (input) => {
-    return characterSchema.safeParse(input);
-};
-
-export const validateCharacterQuery = (input) => {
-    return characterQuerySchema.safeParse(input);
-};

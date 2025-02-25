@@ -18,7 +18,3 @@ export const userSchema = z.object({
         message: "Must be 100 or fewer characters long" 
     })
 });
-
-export const validateUser = (input) => {
-    return userSchema.safeParse(input);
-};
