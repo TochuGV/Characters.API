@@ -15,7 +15,6 @@ export default new class CharacterService {
             .input('pOffset', sql.Int, offset)
             .input('pLimit', sql.Int, limit)
             .execute('GetCharacters');
-        
         const totalResult = await pool.request()
             .input('pName', sql.VarChar, name)
             .input('pAge', sql.Int, age !== undefined ? age : null)
@@ -23,6 +22,7 @@ export default new class CharacterService {
             .input('pMovieID', sql.UniqueIdentifier, movies)
             .execute('GetCharactersCount');
         const total = totalResult.recordset[0].Total;
+        console.log(totalResult)
         console.log(result);
         return {
             characters: result.recordset,

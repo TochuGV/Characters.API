@@ -14,12 +14,12 @@ export default new class MovieService {
             .input('pOffset', sql.Int, offset)
             .input('pLimit', sql.Int, limit)
             .execute('GetMovies');
-        
         const totalResult = await pool.request()
             .input('pTitle', sql.VarChar, title)
             .execute('GetMoviesCount');
         const total = totalResult.recordset[0].Total;
         console.log(result);
+        console.log(totalResult)
         return {
             movies: result.recordset,
             total: total,
