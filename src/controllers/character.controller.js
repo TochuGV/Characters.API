@@ -7,9 +7,7 @@ import { validateRequest } from "../utils/validate-request.util.js";
 export const getAllCharacters = tryCatch(async (req, res) => {
     console.log("This is a get operation");
     validateRequest(characterQuerySchema, req.query);
-    const {name, age, weight, movies} = req.query;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const {name, age, weight, movies, page, limit} = req.query;
     const characters = await characterService.getAllCharacters(name, age, weight, movies, page, limit);
     if(!characters || characters.characters.length === 0) return res.status(200).send("Characters not found");
     return res.status(200).json(characters);
@@ -27,8 +25,8 @@ export const createCharacter = tryCatch(async (req, res) => {
     console.log("This is a post operation");
     validateRequest(characterSchema, req.body);
     const result = await characterService.createCharacter(req.body);
-    if(result.rowsAffected[0] > 0) return res.status(201).send("Character created succesfully");
-        return res.status(400).send("Bad request"); //Hay que manejar bien los errores porque es imposible que llegue acá
+    if(!result) throw ErrorFactory.createError("INTERNAL_SERVER", "Failed to create character")
+    return res.status(201).send("Character created succesfully");
 });
 
 export const updateCharacterById = tryCatch(async (req, res) => {
@@ -36,7 +34,7 @@ export const updateCharacterById = tryCatch(async (req, res) => {
     console.log("This is a put operation");
     validateRequest(characterSchema, req.body);
     const result = await characterService.updateCharacterById(req.params.id, req.body);
-    if(!(result.rowsAffected[0] > 0)) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
+    if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     return res.status(200).send("Character updated succesfully");
 });
 
@@ -44,6 +42,6 @@ export const deleteCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a delete operation");
     const result = await characterService.deleteCharacterById(req.params.id);
-    if(!(result.rowsAffected[0] > 0)) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
+    if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     return res.status(204).send();
 });
