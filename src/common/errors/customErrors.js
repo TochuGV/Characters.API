@@ -20,6 +20,13 @@ export class NotFoundError extends AppError{
     };
 };
 
+export class ConflictError extends AppError{
+    constructor(details = null, message = "Conflict"){
+        super(message, 409);
+        if(details) this.details = details;
+    };
+};
+
 export class ValidationError extends AppError{
     constructor(details = null, message = "Unprocessable entity"){
         super(message, 422);

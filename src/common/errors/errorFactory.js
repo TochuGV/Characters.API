@@ -3,6 +3,7 @@ import {
     UnauthorizedError,
     NotFoundError,
     ValidationError,
+    ConflictError,
     InternalServerError,
     DatabaseError
 } from "./customErrors.js"
@@ -16,6 +17,8 @@ export class ErrorFactory {
                 return new UnauthorizedError(details, message);
             case "NOT_FOUND":
                 return new NotFoundError(message);
+            case "CONFLICT":
+                return new ConflictError(details, message);
             case "VALIDATION":
                 return new ValidationError(details, message);
             case "INTERNAL_SERVER":
