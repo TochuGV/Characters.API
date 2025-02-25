@@ -6,7 +6,7 @@ import {
     ConflictError,
     InternalServerError,
     DatabaseError
-} from "./customErrors.js"
+} from "./custom-errors.js"
 
 export class ErrorFactory {
     static createError(type, details = null, message){

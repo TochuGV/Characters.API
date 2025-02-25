@@ -2,7 +2,7 @@ import { characterSchema, characterQuerySchema } from "../schemas/character.sche
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import characterService from "../services/character.service.js"
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorFactory } from "../common/errors/errorFactory.js";
+import { ErrorFactory } from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
 export const getAllCharacters = tryCatch(async (req, res) => {

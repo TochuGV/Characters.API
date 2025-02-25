@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import sql from "mssql"
-import { ErrorFactory } from '../common/errors/errorFactory.js';
+import { ErrorFactory } from '../common/errors/error-factory.js';
 
 if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_SERVER || !process.env.DB_NAME){
   throw ErrorFactory.createError("DATABASE", "Database must be configured in the .env file");

@@ -4,7 +4,7 @@ import userService from "../services/user.service.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { cookieOptions } from "../config/cookie.config.js";
-import { ErrorFactory } from "../common/errors/errorFactory.js";
+import { ErrorFactory } from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
 export const registerUser = tryCatch(async (req, res) => {

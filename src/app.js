@@ -6,7 +6,7 @@ import { jwtStrategy } from "./config/jwt.strategy.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
-import { errorHandler } from "./middlewares/errorHandler.middleware.js";
+import { errorHandler } from "./middlewares/error-handler.middleware.js";
 
 const app = express();
 app.use(cors())

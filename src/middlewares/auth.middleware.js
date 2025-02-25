@@ -1,6 +1,6 @@
 import passport from "passport";
 import "dotenv/config"
-import { ErrorFactory } from "../common/errors/errorFactory.js";
+import { ErrorFactory } from "../common/errors/error-factory.js";
 
 export const authMiddleware = (req, res, next) => {
     let token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];

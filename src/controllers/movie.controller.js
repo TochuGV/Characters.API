@@ -2,7 +2,7 @@ import { movieSchema, movieQuerySchema } from "../schemas/movie.schema.js";
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import movieService from "../services/movie.service.js";
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorFactory } from "../common/errors/errorFactory.js";
+import { ErrorFactory } from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
 export const getAllMovies = async (req, res) => {
