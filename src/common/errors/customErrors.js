@@ -1,21 +1,16 @@
-export class AppError extends Error{
-    constructor(message, statusCode){
-        super(message);
-        this.statusCode = statusCode;
-        Error.captureStackTrace(this, this.constructor);
-    };
-};
+import { AppError } from "./appError.js";
 
 export class BadRequestError extends AppError{
-    constructor(details, message = "Bad request"){
+    constructor(details = null, message = "Bad request"){
         super(message, 400);
-        this.details = details;
+        if(details) this.details = details;
     };
 };
 
 export class UnauthorizedError extends AppError{
-    constructor(message = "Unauthorized"){
+    constructor(details = null, message = "Unauthorized"){
         super(message, 401);
+        if(details) this.details = details;
     };
 };
 
@@ -26,9 +21,9 @@ export class NotFoundError extends AppError{
 };
 
 export class ValidationError extends AppError{
-    constructor(details, message = "Unprocessable entity"){
+    constructor(details = null, message = "Unprocessable entity"){
         super(message, 422);
-        this.details = details;
+        if(details) this.details = details;
     };
 };
 

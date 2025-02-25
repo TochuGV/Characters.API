@@ -1,8 +1,7 @@
 import { idSchema } from "../schemas/id.schema.js";
-import { BadRequestError } from "../utils/errors.js";
+import { validateRequest } from "../utils/validate-request.util.js";
 
 export const validateIdMiddleware = (req, res, next) => {
-    const validation = idSchema.safeParse({ id: req.params.id });
-    if (!validation.success) throw new BadRequestError("Invalid ID format.");
+    validateRequest(idSchema, {id: req.params.id});
     next();
 }

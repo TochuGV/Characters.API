@@ -1,32 +1,30 @@
-import { validateUser } from "../schemas/user.schema.js";
+import { userSchema } from "../schemas/user.schema.js";
 import { generateToken } from "../services/auth.service.js";
 import userService from "../services/user.service.js";
-import { BadRequestError } from "../utils/errors.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { cookieOptions } from "../config/cookie.config.js";
+import { ErrorFactory } from "../common/errors/errorFactory.js";
 
 export const registerUser = tryCatch(async (req, res) => {
     console.log("This is a post operation");
-    const validation = validateUser(req.body);
-    if(!validation.success) throw new BadRequestError(JSON.parse(validation.error.message));
+    validateRequest(userSchema, req.body);
     const {email, password} = req.body
     const userExists = await userService.getUserByEmail(email);
-    if(userExists) throw new BadRequestError("User already exists");
+    if(userExists) throw ErrorFactory.createError("UNAUTHORIZED", "User already exists");
     const result = await userService.createUser(email, password);
-    if(!(result.rowsAffected[0] > 0)) throw new BadRequestError("Bad Request");
+    if(!(result.rowsAffected[0] > 0)) throw ErrorFactory.createError("INTERNAL_SERVER", "User creation failed due to a database issue");
     return res.status(201).send("User created successfully");
 });
 
 export const loginUser = tryCatch(async (req, res) => {
     console.log("This is a post operation");
-    const validation = validateUser(req.body);
-    if(!validation.success) throw new BadRequestError(JSON.parse(validation.error.message));
+    validateRequest(userSchema, req.body);
     const {email, password} = req.body;
     const user = await userService.getUserByEmail(email);
-    if(!user) throw new BadRequestError("Invalid credentials");
+    if(!user) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.Password);
-    if(!isValidPassword) throw new BadRequestError("Invalid credentials, wrong password");
+    if(!isValidPassword) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const token = generateToken(user);
     res.cookie("jwt", token, cookieOptions);
     return res.status(200).send("Login successful");

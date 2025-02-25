@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import sql from "mssql"
-import { DatabaseError } from '../utils/errors.js';
+import { ErrorFactory } from '../common/errors/errorFactory.js';
 
 if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_SERVER || !process.env.DB_NAME){
-  throw new DatabaseError("Database must be configured in the .env file");
+  throw ErrorFactory.createError("DATABASE", "Database must be configured in the .env file");
 };
 
 const dbSettings = {
@@ -22,7 +22,7 @@ export const getConnection = async () => {
   try {
     return await sql.connect(dbSettings);
   } catch(error){
-    throw new DatabaseError("Failed to connect to the database");
+    throw ErrorFactory.createError("DATABASE", "Failed to connect to the database");
   };
 };
 
