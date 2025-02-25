@@ -23,7 +23,7 @@ export default new class MovieService {
         return {
             movies: result.recordset,
             total: total,
-            currentPage: page,
+            currentPage: Number(page),
             totalPages: Math.ceil(total/limit)
         };
     };
@@ -42,13 +42,13 @@ export default new class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pImage', sql.VarChar, movie?.Image ?? '')
-            .input('pTitle', sql.VarChar, movie?.Title ?? '')
+            .input('pImage', sql.VarChar, movie?.Image)
+            .input('pTitle', sql.VarChar, movie?.Title)
             .input('pCreationDate', sql.Date, movie?.CreationDate ?? getCurrentCreationDate()) //Tendría que mostrar solo YYYY-MM-DD pero muestra el tiempo también
-            .input('pRating', sql.Int, movie?.Rating ?? 0) //Tiene que estar entre 1 y 5
+            .input('pRating', sql.Int, movie?.Rating)
             .execute('CreateMovie');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 
     updateMovieById = async (id, movie) => {
@@ -56,13 +56,13 @@ export default new class MovieService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .input('pImage', sql.VarChar, movie?.Image ?? null) //No puede ser NULL 
-            .input('pTitle', sql.VarChar, movie?.Title ?? null) //No puede ser NULL 
+            .input('pImage', sql.VarChar, movie?.Image)
+            .input('pTitle', sql.VarChar, movie?.Title)
             .input('pCreationDate', sql.Date, movie?.CreationDate ?? getCurrentCreationDate()) //Tendría que mostrar solo YYYY-MM-DD pero muestra el tiempo también
-            .input('pRating', sql.Int, movie?.Rating ?? null) //Tiene que estar entre 1 y 5
+            .input('pRating', sql.Int, movie?.Rating)
             .execute('UpdateMovieByID');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 
     deleteMovieById = async (id) => {
@@ -72,6 +72,6 @@ export default new class MovieService {
             .input('pID', sql.UniqueIdentifier, id)
             .execute('DeleteMovieByID');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 };

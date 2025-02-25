@@ -9,7 +9,7 @@ export default new class CharacterService {
         const offset = (page - 1) * limit;
         const result = await pool.request()
             .input('pName', sql.VarChar, name)
-            .input('pAge', sql.Int, age !== undefined ? age : null)
+            .input('pAge', sql.Int, age)
             .input('pWeight', sql.Float, weight)
             .input('pMovieID', sql.UniqueIdentifier, movies)
             .input('pOffset', sql.Int, offset)
@@ -17,7 +17,7 @@ export default new class CharacterService {
             .execute('GetCharacters');
         const totalResult = await pool.request()
             .input('pName', sql.VarChar, name)
-            .input('pAge', sql.Int, age !== undefined ? age : null)
+            .input('pAge', sql.Int, age)
             .input('pWeight', sql.Float, weight)
             .input('pMovieID', sql.UniqueIdentifier, movies)
             .execute('GetCharactersCount');
@@ -27,7 +27,7 @@ export default new class CharacterService {
         return {
             characters: result.recordset,
             total: total,
-            currentPage: page,
+            currentPage: Number(page),
             totalPages: Math.ceil(total/limit)
         };
     };
@@ -46,14 +46,14 @@ export default new class CharacterService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pImage', sql.VarChar, character?.Image ?? '')
-            .input('pName', sql.VarChar, character?.Name ?? '')
-            .input('pAge', sql.Int, character?.Age ?? 0) //Mayor o igual a 0
-            .input('pWeight', sql.Float, character?.Weight ?? 0.001) //Mayor a 0
-            .input('pStory', sql.VarChar, character?.Story ?? '')
+            .input('pImage', sql.VarChar, character.Image)
+            .input('pName', sql.VarChar, character.Name)
+            .input('pAge', sql.Int, character.Age)
+            .input('pWeight', sql.Float, character.Weight)
+            .input('pStory', sql.VarChar, character.Story)
             .execute('CreateCharacter');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 
     updateCharacterById = async (id, character) => {
@@ -61,14 +61,14 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .input('pImage', sql.VarChar, character?.Image ?? null) //No puede ser NULL 
-            .input('pName', sql.VarChar, character?.Name ?? null) //No puede ser NULL
-            .input('pAge', sql.Int, character?.Age ?? null)
-            .input('pWeight', sql.Int, character?.Weight ?? null)
-            .input('pStory', sql.VarChar, character?.Story ?? null)
+            .input('pImage', sql.VarChar, character.Image) 
+            .input('pName', sql.VarChar, character.Name)
+            .input('pAge', sql.Int, character.Age)
+            .input('pWeight', sql.Int, character.Weight)
+            .input('pStory', sql.VarChar, character.Story)
             .execute('UpdateCharacterByID');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 
     deleteCharacterById = async (id) => {
@@ -78,6 +78,6 @@ export default new class CharacterService {
             .input('pID', sql.UniqueIdentifier, id)
             .execute('DeleteCharacterByID');
         console.log(result);
-        return result;
+        return result.rowsAffected[0] > 0;
     };
 };
