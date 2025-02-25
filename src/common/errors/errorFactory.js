@@ -22,11 +22,11 @@ export class ErrorFactory {
             case "VALIDATION":
                 return new ValidationError(details, message);
             case "INTERNAL_SERVER":
-                return new InternalServerError(message);
+                return new InternalServerError(details);
             case "DATABASE":
-                return new DatabaseError(message);
+                return new DatabaseError(details);
             default:
-                return new InternalServerError("Unknown error");
+                return new InternalServerError();
         };
     };
 };

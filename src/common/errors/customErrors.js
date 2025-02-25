@@ -36,13 +36,15 @@ export class ValidationError extends AppError{
 };
 
 export class InternalServerError extends AppError{
-    constructor(message = "Internal Server Error"){
-        super(message, 500);
+    constructor(details = null){
+        super("Internal Server Error", 500, false);
+        if(details) this.details = details;
     };
 };
 
 export class DatabaseError extends AppError{
-    constructor(message = "Service Unavailable"){
-        super(message, 503);
+    constructor(details = null){
+        super("Service Unavailable", 503, false);
+        if(details) this.details = details;
     };
 };
