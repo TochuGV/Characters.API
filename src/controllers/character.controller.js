@@ -1,4 +1,5 @@
 import { characterSchema, characterQuerySchema } from "../schemas/character.schema.js";
+import { uuidSchema } from "../schemas/uuid.schema.js";
 import characterService from "../services/character.service.js"
 import { tryCatch } from "../utils/try-catch.js";
 import { ErrorFactory } from "../common/errors/errorFactory.js";
@@ -16,6 +17,7 @@ export const getAllCharacters = tryCatch(async (req, res) => {
 export const getCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     const character = await characterService.getCharacterById(req.params.id);
     if(!character) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     return res.status(200).json(character);
@@ -32,6 +34,7 @@ export const createCharacter = tryCatch(async (req, res) => {
 export const updateCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a put operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     validateRequest(characterSchema, req.body);
     const result = await characterService.updateCharacterById(req.params.id, req.body);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
@@ -41,6 +44,7 @@ export const updateCharacterById = tryCatch(async (req, res) => {
 export const deleteCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a delete operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     const result = await characterService.deleteCharacterById(req.params.id);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     return res.status(204).send();

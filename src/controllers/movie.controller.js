@@ -1,4 +1,5 @@
 import { movieSchema, movieQuerySchema } from "../schemas/movie.schema.js";
+import { uuidSchema } from "../schemas/uuid.schema.js";
 import movieService from "../services/movie.service.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { ErrorFactory } from "../common/errors/errorFactory.js";
@@ -16,6 +17,7 @@ export const getAllMovies = async (req, res) => {
 export const getMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     const movie = await movieService.getMovieById(req.params.id);
     if(!movie) throw ErrorFactory.createError("NOT_FOUND", "Movie not found"); 
     return res.status(200).json(movie);
@@ -32,6 +34,7 @@ export const createMovie = async (req, res) => {
 export const updateMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a update operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     validateRequest(movieSchema, req.body);
     const result = await movieService.updateMovieById(req.params.id, req.body);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
@@ -41,6 +44,7 @@ export const updateMovieById = tryCatch(async (req, res) => {
 export const deleteMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a delete operation");
+    validateRequest(uuidSchema, {id: req.params.id});
     const result = await movieService.deleteMovieById(req.params.id);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
     return res.status(204).send();
