@@ -2,8 +2,9 @@ import {
     BadRequestError,
     UnauthorizedError,
     NotFoundError,
-    ValidationError,
     ConflictError,
+    ValidationError,
+    TooManyRequestsError,
     InternalServerError,
     DatabaseError
 } from "./custom-errors.js"
@@ -21,6 +22,8 @@ export class ErrorFactory {
                 return new ConflictError(details, message);
             case "VALIDATION":
                 return new ValidationError(details, message);
+            case "TOO_MANY_REQUESTS":
+                return new TooManyRequestsError(details, message);
             case "INTERNAL_SERVER":
                 return new InternalServerError(details);
             case "DATABASE":

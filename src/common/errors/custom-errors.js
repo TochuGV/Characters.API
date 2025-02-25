@@ -35,6 +35,13 @@ export class ValidationError extends AppError{
     };
 };
 
+export class TooManyRequestsError extends AppError{
+    constructor(details = null, message = "Too Many Requests"){
+        super(message, 429);
+        if(details) this.details = details;
+    };
+};
+
 export class InternalServerError extends AppError{
     constructor(details = null){
         super("Internal Server Error", 500, false);
