@@ -1,5 +1,5 @@
 import z from "zod";
-import { parseNumericQueryParam } from "../utils/character.utils.js";
+import { parseNumericQueryParam } from "../utils/query.utils.js";
 
 export const movieSchema = z.object({
     image: z.string({

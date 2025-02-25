@@ -1,5 +1,4 @@
 import { getConnection, sql } from "../database/config.js"
-import { getCurrentCreationDate } from "../utils/movie.utils.js";
 import "dotenv/config";
 
 export default new class MovieService {
