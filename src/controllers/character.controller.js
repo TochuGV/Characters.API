@@ -25,7 +25,6 @@ export const getCharacterById = tryCatch(async (req, res) => {
 
 export const createCharacter = tryCatch(async (req, res) => {
     console.log("This is a post operation");
-    const validation = validateCharacter(req.body);
     validateRequest(characterSchema, req.body);
     const result = await characterService.createCharacter(req.body);
     if(result.rowsAffected[0] > 0) return res.status(201).send("Character created succesfully");
