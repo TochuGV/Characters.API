@@ -7,11 +7,13 @@ import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
+import { limiter } from "./middlewares/rate-limit.middleware.js";
 
 const app = express();
 app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
+app.use(limiter)
 passport.use("jwt", jwtStrategy);
 app.use(passport.initialize());
 app.use('/auth', authRouter);
