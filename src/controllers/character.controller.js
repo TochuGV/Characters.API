@@ -21,7 +21,7 @@ export const getAllCharacters = tryCatch(async (req, res) => {
 export const getCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
-    validateRequest(uuidSchema, {id: req.params.id});
+    validateRequest(uuidSchema, req.params);
     const cachedCharacter = checkCache("getCharacterById", req.params.id);
     if(cachedCharacter) return res.status(200).json(cachedCharacter);
     const character = await characterService.getCharacterById(req.params.id);
@@ -42,7 +42,7 @@ export const createCharacter = tryCatch(async (req, res) => {
 export const updateCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a put operation");
-    validateRequest(uuidSchema, {id: req.params.id});
+    validateRequest(uuidSchema, req.params);
     validateRequest(characterSchema, req.body);
     const result = await characterService.updateCharacterById(req.params.id, req.body);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
@@ -54,7 +54,7 @@ export const updateCharacterById = tryCatch(async (req, res) => {
 export const deleteCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a delete operation");
-    validateRequest(uuidSchema, {id: req.params.id});
+    validateRequest(uuidSchema, req.params);
     const result = await characterService.deleteCharacterById(req.params.id);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     deleteCache('getAllCharacters', {});
