@@ -21,8 +21,8 @@ export default new class CharacterService {
             .input('pMovieID', sql.UniqueIdentifier, movies)
             .execute('GetCharactersCount');
         const total = totalResult.recordset[0].Total;
-        console.log(totalResult)
         console.log(result);
+        console.log(totalResult)
         return {
             characters: result.recordset,
             total: total,

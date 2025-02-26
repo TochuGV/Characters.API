@@ -5,14 +5,14 @@ import { tryCatch } from "../utils/try-catch.js";
 import { ErrorFactory } from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
-export const getAllMovies = async (req, res) => {
+export const getAllMovies = tryCatch(async (req, res) => {
     console.log("This is a get operation");
     validateRequest(movieQuerySchema, req.query);
     const {title, order, page, limit} = req.query;
     const movies = await movieService.getAllMovies(title, order, page, limit);
     if(!movies || movies.movies.length === 0) return res.status(200).send("Movies not found");
     return res.status(200).json(movies);
-};
+});
 
 export const getMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
@@ -23,13 +23,13 @@ export const getMovieById = tryCatch(async (req, res) => {
     return res.status(200).json(movie);
 });
 
-export const createMovie = async (req, res) => {
+export const createMovie = tryCatch(async (req, res) => {
     console.log("This is a get operation");
     validateRequest(movieSchema, req.body);
     const result = await movieService.createMovie(req.body);
     if(!result) throw ErrorFactory.createError("INTERNAL_SERVER", "Failed to create movie")
     return res.status(201).send("Movie created succesfully");
-};
+});
 
 export const updateMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
