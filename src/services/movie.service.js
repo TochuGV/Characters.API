@@ -31,7 +31,7 @@ export default new class MovieService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .execute('GetMovieByID');
+            .execute('GetMovieById');
         console.log(result);
         return result.recordset.length > 0 ? result.recordset : null;
     };
@@ -58,7 +58,7 @@ export default new class MovieService {
             .input('pTitle', sql.VarChar, movie?.Title)
             .input('pCreationDate', sql.Date, movie?.CreationDate)
             .input('pRating', sql.Int, movie?.Rating)
-            .execute('UpdateMovieByID');
+            .execute('UpdateMovieById');
         console.log(result);
         return result.rowsAffected[0] > 0;
     };
@@ -68,7 +68,7 @@ export default new class MovieService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .execute('DeleteMovieByID');
+            .execute('DeleteMovieById');
         console.log(result);
         return result.rowsAffected[0] > 0;
     };

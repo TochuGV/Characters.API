@@ -36,7 +36,7 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .execute('GetCharacterByID');
+            .execute('GetCharacterById');
         console.log(result);
         return result.recordset.length > 0 ? result.recordset : null;
     };
@@ -65,7 +65,7 @@ export default new class CharacterService {
             .input('pAge', sql.Int, character.Age)
             .input('pWeight', sql.Int, character.Weight)
             .input('pStory', sql.VarChar, character.Story)
-            .execute('UpdateCharacterByID');
+            .execute('UpdateCharacterById');
         console.log(result);
         return result.rowsAffected[0] > 0;
     };
@@ -75,7 +75,7 @@ export default new class CharacterService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .execute('DeleteCharacterByID');
+            .execute('DeleteCharacterById');
         console.log(result);
         return result.rowsAffected[0] > 0;
     };
