@@ -1,10 +1,6 @@
 import NodeCache from "node-cache";
+import { cacheConfig } from "../config/cache.config.js";
 
-const cache = new NodeCache({
-    stdTTL: 3600,  // Tiempo de vida estándar de 1 hora
-    checkperiod: 600,  // Cada 10 minutos, verificar los elementos expirados
-    useClones: false,  // Para no clonar los valores al ser almacenados
-    deleteOnExpire: true  // Eliminar elementos cuando expiren
-});
+const cache = new NodeCache(cacheConfig);
 
 export default cache;
