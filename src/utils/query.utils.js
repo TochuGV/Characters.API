@@ -1,7 +1,9 @@
 import z from "zod";
 
 export const parseNumericQueryParam = (val) => {
-    if(typeof val !== "string") return undefined;
-    const num = Number(val);
-    return (isNaN(num)) ? z.NEVER : num;
+    if (typeof val === "string") {
+        const parsed = Number(val);
+        return isNaN(parsed) ? undefined : parsed;
+    }
+    return val;
 };

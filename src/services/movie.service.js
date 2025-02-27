@@ -17,7 +17,7 @@ export default class MovieService {
             .execute('GetMoviesCount');
         const total = totalResult.recordset[0].Total;
         console.log(result);
-        console.log(totalResult)
+        console.log(totalResult);
         return {
             movies: result.recordset,
             total: total,

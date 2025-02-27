@@ -22,11 +22,11 @@ export const getMovieById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
     validateRequest(uuidSchema, req.params);
-    const cachedMovie = checkCache("getMovieById", req.params.id);
+    const cachedMovie = checkCache("getMovieById", req.params);
     if(cachedMovie) return res.status(200).json(cachedMovie);
     const movie = await movieService.getMovieById(req.params.id);
     if(!movie) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
-    setCache("getMovieById", req.params.id, movie);
+    setCache("getMovieById", req.params, movie);
     return res.status(200).json(movie);
 });
 
@@ -47,7 +47,7 @@ export const updateMovieById = tryCatch(async (req, res) => {
     const result = await movieService.updateMovieById(req.params.id, req.body);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
     deleteCache('getAllMovies', {});
-    deleteCache('getMovieById', req.params.id);
+    deleteCache('getMovieById', req.params);
     return res.status(200).send("Movie updated succesfully");
 });
 

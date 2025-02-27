@@ -22,11 +22,11 @@ export const getCharacterById = tryCatch(async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log("This is a get operation");
     validateRequest(uuidSchema, req.params);
-    const cachedCharacter = checkCache("getCharacterById", req.params.id);
+    const cachedCharacter = checkCache("getCharacterById", req.params);
     if(cachedCharacter) return res.status(200).json(cachedCharacter);
     const character = await characterService.getCharacterById(req.params.id);
     if(!character) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
-    setCache("getCharacterById", req.params.id, character);
+    setCache("getCharacterById", req.params, character);
     return res.status(200).json(character);
 });
 
@@ -47,7 +47,7 @@ export const updateCharacterById = tryCatch(async (req, res) => {
     const result = await characterService.updateCharacterById(req.params.id, req.body);
     if(!result) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
     deleteCache('getAllCharacters', {});
-    deleteCache('getCharacterById', req.params.id);
+    deleteCache('getCharacterById', req.params);
     return res.status(200).send("Character updated succesfully");
 });
 

@@ -3,16 +3,16 @@ import cache from "../cache/cache.js"
 export const generateCacheKey = (type, params) => {
     switch(type){
         case "getAllCharacters":
-            const { name, age, weight, movies, characterPage, characterLimit } = params;
+            const { name, age, weight, movies, page: characterPage, limit: characterLimit } = params;
             return `characters:${name}:${age}:${weight}:${movies}:${characterPage}:${characterLimit}`
         case "getCharacterById":
-            const { characterId } = params;
+            const { id: characterId } = params;
             return `character:${characterId}`
         case "getAllMovies":
-            const { title, order, moviePage, movieLimit } = params;
+            const { title, order, page: moviePage, limit: movieLimit } = params;
             return `movies:${title}:${order}:${moviePage}:${movieLimit}`
         case "getMovieById":
-            const { movieId } = params;
+            const { id: movieId } = params;
             return `movie:${movieId}`
         default:
             return null;

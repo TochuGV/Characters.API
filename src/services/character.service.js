@@ -22,7 +22,7 @@ export default class CharacterService {
             .execute('GetCharactersCount');
         const total = totalResult.recordset[0].Total;
         console.log(result);
-        console.log(totalResult)
+        console.log(totalResult);
         return {
             characters: result.recordset,
             total: total,
