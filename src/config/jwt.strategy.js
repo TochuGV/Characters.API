@@ -3,15 +3,13 @@ import userService from "../services/user.service.js";
 import { CONFIG } from "../common/config.constants.js";
 
 const options = {
-    jwtFromRequest: ExtractJwt.fromExtractors([
-        (req) => req.cookies?.jwt
-    ]), // De dónde extraer el token
-    secretOrKey: CONFIG.JWT_SECRET_KEY, // Clave secreta para verificar el token
-    algorithms: ["HS256"], // Algoritmo de firma permitido -.env
-    //issuer: "yourdomain.com", // Quién emitió el token -.env
-    //audience: "yourdomain.com", // Para quién está destinado el token -.env
-    ignoreExpiration: false, // Si debe ignorar la expiración del token
-    //passReqToCallback: false, // Si quieres pasar `req` al callback de `JwtStrategy`
+    jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.cookies?.jwt]),
+    secretOrKey: CONFIG.JWT_SECRET_KEY,
+    algorithms: ["HS256"],
+    //issuer: "yourdomain.com",
+    //audience: "yourdomain.com",
+    ignoreExpiration: false,
+    //passReqToCallback: false
 };
 
 export const jwtStrategy = new Strategy(options, async (jwt_payload, done) => {
