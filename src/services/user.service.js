@@ -1,7 +1,7 @@
 import { getConnection, sql } from "../database/config.js";
 import { getHashedPassword } from "../utils/user.utils.js";
 
-export default new class UserService {
+export default class UserService {
 
     static async getUserByEmail(email){
         console.log("This is a function on the service");
