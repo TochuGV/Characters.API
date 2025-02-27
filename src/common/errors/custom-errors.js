@@ -14,6 +14,13 @@ export class UnauthorizedError extends AppError{
     };
 };
 
+export class ForbiddenError extends AppError{
+    constructor(details = null, message = "Forbidden"){
+        super(message, 403);
+        if(details) this.details = details;
+    };
+};
+
 export class NotFoundError extends AppError{
     constructor(details = null, message = "Not Found"){
         super(message, 404);

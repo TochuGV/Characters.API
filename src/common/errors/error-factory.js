@@ -1,6 +1,7 @@
 import {
     BadRequestError,
     UnauthorizedError,
+    ForbiddenError,
     NotFoundError,
     ConflictError,
     ValidationError,
@@ -16,6 +17,8 @@ export class ErrorFactory {
                 return new BadRequestError(details, message);
             case "UNAUTHORIZED":
                 return new UnauthorizedError(details, message);
+            case "FORBIDDEN":
+                return new ForbiddenError(details, message)
             case "NOT_FOUND":
                 return new NotFoundError(details, message);
             case "CONFLICT":
