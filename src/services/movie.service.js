@@ -1,8 +1,8 @@
 import { getConnection, sql } from "../database/config.js"
 
-export default new class MovieService {
+export default class MovieService {
 
-    getAllMovies = async (title, order, page = 1, limit = 10) => {
+    static async getAllMovies(title, order, page = 1, limit = 10){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const offset = (page - 1) * limit;
@@ -26,7 +26,7 @@ export default new class MovieService {
         };
     };
 
-    getMovieById = async (id) => {
+    static async getMovieById(id){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -36,7 +36,7 @@ export default new class MovieService {
         return result.recordset.length > 0 ? result.recordset : null;
     };
 
-    createMovie = async (movie) => {
+    static async createMovie(movie){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -49,7 +49,7 @@ export default new class MovieService {
         return result.rowsAffected[0] > 0;
     };
 
-    updateMovieById = async (id, movie) => {
+    static async updateMovieById(id, movie){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -63,7 +63,7 @@ export default new class MovieService {
         return result.rowsAffected[0] > 0;
     };
 
-    deleteMovieById = async (id) => {
+    static async deleteMovieById(id){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()

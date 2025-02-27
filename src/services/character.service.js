@@ -1,8 +1,8 @@
 import { getConnection, sql } from "../database/config.js"
 
-export default new class CharacterService {
+export default class CharacterService {
 
-    getAllCharacters = async (name, age, weight, movies, page = 1, limit = 10) => {
+    static async getAllCharacters(name, age, weight, movies, page = 1, limit = 10){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const offset = (page - 1) * limit;
@@ -31,7 +31,7 @@ export default new class CharacterService {
         };
     };
 
-    getCharacterById = async (id) => {
+    static async getCharacterById(id){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -41,7 +41,7 @@ export default new class CharacterService {
         return result.recordset.length > 0 ? result.recordset : null;
     };
 
-    createCharacter = async (character) => {
+    static async createCharacter(character){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -55,7 +55,7 @@ export default new class CharacterService {
         return result.rowsAffected[0] > 0;
     };
 
-    updateCharacterById = async (id, character) => {
+    static async updateCharacterById(id, character){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
@@ -70,7 +70,7 @@ export default new class CharacterService {
         return result.rowsAffected[0] > 0;
     };
 
-    deleteCharacterById = async (id) => {
+    static async deleteCharacterById(id){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
