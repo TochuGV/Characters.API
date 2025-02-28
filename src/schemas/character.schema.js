@@ -53,7 +53,7 @@ export const characterQuerySchema = z.object({
     }).positive({
         message: "Must be positive"
     }).optional()),
-    movies: z.string().uuid({ message: "Invalid UUID format" }).optional(),
+    movie: z.string().uuid({ message: "Invalid UUID format" }).optional(),
     page: z.preprocess(parseNumericQueryParam, z.number().int().min(1).optional().default(1)),
     limit: z.preprocess(parseNumericQueryParam, z.number().int().min(1).max(100).optional().default(10))
 });

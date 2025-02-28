@@ -2,7 +2,7 @@ import { getConnection, sql } from "../database/config.js"
 
 export default class CharacterService {
 
-    static async getAllCharacters(name, age, weight, movies, page = 1, limit = 10){
+    static async getAllCharacters(name, age, weight, movie, page = 1, limit = 10){
         console.log("This is a function on the service");
         const pool = await getConnection();
         const offset = (page - 1) * limit;
@@ -10,7 +10,7 @@ export default class CharacterService {
             .input('pName', sql.VarChar, name)
             .input('pAge', sql.Int, age)
             .input('pWeight', sql.Float, weight)
-            .input('pMovieID', sql.UniqueIdentifier, movies)
+            .input('pMovieID', sql.UniqueIdentifier, movie)
             .input('pOffset', sql.Int, offset)
             .input('pLimit', sql.Int, limit)
             .execute('GetCharacters');
@@ -18,7 +18,7 @@ export default class CharacterService {
             .input('pName', sql.VarChar, name)
             .input('pAge', sql.Int, age)
             .input('pWeight', sql.Float, weight)
-            .input('pMovieID', sql.UniqueIdentifier, movies)
+            .input('pMovieID', sql.UniqueIdentifier, movie)
             .execute('GetCharactersCount');
         const total = totalResult.recordset[0].Total;
         console.log(result);

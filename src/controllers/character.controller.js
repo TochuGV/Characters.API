@@ -9,10 +9,10 @@ import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 export const getAllCharacters = tryCatch(async (req, res) => {
     console.log("This is a get operation");
     validateRequest(characterQuerySchema, req.query);
-    const {name, age, weight, movies, page, limit} = req.query;
+    const {name, age, weight, movie, page, limit} = req.query;
     const cachedCharacters = checkCache("getAllCharacters", req.query);
     if(cachedCharacters) return res.status(200).json(cachedCharacters);
-    const characters = await characterService.getAllCharacters(name, age, weight, movies, page, limit);
+    const characters = await characterService.getAllCharacters(name, age, weight, movie, page, limit);
     if(!characters || characters.characters.length === 0) return res.status(200).send("Characters not found");
     setCache("getAllCharacters", req.query, characters);
     return res.status(200).json(characters);
