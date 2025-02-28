@@ -1,5 +1,5 @@
 import { userSchema } from "../schemas/user.schema.js";
-import { generateToken } from "../services/auth.service.js";
+import { generateToken } from "../utils/token.utils.js";
 import userService from "../services/user.service.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
