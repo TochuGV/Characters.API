@@ -10,8 +10,11 @@ import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger/index.js";
 
 const app = express();
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(helmet());
 app.use(cors());
 app.use(compressionMiddleware);
