@@ -1,0 +1,83 @@
+{
+    "Character": {
+        "type": "object",
+        "properties": {
+            "ID": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "Image": {
+                "type": "string",
+                "maximum": 255
+            },
+            "Name": {
+                "type": "string",
+                "maximum": 100
+            },
+            "Age": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "Weight": {
+                "type": "number",
+                "format": "float",
+                "exclusiveMinium": 0
+            },
+            "Story": {
+                "type": "string"
+            }
+        },
+        "required": ["ID", "Image", "Name"]
+    },
+    "Movie": {
+        "type": "object",
+        "properties": {
+            "ID": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "Image": {
+                "type": "string",
+                "maximum": 255
+            },
+            "Title": {
+                "type": "string",
+                "maximum": 100
+            },
+            "CreationDate": {
+                "type": "string",
+                "format": "date",
+                "example": "2022-12-18",
+                "description": "La fecha de estreno debe ser posterior a 1888, año en que se considera que se creó la primera película"
+            },
+            "Rating": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+            }
+        },
+        "required": ["ID", "Image", "Title", "CreationDate"]
+    },
+    "User": {
+        "type": "object",
+        "properties": {
+            "ID": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "Email": {
+                "type": "string",
+                "format": "email",
+                "maximum": 100,
+                "example": "user@example.com",
+                "description": "Debe ser un correo válido."
+            },
+            "Password": {
+                "type": "string",
+                "minimum": 6,
+                "maximum": 100
+            }
+        },
+        "required": ["ID", "Email", "Password"]
+    }
+}
