@@ -13,8 +13,8 @@ export const registerUser = tryCatch(async (req, res) => {
     const {email, password} = req.body
     const userExists = await userService.getUserByEmail(email);
     if(userExists) throw ErrorFactory.createError("CONFLICT", "User already exists");
-    const result = await userService.createUser(email, password);
-    if(!result) throw ErrorFactory.createError("INTERNAL_SERVER", "User creation failed due to a database issue");
+    const isUserCreated = await userService.createUser(email, password);
+    if(!isUserCreated) throw ErrorFactory.createError("DATABASE", "User creation failed due to a database issue");
     return res.status(201).send("User created successfully");
 });
 
