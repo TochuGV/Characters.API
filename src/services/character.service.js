@@ -52,7 +52,7 @@ export default class CharacterService {
             .input('pStory', sql.VarChar, character.Story)
             .execute('CreateCharacter');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 
     static async updateCharacterById(id, character){
@@ -67,7 +67,7 @@ export default class CharacterService {
             .input('pStory', sql.VarChar, character.Story)
             .execute('UpdateCharacterById');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 
     static async deleteCharacterById(id){
@@ -77,6 +77,6 @@ export default class CharacterService {
             .input('pID', sql.UniqueIdentifier, id)
             .execute('DeleteCharacterById');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 };

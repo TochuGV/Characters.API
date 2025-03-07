@@ -40,13 +40,13 @@ export default class MovieService {
         console.log("This is a function on the service");
         const pool = await getConnection();
         const result = await pool.request()
-            .input('pImage', sql.VarChar, movie?.Image)
-            .input('pTitle', sql.VarChar, movie?.Title)
-            .input('pCreationDate', sql.Date, movie?.CreationDate)
-            .input('pRating', sql.Int, movie?.Rating)
+            .input('pImage', sql.VarChar, movie.Image)
+            .input('pTitle', sql.VarChar, movie.Title)
+            .input('pCreationDate', sql.Date, movie.CreationDate)
+            .input('pRating', sql.Int, movie.Rating)
             .execute('CreateMovie');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 
     static async updateMovieById(id, movie){
@@ -54,13 +54,13 @@ export default class MovieService {
         const pool = await getConnection();
         const result = await pool.request()
             .input('pID', sql.UniqueIdentifier, id)
-            .input('pImage', sql.VarChar, movie?.Image)
-            .input('pTitle', sql.VarChar, movie?.Title)
-            .input('pCreationDate', sql.Date, movie?.CreationDate)
-            .input('pRating', sql.Int, movie?.Rating)
+            .input('pImage', sql.VarChar, movie.Image)
+            .input('pTitle', sql.VarChar, movie.Title)
+            .input('pCreationDate', sql.Date, movie.CreationDate)
+            .input('pRating', sql.Int, movie.Rating)
             .execute('UpdateMovieById');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 
     static async deleteMovieById(id){
@@ -70,6 +70,6 @@ export default class MovieService {
             .input('pID', sql.UniqueIdentifier, id)
             .execute('DeleteMovieById');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 };

@@ -20,8 +20,8 @@ export default class UserService {
         const result = await pool.request()
             .input('pEmail', sql.VarChar, email)
             .input('pPassword', sql.VarChar, hashedPassword)
-            .query('CreateUser');
+            .execute('CreateUser');
         console.log(result);
-        return result.rowsAffected[0] > 0;
+        return result.recordset?.[0]?.RowsAffected > 0;
     };
 };
