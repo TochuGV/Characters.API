@@ -1,0 +1,68 @@
+{
+    "query": {
+        "name": {
+            "in": "query",
+            "name": "name",
+            "schema": { "type": "string", "maximum": 100 },
+            "description": "Filter characters by name"
+        },
+        "age": {
+            "in": "query",
+            "name": "age",
+            "schema": { "type": "integer", "minimum": 0 },
+            "description": "Filter characters by age"
+        },
+        "weight": {
+            "in": "query",
+            "name": "weight",
+            "schema": { "type": "number", "format": "float", "exclusiveMinimum": 0 },
+            "description": "Filter characters by weight"
+        },
+        "movie": {
+            "in": "query",
+            "name": "movie",
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Filter characters by movie ID" 
+        },
+        "title":{
+            "in": "query",
+            "name": "title",
+            "schema": { "type": "string", "maximum": 100 },
+            "description": "Filter movies by title" 
+        },
+        "order":{
+            "in": "query",
+            "name": "order",
+            "schema": { "type": "string", "enum": ["ASC", "DESC"], "default": "ASC" },
+            "description": "Sort movies in ascending (ASC) or descending (DESC) order" 
+        },
+        "page": {
+            "in": "query",
+            "name": "page",
+            "schema": { "type": "integer", "minimum": 1, "default": 1 },
+            "description": "Page number for pagination"
+        },
+        "limit": {
+            "in": "query",
+            "name": "limit",
+            "schema": { "type": "integer", "minimum": 1, "default": 10 },
+            "description": "Limit the number of characters per page"
+        }
+    },
+    "path": {
+        "characterId": {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Character ID"
+        },
+        "movieId": {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Character ID"
+        }
+    }
+}
