@@ -11,9 +11,21 @@
 				{ "$ref": "#/components/parameters/pagination/page"},
 				{ "$ref": "#/components/parameters/pagination/limit"}
             ],
+			"security": [
+				{
+					"BearerAuth": []
+				}
+			],
             "responses": {
                 "200": {
-                    "description": "List of characters"
+                    "description": "List of characters",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/responses/charactersListResponse"
+							}
+						}
+					}
                 },
                 "401": {
                     "description": "Unauthorized Error"
@@ -22,6 +34,87 @@
                     "description": "Validation Error"
                 }
             }
-        }
-    }
+        },
+		"post": {
+			"summary": "Create a new character",
+			"tags": ["Characters"],
+			"requestBody": {
+				"required": true,
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/Character"
+						}
+					}
+				}
+			},
+			"responses": {
+				"201": {
+					"description": "Character created successfully"
+				},
+				"401": {
+                    "description": "Unauthorized Error"
+                },
+                "422": {
+                    "description": "Validation Error"
+                }
+			}
+		}
+    },
+	"/characters/{id}": {
+		"get": {
+			"summary": "Get a character by ID",
+			"tags": ["Characters"],
+			"parameters": [
+				{ "$ref": "#/components/parameters/characterPath/characterId" }
+			],
+			"security": [
+				{
+					"BearerAuth": []
+				}
+			],
+			"responses": {
+				"200": {
+                    "description": "Character found",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/responses/characterDetailsResponse"
+							}
+						}
+					}
+                },
+                "401": {
+                    "description": "Unauthorized Error"
+                },
+				"404": {
+					"description": "NotFound Error"
+				},
+                "422": {
+                    "description": "Validation Error"
+                }
+			}
+		},
+		"put": {
+			"summary": "Update a character by ID",
+			"tags": ["Characters"],
+			"parameters": [
+				{ "$ref": "#/components/parameters/characterPath/characterId" }
+			],
+			"requestBody": {
+				"required": true,
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/requests/characterUpdateRequest"
+						}
+					}
+				}
+			}
+		},
+		"delete": {
+			"summary": "Delete a character by ID",
+			"tags": ["Characters"]
+		}
+	}
 }
