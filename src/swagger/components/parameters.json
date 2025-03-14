@@ -53,14 +53,16 @@
             "description": "Limit the number of characters per page"
         }
 	},
-    "path": {
+    "characterPath": {
         "characterId": {
             "in": "path",
             "name": "id",
             "required": true,
             "schema": { "type": "string", "format": "uuid" },
             "description": "Character ID"
-        },
+        }
+	},
+	"moviePath": {
         "movieId": {
             "in": "path",
             "name": "id",
