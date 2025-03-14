@@ -11,6 +11,12 @@
             "description": "Local server"
         }
     ],
-    "paths": {},
-    "components": {}
+	"paths": {},
+	"components": {
+		"schemas": {},
+		"responses": {},
+		"requests": {},
+		"parameters": {},
+		"securitySchemes": {}
+	}
 }

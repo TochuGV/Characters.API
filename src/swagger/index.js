@@ -1,13 +1,23 @@
 import fs from "fs";
 
-const swaggerPaths = JSON.parse(fs.readFileSync("./src/swagger/paths.json", "utf-8"));
-const swaggerModels = JSON.parse(fs.readFileSync("./src/swagger/models.json", "utf-8"))
-//const swaggerSchemas = JSON.parse(fs.readFileSync("./src/swagger/schemas.json", "utf-8"));
-const swaggerDocument = JSON.parse(fs.readFileSync("./src/swagger/swagger.json", "utf-8"));
+const swagger = JSON.parse(fs.readFileSync("./src/swagger/swagger.json", "utf-8"));
+const models = JSON.parse(fs.readFileSync("./src/swagger/components/models.json", "utf-8"));
+const parameters = JSON.parse(fs.readFileSync("./src/swagger/components/parameters.json", "utf-8"));
+const characterPath = JSON.parse(fs.readFileSync("./src/swagger/paths/characters.json", "utf-8"));
 
-swaggerDocument.paths = swaggerPaths;
-swaggerDocument.components = { 
-    schemas: { ...swaggerModels/*, ...swaggerSchemas*/ } 
+swagger.paths = {
+	...swagger.paths,
+	...characterPath
+}
+
+swagger.components = {
+	...swagger.components,
+	schemas: {
+		...models
+	},
+	parameters: {
+		...parameters
+	}
 };
 
-export default swaggerDocument;
+export default swagger;

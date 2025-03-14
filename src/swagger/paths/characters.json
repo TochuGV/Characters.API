@@ -1,0 +1,27 @@
+{
+    "/characters": {
+        "get": {
+            "summary": "Get all characters",
+            "tags": ["Characters"],
+            "parameters": [
+				{ "$ref": "#/components/parameters/characterQuery/name"},
+				{ "$ref": "#/components/parameters/characterQuery/age"},
+				{ "$ref": "#/components/parameters/characterQuery/weight"},
+				{ "$ref": "#/components/parameters/characterQuery/movie"},
+				{ "$ref": "#/components/parameters/pagination/page"},
+				{ "$ref": "#/components/parameters/pagination/limit"}
+            ],
+            "responses": {
+                "200": {
+                    "description": "List of characters"
+                },
+                "401": {
+                    "description": "Unauthorized Error"
+                },
+                "422": {
+                    "description": "Validation Error"
+                }
+            }
+        }
+    }
+}

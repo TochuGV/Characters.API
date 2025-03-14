@@ -1,5 +1,5 @@
 {
-    "query": {
+    "characterQuery": {
         "name": {
             "in": "query",
             "name": "name",
@@ -23,8 +23,10 @@
             "name": "movie",
             "schema": { "type": "string", "format": "uuid" },
             "description": "Filter characters by movie ID" 
-        },
-        "title":{
+        }
+    },
+	"movieQuery":{
+		"title":{
             "in": "query",
             "name": "title",
             "schema": { "type": "string", "maximum": 100 },
@@ -35,8 +37,10 @@
             "name": "order",
             "schema": { "type": "string", "enum": ["ASC", "DESC"], "default": "ASC" },
             "description": "Sort movies in ascending (ASC) or descending (DESC) order" 
-        },
-        "page": {
+        }
+	},
+	"pagination": {
+		"page": {
             "in": "query",
             "name": "page",
             "schema": { "type": "integer", "minimum": 1, "default": 1 },
@@ -48,7 +52,7 @@
             "schema": { "type": "integer", "minimum": 1, "default": 10 },
             "description": "Limit the number of characters per page"
         }
-    },
+	},
     "path": {
         "characterId": {
             "in": "path",
