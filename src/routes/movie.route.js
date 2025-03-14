@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { 
-    getAllMovies, 
-    getMovieById, 
-    createMovie, 
-    updateMovieById, 
-    deleteMovieById 
+import {
+    getAllMovies,
+    getMovieById,
+    createMovie,
+    updateMovieById,
+    deleteMovieById
 } from "../controllers/movie.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js"
 
