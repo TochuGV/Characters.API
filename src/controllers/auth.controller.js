@@ -1,5 +1,5 @@
 import { userSchema } from "../schemas/user.schema.js";
-import { generateToken } from "../utils/token.utils.js";
+import { generateToken, isValidToken } from "../utils/token.utils.js";
 import userService from "../services/user.service.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
@@ -10,7 +10,7 @@ import { validateRequest } from "../utils/validate-request.util.js";
 export const registerUser = tryCatch(async (req, res) => {
     console.log("This is a post operation");
     validateRequest(userSchema, req.body);
-    const {email, password} = req.body
+    const {Email: email, Password: password} = req.body;
     const userExists = await userService.getUserByEmail(email);
     if(userExists) throw ErrorFactory.createError("CONFLICT", "User already exists");
     const isUserCreated = await userService.createUser(email, password);
@@ -21,7 +21,7 @@ export const registerUser = tryCatch(async (req, res) => {
 export const loginUser = tryCatch(async (req, res) => {
     console.log("This is a post operation");
     validateRequest(userSchema, req.body);
-    const {email, password} = req.body;
+    const {Email: email, Password: password} = req.body;
     const user = await userService.getUserByEmail(email);
     if(!user) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.Password);
@@ -32,7 +32,10 @@ export const loginUser = tryCatch(async (req, res) => {
 });
 
 export const logoutUser = (req, res) => {
-    console.log("This is a post operation");
-    res.clearCookie("jwt", cookieOptions);
-    return res.status(200).send("Logout successful");
+	console.log("This is a post operation");
+	const token = req.cookies?.jwt;
+	if(!token) throw ErrorFactory.createError("UNAUTHORIZED", "User is not logged in");
+	if(!isValidToken(token)) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid session");
+	res.clearCookie("jwt", cookieOptions);
+	return res.status(200).send("Logout successful");
 };
