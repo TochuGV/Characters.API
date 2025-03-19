@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {
-    getAllCharacters,
-    getCharacterById,
-    createCharacter,
-    updateCharacterById,
-    deleteCharacterById
+	getAllCharacters,
+	getCharacterById,
+	createCharacter,
+	updateCharacterById,
+	deleteCharacterById
 } from "../controllers/character.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js"
 

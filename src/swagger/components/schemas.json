@@ -1,107 +1,107 @@
 {
-    "Character": {
-        "type": "object",
-        "properties": {
-            "ID": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Unique identifier for the character in UUID format.",
-                "example": "0F5EFD93-F3EC-EF11-90CE-D45D64461B62"
-            },
-            "Image": {
-                "type": "string",
-                "maximum": 255,
-                "description": "URL of the character's image.",
-                "example": "https://example.com/woody.jpg"
-            },
-            "Name": {
-                "type": "string",
-                "maximum": 100,
-                "description": "Character's name.",
-                "example": "Woody"
-            },
-            "Age": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "Character's age in years.",
-                "example": "40"
-            },
-            "Weight": {
-                "type": "number",
-                "format": "float",
-                "exclusiveMinimum": 0,
-                "description": "Character's weight in kilograms",
-                "example": "1.2"
-            },
-            "Story": {
-                "type": "string",
-                "description": "Brief backstory or description of the character",
-                "example": "Un vaquero y líder de los juguetes en la película Toy Story."
-            }
-        },
-        "required": ["ID", "Image", "Name"]
-    },
-    "Movie": {
-        "type": "object",
-        "properties": {
-            "ID": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Unique identifier for the character in UUID format.",
-                "example": "175EFD93-F3EC-EF11-90CE-D45D64461B62"
-            },
-            "Image": {
-                "type": "string",
-                "maximum": 255,
-                "description": "URL of the movie's image.",
-                "example": "https://example.com/toystory.jpg"
-            },
-            "Title": {
-                "type": "string",
-                "maximum": 100,
-                "description": "Movie title.",
-                "example": "Toy Story"
-            },
-            "CreationDate": {
-                "type": "string",
-                "format": "date",
-                "description": "Movie release date. Must be after 1888, the year when the first movie was created.",
-                "example": "1995-11-22"
-            },
-            "Rating": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 5,
-                "description": "Movie rating on a scale from 1 to 5.",
-                "example": "5"
-            }
-        },
-        "required": ["ID", "Image", "Title", "CreationDate"]
-    },
-    "User": {
-        "type": "object",
-        "properties": {
-            "ID": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Unique identifier for the user in UUID format.",
-                "example": "6BEDDBE1-F127-4DCF-BC3C-60076B656F15"
-            },
-            "Email": {
-                "type": "string",
-                "format": "email",
-                "maximum": 100,
-                "description": "User's email address. Must be a valid email.",
-                "example": "asdfg@gmail.com"
-            },
-            "Password": {
-                "type": "string",
-                "minimum": 6,
-                "maximum": 100,
-                "description": "User's password. Must be at least 6 characters long.",
-                "example": "123456"
-            }
-        },
-        "required": ["ID", "Email", "Password"]
-    }
+	"Character": {
+		"type": "object",
+		"properties": {
+			"ID": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique identifier for the character in UUID format.",
+				"example": "0F5EFD93-F3EC-EF11-90CE-D45D64461B62"
+			},
+			"Image": {
+				"type": "string",
+				"maximum": 255,
+				"description": "URL of the character's image.",
+				"example": "https://example.com/woody.jpg"
+			},
+			"Name": {
+				"type": "string",
+				"maximum": 100,
+				"description": "Character's name.",
+				"example": "Woody"
+			},
+			"Age": {
+				"type": "integer",
+				"minimum": 0,
+				"description": "Character's age in years.",
+				"example": "40"
+			},
+			"Weight": {
+				"type": "number",
+				"format": "float",
+				"exclusiveMinimum": 0,
+				"description": "Character's weight in kilograms",
+				"example": "1.2"
+			},
+			"Story": {
+				"type": "string",
+				"description": "Brief backstory or description of the character",
+				"example": "Un vaquero y líder de los juguetes en la película Toy Story."
+			}
+		},
+		"required": ["ID", "Image", "Name"]
+	},
+	"Movie": {
+		"type": "object",
+		"properties": {
+			"ID": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique identifier for the character in UUID format.",
+				"example": "175EFD93-F3EC-EF11-90CE-D45D64461B62"
+			},
+			"Image": {
+				"type": "string",
+				"maximum": 255,
+				"description": "URL of the movie's image.",
+				"example": "https://example.com/toystory.jpg"
+			},
+			"Title": {
+				"type": "string",
+				"maximum": 100,
+				"description": "Movie title.",
+				"example": "Toy Story"
+			},
+			"CreationDate": {
+				"type": "string",
+				"format": "date",
+				"description": "Movie release date. Must be after 1888, the year when the first movie was created.",
+				"example": "1995-11-22"
+			},
+			"Rating": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 5,
+				"description": "Movie rating on a scale from 1 to 5.",
+				"example": "5"
+			}
+		},
+		"required": ["ID", "Image", "Title", "CreationDate"]
+	},
+	"User": {
+		"type": "object",
+		"properties": {
+			"ID": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique identifier for the user in UUID format.",
+				"example": "6BEDDBE1-F127-4DCF-BC3C-60076B656F15"
+			},
+			"Email": {
+				"type": "string",
+				"format": "email",
+				"maximum": 100,
+				"description": "User's email address. Must be a valid email.",
+				"example": "asdfg@gmail.com"
+			},
+			"Password": {
+				"type": "string",
+				"minimum": 6,
+				"maximum": 100,
+				"description": "User's password. Must be at least 6 characters long.",
+				"example": "123456"
+			}
+		},
+		"required": ["ID", "Email", "Password"]
+	}
 }

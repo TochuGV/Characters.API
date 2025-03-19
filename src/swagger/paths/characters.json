@@ -1,19 +1,19 @@
 {
-    "/characters": {
-        "get": {
-            "summary": "Get all characters",
-            "tags": ["Characters"],
-            "parameters": [
+	"/characters": {
+		"get": {
+			"summary": "Get all characters",
+			"tags": ["Characters"],
+			"parameters": [
 				{ "$ref": "#/components/parameters/characterQuery/name"},
 				{ "$ref": "#/components/parameters/characterQuery/age"},
 				{ "$ref": "#/components/parameters/characterQuery/weight"},
 				{ "$ref": "#/components/parameters/characterQuery/movie"},
 				{ "$ref": "#/components/parameters/pagination/page"},
 				{ "$ref": "#/components/parameters/pagination/limit"}
-            ],
-            "responses": {
-                "200": {
-                    "description": "List of characters",
+			],
+			"responses": {
+				"200": {
+					"description": "List of characters",
 					"content": {
 						"application/json": {
 							"schema": {
@@ -21,23 +21,23 @@
 							}
 						}
 					}
-                },
-                "401": {
-                    "description": "Unauthorized Error"
-                },
-                "422": {
-                    "description": "Validation Error"
-                },
+				},
+				"401": {
+					"description": "Unauthorized Error"
+				},
+				"422": {
+					"description": "Validation Error"
+				},
 				"503": {
 					"description": "Database Error"
 				}
-            },
+			},
 			"security": [
 				{
 					"BearerAuth": []
 				}
 			]
-        },
+		},
 		"post": {
 			"summary": "Create a new character",
 			"tags": ["Characters"],
@@ -56,11 +56,11 @@
 					"description": "Character created successfully"
 				},
 				"401": {
-                    "description": "Unauthorized Error"
-                },
-                "422": {
-                    "description": "Validation Error"
-                },
+					"description": "Unauthorized Error"
+				},
+				"422": {
+					"description": "Validation Error"
+				},
 				"500": {
 					"description": "Internal Server Error"
 				},
@@ -74,7 +74,7 @@
 				}
 			]
 		}
-    },
+	},
 	"/characters/:id": {
 		"get": {
 			"summary": "Get a character by ID",
@@ -84,7 +84,7 @@
 			],
 			"responses": {
 				"200": {
-                    "description": "Character found",
+					"description": "Character found",
 					"content": {
 						"application/json": {
 							"schema": {
@@ -92,16 +92,16 @@
 							}
 						}
 					}
-                },
-                "401": {
-                    "description": "Unauthorized Error"
-                },
+				},
+				"401": {
+					"description": "Unauthorized Error"
+				},
 				"404": {
 					"description": "NotFound Error"
 				},
-                "422": {
-                    "description": "Validation Error"
-                },
+				"422": {
+					"description": "Validation Error"
+				},
 				"503": {
 					"description": "Database Error"
 				}
@@ -133,14 +133,14 @@
 					"description": "Character updated successfully"
 				},
 				"401": {
-                    "description": "Unauthorized Error"
-                },
+					"description": "Unauthorized Error"
+				},
 				"404": {
 					"description": "NotFound Error"
 				},
-                "422": {
-                    "description": "Validation Error"
-                },
+				"422": {
+					"description": "Validation Error"
+				},
 				"500": {
 					"description": "Internal Server Error"
 				},
@@ -162,17 +162,17 @@
 			],
 			"responses": {
 				"204": {
-                    "description": "Character deleted successfully"
-                },
-                "401": {
-                    "description": "Unauthorized Error"
-                },
+					"description": "Character deleted successfully"
+				},
+				"401": {
+					"description": "Unauthorized Error"
+				},
 				"404": {
 					"description": "NotFound Error"
 				},
-                "422": {
-                    "description": "Validation Error"
-                },
+				"422": {
+					"description": "Validation Error"
+				},
 				"500": {
 					"description": "Internal Server Error"
 				},
@@ -181,9 +181,9 @@
 				}
 			},
 			"security": [
-				{
-					"BearerAuth": []
-				}
+			{
+				"BearerAuth": []
+			}
 			]
 		}
 	}

@@ -8,27 +8,27 @@ import { ErrorFactory } from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
 export const registerUser = tryCatch(async (req, res) => {
-    console.log("This is a post operation");
-    validateRequest(userSchema, req.body);
-    const {Email: email, Password: password} = req.body;
-    const userExists = await userService.getUserByEmail(email);
-    if(userExists) throw ErrorFactory.createError("CONFLICT", "User already exists");
-    const isUserCreated = await userService.createUser(email, password);
-    if(!isUserCreated) throw ErrorFactory.createError("DATABASE", "User creation failed due to a database issue");
-    return res.status(201).send("User created successfully");
+	console.log("This is a post operation");
+	validateRequest(userSchema, req.body);
+	const {Email: email, Password: password} = req.body;
+	const userExists = await userService.getUserByEmail(email);
+	if(userExists) throw ErrorFactory.createError("CONFLICT", "User already exists");
+	const isUserCreated = await userService.createUser(email, password);
+	if(!isUserCreated) throw ErrorFactory.createError("DATABASE", "User creation failed due to a database issue");
+	return res.status(201).send("User created successfully");
 });
 
 export const loginUser = tryCatch(async (req, res) => {
-    console.log("This is a post operation");
-    validateRequest(userSchema, req.body);
-    const {Email: email, Password: password} = req.body;
-    const user = await userService.getUserByEmail(email);
-    if(!user) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
-    const isValidPassword = await comparePasswords(password, user.Password);
-    if(!isValidPassword) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
-    const token = generateToken(user);
-    res.cookie("jwt", token, cookieOptions);
-    return res.status(200).send("Login successful");
+	console.log("This is a post operation");
+	validateRequest(userSchema, req.body);
+	const {Email: email, Password: password} = req.body;
+	const user = await userService.getUserByEmail(email);
+	if(!user) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+	const isValidPassword = await comparePasswords(password, user.Password);
+	if(!isValidPassword) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+	const token = generateToken(user);
+	res.cookie("jwt", token, cookieOptions);
+	return res.status(200).send("Login successful");
 });
 
 export const logoutUser = (req, res) => {
