@@ -2,7 +2,7 @@ import { movieSchema, movieQuerySchema } from "../schemas/movie.schema.js";
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import movieService from "../services/movie.service.js";
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorFactory } from "../common/errors/error-factory.js";
+import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 
@@ -25,7 +25,7 @@ export const getMovieById = tryCatch(async (req, res) => {
 	const cachedMovie = checkCache("getMovieById", req.params);
 	if(cachedMovie) return res.status(200).json(cachedMovie);
 	const movie = await movieService.getMovieById(req.params.id);
-	if(!movie) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
+	if(!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
 	setCache("getMovieById", req.params, movie);
 	return res.status(200).json(movie);
 });
@@ -34,7 +34,7 @@ export const createMovie = tryCatch(async (req, res) => {
 	console.log("This is a get operation");
 	validateRequest(movieSchema, req.body);
 	const movie = await movieService.createMovie(req.body);
-	if(!movie) throw ErrorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
+	if(!movie) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
 	deleteCache('getAllMovies', {});
 	return res.status(201).send("Movie created succesfully");
 });
@@ -45,7 +45,7 @@ export const updateMovieById = tryCatch(async (req, res) => {
 	validateRequest(uuidSchema, req.params);
 	validateRequest(movieSchema, req.body);
 	const movie = await movieService.updateMovieById(req.params.id, req.body);
-	if(!movie) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
+	if(!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
 	deleteCache('getAllMovies', {});
 	deleteCache('getMovieById', req.params);
 	return res.status(200).send("Movie updated succesfully");
@@ -56,7 +56,7 @@ export const deleteMovieById = tryCatch(async (req, res) => {
 	console.log("This is a delete operation");
 	validateRequest(uuidSchema, req.params);
 	const movie = await movieService.deleteMovieById(req.params.id);
-	if(!movie) throw ErrorFactory.createError("NOT_FOUND", "Movie not found");
+	if(!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
 	deleteCache('getAllMovies', {});
 	return res.status(204).send();
 });

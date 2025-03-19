@@ -10,7 +10,7 @@ import {
 	DatabaseError
 } from "./custom-errors.js"
 
-export class ErrorFactory {
+export default class ErrorFactory {
 	static createError(type, details = null, message){
 		switch(type){
 			case "BAD_REQUEST":

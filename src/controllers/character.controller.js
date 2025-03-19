@@ -2,7 +2,7 @@ import { characterSchema, characterQuerySchema } from "../schemas/character.sche
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import characterService from "../services/character.service.js"
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorFactory } from "../common/errors/error-factory.js";
+import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 
@@ -25,7 +25,7 @@ export const getCharacterById = tryCatch(async (req, res) => {
 	const cachedCharacter = checkCache("getCharacterById", req.params);
 	if(cachedCharacter) return res.status(200).json(cachedCharacter);
 	const character = await characterService.getCharacterById(req.params.id);
-	if(!character) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
+	if(!character) throw errorFactory.createError("NOT_FOUND", "Character not found");
 	setCache("getCharacterById", req.params, character);
 	return res.status(200).json(character);
 });
@@ -34,7 +34,7 @@ export const createCharacter = tryCatch(async (req, res) => {
 	console.log("This is a post operation");
 	validateRequest(characterSchema, req.body);
 	const character = await characterService.createCharacter(req.body);
-	if(!character) throw ErrorFactory.createError("INTERNAL_SERVER", "Failed to create character");
+	if(!character) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create character");
 	deleteCache('getAllCharacters', {});
 	return res.status(201).send("Character created succesfully");
 });
@@ -45,7 +45,7 @@ export const updateCharacterById = tryCatch(async (req, res) => {
 	validateRequest(uuidSchema, req.params);
 	validateRequest(characterSchema, req.body);
 	const character = await characterService.updateCharacterById(req.params.id, req.body);
-	if(!character) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
+	if(!character) throw errorFactory.createError("NOT_FOUND", "Character not found");
 	deleteCache('getAllCharacters', {});
 	deleteCache('getCharacterById', req.params);
 	return res.status(200).send("Character updated succesfully");
@@ -56,7 +56,7 @@ export const deleteCharacterById = tryCatch(async (req, res) => {
 	console.log("This is a delete operation");
 	validateRequest(uuidSchema, req.params);
 	const character = await characterService.deleteCharacterById(req.params.id);
-	if(!character) throw ErrorFactory.createError("NOT_FOUND", "Character not found");
+	if(!character) throw errorFactory.createError("NOT_FOUND", "Character not found");
 	deleteCache('getAllCharacters', {});
 	return res.status(204).send();
 });

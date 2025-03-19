@@ -4,7 +4,7 @@ import userService from "../services/user.service.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { cookieOptions } from "../config/cookie.config.js";
-import { ErrorFactory } from "../common/errors/error-factory.js";
+import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 
 export const registerUser = tryCatch(async (req, res) => {
@@ -12,9 +12,9 @@ export const registerUser = tryCatch(async (req, res) => {
 	validateRequest(userSchema, req.body);
 	const {Email: email, Password: password} = req.body;
 	const userExists = await userService.getUserByEmail(email);
-	if(userExists) throw ErrorFactory.createError("CONFLICT", "User already exists");
+	if(userExists) throw errorFactory.createError("CONFLICT", "User already exists");
 	const isUserCreated = await userService.createUser(email, password);
-	if(!isUserCreated) throw ErrorFactory.createError("DATABASE", "User creation failed due to a database issue");
+	if(!isUserCreated) throw errorFactory.createError("DATABASE", "User creation failed due to a database issue");
 	return res.status(201).send("User created successfully");
 });
 
@@ -23,9 +23,9 @@ export const loginUser = tryCatch(async (req, res) => {
 	validateRequest(userSchema, req.body);
 	const {Email: email, Password: password} = req.body;
 	const user = await userService.getUserByEmail(email);
-	if(!user) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+	if(!user) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
 	const isValidPassword = await comparePasswords(password, user.Password);
-	if(!isValidPassword) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+	if(!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
 	const token = generateToken(user);
 	res.cookie("jwt", token, cookieOptions);
 	return res.status(200).send("Login successful");
@@ -34,8 +34,8 @@ export const loginUser = tryCatch(async (req, res) => {
 export const logoutUser = (req, res) => {
 	console.log("This is a post operation");
 	const token = req.cookies?.jwt;
-	if(!token) throw ErrorFactory.createError("UNAUTHORIZED", "User is not logged in");
-	if(!isValidToken(token)) throw ErrorFactory.createError("UNAUTHORIZED", "Invalid session");
+	if(!token) throw errorFactory.createError("UNAUTHORIZED", "User is not logged in");
+	if(!isValidToken(token)) throw errorFactory.createError("UNAUTHORIZED", "Invalid session");
 	res.clearCookie("jwt", cookieOptions);
 	return res.status(200).send("Logout successful");
 };

@@ -1,4 +1,4 @@
-export class AppError extends Error{
+export default class AppError extends Error{
 	constructor(message, statusCode, isOperational = true){
 		super(message);
 		this.statusCode = statusCode;

@@ -1,4 +1,4 @@
-import { ErrorFactory } from "../common/errors/error-factory.js";
+import errorFactory from "../common/errors/error-factory.js";
 
 export const limiterConfig = {
 	windowMs: Number(process.env.RATE_LIMIT_WINDOW) || 15 * 60 * 1000,
@@ -6,6 +6,6 @@ export const limiterConfig = {
 	standardHeaders: true,
 	legacyHeaders: false,
 	handler: (req, res, next) => {
-		next(ErrorFactory.createError("TOO_MANY_REQUESTS", "Rate limit exceeded, please try again later"));
+		next(errorFactory.createError("TOO_MANY_REQUESTS", "Rate limit exceeded, please try again later"));
 	}
 };

@@ -1,4 +1,4 @@
-import { ErrorFactory } from "../common/errors/error-factory.js";
+import errorFactory from "../common/errors/error-factory.js";
 
 export const validateRequest = (schema, data) => {
 	const validation = schema.safeParse(data);
@@ -7,6 +7,6 @@ export const validateRequest = (schema, data) => {
 			field: issue.path.join("."),
 			message: issue.message
 		}));
-		throw ErrorFactory.createError("VALIDATION", formattedErrors);
+		throw errorFactory.createError("VALIDATION", formattedErrors);
 	};
 };
