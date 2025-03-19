@@ -2,7 +2,7 @@ import { getConnection, sql } from "../database/config.js"
 
 export default class CharacterService {
 
-	static async getAllCharacters(name, age, weight, movie, page = 1, limit = 10){
+	static async getAll(name, age, weight, movie, page = 1, limit = 10){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const offset = (page - 1) * limit;
@@ -31,7 +31,7 @@ export default class CharacterService {
 		};
 	};
 
-	static async getCharacterById(id){
+	static async getById(id){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const result = await pool.request()
@@ -41,7 +41,7 @@ export default class CharacterService {
 		return result.recordset.length > 0 ? result.recordset : null;
 	};
 
-	static async createCharacter(character){
+	static async create(character){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const result = await pool.request()
@@ -55,7 +55,7 @@ export default class CharacterService {
 		return result.recordset?.[0]?.RowsAffected > 0;
 	};
 
-	static async updateCharacterById(id, character){
+	static async updateById(id, character){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const result = await pool.request()
@@ -70,7 +70,7 @@ export default class CharacterService {
 		return result.recordset?.[0]?.RowsAffected > 0;
 	};
 
-	static async deleteCharacterById(id){
+	static async deleteById(id){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const result = await pool.request()

@@ -3,7 +3,7 @@ import { getHashedPassword } from "../utils/user.utils.js";
 
 export default class UserService {
 
-	static async getUserByEmail(email){
+	static async getByEmail(email){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const result = await pool.request()
@@ -13,7 +13,7 @@ export default class UserService {
 		return result.recordset[0];
 	};
 
-	static async createUser(email, password){
+	static async create(email, password){
 		console.log("This is a function on the service");
 		const pool = await getConnection();
 		const hashedPassword = await getHashedPassword(password);

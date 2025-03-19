@@ -14,7 +14,7 @@ const options = {
 
 export const jwtStrategy = new Strategy(options, async (jwt_payload, done) => {
 	try {
-		const user = await userService.getUserByEmail(jwt_payload.email);
+		const user = await userService.getByEmail(jwt_payload.email);
 		if(!user) return done(null, false);
 		return done(null, user);
 	} catch(error){
