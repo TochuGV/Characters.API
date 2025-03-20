@@ -29,7 +29,20 @@ export const setCache = (type, params, data) => {
 	cache.set(cacheKey, data);
 };
 
+const clearCacheByType = (type) => {
+	const prefix = type === "characters" ? "characters" : type === "movies" ? "movies" : null;
+	if(prefix) {
+		cache.keys().forEach(key => {
+			if(key.startsWith(prefix)) cache.del(key);
+		});
+	};
+};
+
 export const deleteCache = (type, params) => {
-	const cacheKey = generateCacheKey(type, params);
-	cache.del(cacheKey);
+	if(type === "getAllCharacters" || type === "getAllMovies"){
+		clearCacheByType(type === "getAllCharacters" ? "characters" : "movies");
+	} else {
+		const cacheKey = generateCacheKey(type, params);
+		cache.del(cacheKey);
+	};
 };
