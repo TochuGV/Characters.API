@@ -84,6 +84,7 @@ npm start
     ├──📂components
     ├──📂paths
 ├──📂utils
+📂postman
 ```
 
 ## 📌 Endpoints
