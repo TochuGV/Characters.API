@@ -17,37 +17,54 @@ npm install
 - Copy and paste the following template, then replace the values with your own:
 
 ```
-# Database configuration
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_SERVER=your_database_server
-DB_NAME=your_database_name
+###############################
+#  🌐 DATABASE CONFIGURATION  #
+###############################
+DB_USER=your_database_user            # 👤 Database username          
+DB_PASSWORD=your_database_password    # 🔑 Database password
+DB_SERVER=your_database_server        # 🖥️ Database server address
+DB_NAME=your_database_name            # 📂 Database name
 
-# Database tables
-DB_CHARACTER_TABLE=your_character_table_name
-DB_MOVIE_TABLE=your_movie_table_name
-DB_CHARACTERSXMOVIES_TABLE=your_charactersxmovies_table_name
-DB_USER_TABLE=your_user_table_name
+########################
+#  📌 DATABASE TABLES  #
+########################
+DB_CHARACTER_TABLE=your_character_table_name                    # 🎭 Table for characters
+DB_MOVIE_TABLE=your_movie_table_name                            # 🎬 Table for movies
+DB_CHARACTERSXMOVIES_TABLE=your_charactersxmovies_table_name    # 🔗 Relationship table (characters & movies)
+DB_USER_TABLE=your_user_table_name                              # 👥 Table for users
 
-# Server configuration
-PORT=your_port
+##############################
+#  🚀 SERVER CONFIGURATION   #
+##############################
+PORT=your_port    # 🔌 Server port
 
-# Security
-JWT_SECRET_KEY=your_jwt_secret_key # Use a secure key and store it securely
+####################
+#  🔐 SECURITY    #
+####################
+JWT_SECRET_KEY=your_jwt_secret_key    # 🛡️ Use a secure key and store it safely!
 
-# Rate limit configuration
-RATE_LIMIT_WINDOW=your_rate_limit_window # Time window in minutes
-RATE_LIMIT_MAX=your_rate_limit_max # Maximum requests per window
+##################################
+#  ⏳ RATE LIMIT CONFIGURATION   #
+##################################
+RATE_LIMIT_WINDOW=your_rate_limit_window    # ⏲️ Time window (minutes)
+RATE_LIMIT_MAX=your_rate_limit_max          # 🚦 Max requests per window  
 
-# Compression configuration
-COMPRESSION_THRESHOLD=your_compression_threshold # Minimum size in bytes to compress responses
-COMPRESSION_LEVEL=your_compression_level # Compression level (0-9)
+###################################
+#  📦 COMPRESSION CONFIGURATION  #
+###################################
+COMPRESSION_THRESHOLD=your_compression_threshold    # 📏 Min size in bytes to compress responses
+COMPRESSION_LEVEL=your_compression_level            # 🔽 Compression level (0-9)
 
-# Cache configuration
-CACHE_TTL=your_cache_ttl # Cache lifetime in seconds
-CACHE_CHECK_PERIOD=your_cache_check_period # Interval to clear the cache in seconds
+##############################
+#  ⚡ CACHE CONFIGURATION   #
+##############################
+CACHE_TTL=your_cache_ttl                      # ⏳ Cache lifetime in seconds
+CACHE_CHECK_PERIOD=your_cache_check_period    # 🔄 Interval to clear the cache in seconds
 ```
-<!--![dotenv](./src/assets/dotenv-code.png)-->
+
+>[!IMPORTANT]
+>Before starting the server, make sure to execute the `script.sql` file inside your **SQL Server** database.
+>This will create the required tables and relationships for the API to function correctly.
 
 ### 4️⃣ Start the server:
 ~~~
@@ -84,46 +101,43 @@ npm start
     ├──📂components
     ├──📂paths
 ├──📂utils
+📂assets
+├──📂images
 📂postman
 ```
 
 ## 📌 Endpoints
 
-<!--
-| Endpoint      | Description |
-|---------------|-------------|
-|`GET /characters`| Get all characters |
-|`GET /characters/:id`| Get all characters |
-|`POST /characters`| Get all characters |
-|`PUT /characters/:id`| Get all characters |
-|`DELETE /characters/:id`| Get all characters |
-|`GET/movies`| Get all characters |
-|`GET/movies/:id`| Get all characters |
-|`GET/movies`| Get all characters |
-|`GET/movies/:id`| Get all characters |
-|`GET/movies/:id`| Get all characters | -->
+### 🎭 Characters
 
-<!--
-🎭 Personajes
-✔️ GET /characters → Obtiene todos los personajes.
-✔️ GET /characters/:id → Obtiene un personaje por ID.
-✔️ POST /characters → Crea un nuevo personaje.
-✔️ PUT /characters/:id → Modifica un personaje.
-✔️ DELETE /characters/:id → Elimina un personaje.
+| Method | Endpoint          | Description                                                                                  |
+|--------|-------------------|----------------------------------------------------------------------------------------------|
+| GET    | `/characters`     | Get all characters (supports filtering by `name`, `age`, `weight`, `movie`, `page`, `limit`) |
+| GET    | `/characters/:id` | Get character by ID                                                                          |
+| POST   | `/characters`     | Create a new character                                                                       |
+| PUT    | `/characters/:id` | Update an existing character                                                                 |
+| DELETE | `/characters/:id` | Delete a character                                                                           |
 
-🎬 Películas
-✔️ GET /movies → Obtiene todas las películas.
-✔️ GET /movies/:id → Obtiene una película por ID.
-✔️ POST /movies → Crea una nueva película.
-✔️ PUT /movies/:id → Modifica una película.
-✔️ DELETE /movies/:id → Elimina una película.
+### 🎬 Movies
 
-📌 Para más detalles, consulta la documentación de Swagger en:
+| Method | Endpoint      | Description                                                               |
+|--------|---------------|---------------------------------------------------------------------------|
+| GET    | `/movies`     | Get all movies (supports filtering by `title`, `order`, `page`, `limit`)) |
+| GET    | `/movies/:id` | Get movie by ID                                                           |
+| POST   | `/movies`     | Create a new movie                                                        |
+| PUT    | `/movies/:id` | Update an existing movie                                                  |
+| DELETE | `/movies/:id` | Delete a movie                                                            |
 
-bash
-Copy
-Edit
-http://localhost:3000/api-docs-->
+### 🔐 Authentication
+
+| Method | Endpoint         | Description             |
+|--------|------------------|-------------------------|
+| POST   | `/auth/register` | Register a new user     |
+| POST   | `/auth/login`    | Login an existing user  |
+| POST   | `/auth/logout`   | Logout the current user |
+
+> [!NOTE]  
+> The full API documentation can be found at [http://localhost:3000/api-docs](http://localhost:3000/api-docs). This includes all available endpoints, query parameters, request bodies, and responses.
 
 ## 🔐 Authentication
 
@@ -131,6 +145,9 @@ http://localhost:3000/api-docs-->
 
 📌 **Endpoint:** `POST /auth/register`<br>
 📌 **Description:** Creates a new user with an encrypted password.
+
+- **Request Body**
+<!--![RegisterUser](./assets/images/register-code.png)-->
 
 ### 2️⃣ User Login:
 
@@ -146,12 +163,3 @@ http://localhost:3000/api-docs-->
 
 📌 **Endpoint:** `POST /auth/logout`<br>
 📌 **Description:** Clears the authentication cookie, logging the user out.
-
-<!--It provides: 
-- **Secure authentication** with `jsonwebtoken` and `bcrypt` for password hashing.
-- **Data validation** using `Zod` to ensure correct input handling.
-- **Performance optimization**, including caching with `node-cache` and response compression with `compression`.
-- **Security enhancements** using `helmet`, `cors` for CORS management, and `express-rate-limit` for rate limiting.
-- **Database integration** with `mssql` for seamless SQL Server interaction.
-- **API documentation** with `swagger-ui-express`.
-- **Cookie handling** with `cookie-parser` and authentication support via `passport` and `passport-jwt`.-->
