@@ -147,7 +147,7 @@ npm start
 📌 **Description:** Creates a new user with an encrypted password.
 
 - **Request Body**
-<!--![RegisterUser](./assets/images/register-code.png)-->
+![RegisterUser](./assets/images/register-user-code.png)
 
 ### 2️⃣ User Login:
 
