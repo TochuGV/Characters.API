@@ -30,7 +30,7 @@ DB_NAME=database_name            # 📂 Database name
 #########################
 DB_CHARACTER_TABLE=character_table_name                    # 🎭 Table for characters
 DB_MOVIE_TABLE=movie_table_name                            # 🎬 Table for movies
-DB_CHARACTERSXMOVIES_TABLE=charactersxmovies_table_name    # 🔗 Relationship table (characters & movies)
+DB_CHARACTERSXMOVIES_TABLE=charactersxmovies_table_name    # 🔗 Relationship table
 DB_USER_TABLE=user_table_name                              # 👥 Table for users
 
 ###############################
@@ -87,23 +87,23 @@ npm start
 
 ```
 📂src
-├──📂cache					# Cache initilization
-├──📂common					# Shared utilities and configurations
-|  ├──📂errors				# Custom error handling
-├──📂config					# Configuration files 
-├──📂controllers			# Request handlers that process HTTP requests and call services
-├──📂database				# Database connection setup and initilization
-├──📂middlewares			# Middleware definitions
-├──📂routes					# Route definitions
-├──📂schemas				# Validation schemas using Zod
-├──📂services				# Business logic and database interacions
-├──📂swagger				# Swagger documentation
-|    ├──📂components		# Components like schemas and responses
-|    ├──📂paths				# Path definitions for each endpoint
-├──📂utils					# Helper functions and reusable utilities
-📂postman					# Postman collections for testing endpoints
-📂assets					# Static resources (images, logos, etc.)
-├──📂images					# Screenshots of code or illustrations
+├──📂cache              # 🗄️ Cache initilization
+├──📂common             # ⚙️ Shared utilities and configurations
+|  ├──📂errors          # ❌ Custom error handling
+├──📂config             # 🛠️ Configuration files 
+├──📂controllers        # 🎮 Request handlers that process HTTP requests and call services
+├──📂database           # 🏛️ Database connection setup and initilization
+├──📂middlewares        # 🚦 Middleware definitions
+├──📂routes             # 🛤️ Route definitions
+├──📂schemas            # 📜 Validation schemas using Zod
+├──📂services           # 🏗️ Business logic and database interacions
+├──📂swagger            # 📑 Swagger documentation
+|    ├──📂components    # 🧩 Components like schemas and responses
+|    ├──📂paths         # 🛣️ Path definitions for each endpoint
+├──📂utils              # 🧰 Helper functions and reusable utilities
+📂postman               # 📮 Postman collections for testing endpoints
+📂assets                # 🖼️ Static resources (images, logos, etc.)
+├──📂images             # 📸 Screenshots of code or illustrations
 ```
 
 ## 📌 Endpoints
@@ -147,7 +147,12 @@ npm start
 📌 **Description:** Creates a new user with an encrypted password.
 
 📍 **Request Body:**
-![RegisterUser](./assets/images/register-user-code.png)
+~~~
+{
+  "Email": "user.example@gmail.com",
+  "Password": 123456
+}
+~~~
 
 ### 2️⃣ User Login:
 
@@ -155,13 +160,18 @@ npm start
 📌 **Description:** Authenticates the user and returns a JWT token in an HTTP-only cookie. Because of this cookie's attribute, it means it's not accessible to JavaScript running in the browser.
 
 📍 **Request Body:**
-![RegisterUser](./assets/images/register-user-code.png)
+~~~
+{
+  "Email": "user.example@gmail.com",
+  "Password": 123456
+}
+~~~
 
 ### 3️⃣ Accessing Protected Routes:
 📌 **Description:** To access protected routes, the user must send the JWT token in their HTTP request. This is validated using a middleware that checks the presence of the token in the cookie or in the Authorization Header.
 
 This is the middleware mentioned above:
-![AuthMiddleware](./assets/images/auth-middleware.png)
+![AuthMiddleware](./assets/images/auth-middleware-code.png)
 
 ### 4️⃣ Token Expiration & Refresh:
 
@@ -173,3 +183,12 @@ This is the middleware mentioned above:
 📌 **Description:** Clears the authentication cookie, logging the user out.
 
 ![LogoutUser](./assets/images/logout-user-code.png)
+
+## 🌱 Future Improvements
+
+- [ ] 🔐 Implement roles and permissions for users.
+- [ ] 📊 Add logs and monitoring to the API.
+- [ ] 🔑 Implement access and refresh tokens for enhanced security.
+- [ ] 📌 Implement automated tests.
+- [ ] 📄 More detailed documentation of the endpoints in Swagger.
+- [ ] 🗄️ Improve error handling with more specific error codes, especially for SQL Server database errors.
