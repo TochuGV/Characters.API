@@ -17,49 +17,49 @@ npm install
 - Copy and paste the following template, then replace the values with your own:
 
 ```
-###############################
+################################
 #  🌐 DATABASE CONFIGURATION  #
-###############################
-DB_USER=your_database_user            # 👤 Database username          
-DB_PASSWORD=your_database_password    # 🔑 Database password
-DB_SERVER=your_database_server        # 🖥️ Database server address
-DB_NAME=your_database_name            # 📂 Database name
+################################
+DB_USER=database_user            # 👤 Database username          
+DB_PASSWORD=database_password    # 🔑 Database password
+DB_SERVER=database_server        # 🖥️ Database server address
+DB_NAME=database_name            # 📂 Database name
 
-########################
+#########################
 #  📌 DATABASE TABLES  #
-########################
-DB_CHARACTER_TABLE=your_character_table_name                    # 🎭 Table for characters
-DB_MOVIE_TABLE=your_movie_table_name                            # 🎬 Table for movies
-DB_CHARACTERSXMOVIES_TABLE=your_charactersxmovies_table_name    # 🔗 Relationship table (characters & movies)
-DB_USER_TABLE=your_user_table_name                              # 👥 Table for users
+#########################
+DB_CHARACTER_TABLE=character_table_name                    # 🎭 Table for characters
+DB_MOVIE_TABLE=movie_table_name                            # 🎬 Table for movies
+DB_CHARACTERSXMOVIES_TABLE=charactersxmovies_table_name    # 🔗 Relationship table (characters & movies)
+DB_USER_TABLE=user_table_name                              # 👥 Table for users
 
-##############################
+###############################
 #  🚀 SERVER CONFIGURATION   #
-##############################
-PORT=your_port    # 🔌 Server port
+###############################
+PORT=port    # 🔌 Server port
 
 ####################
 #  🔐 SECURITY    #
 ####################
-JWT_SECRET_KEY=your_jwt_secret_key    # 🛡️ Use a secure key and store it safely!
+JWT_SECRET_KEY=jwt_secret_key    # 🛡️ Use a secure key and store it safely!
 
 ##################################
 #  ⏳ RATE LIMIT CONFIGURATION   #
 ##################################
-RATE_LIMIT_WINDOW=your_rate_limit_window    # ⏲️ Time window (minutes)
-RATE_LIMIT_MAX=your_rate_limit_max          # 🚦 Max requests per window  
+RATE_LIMIT_WINDOW=rate_limit_window    # ⏲️ Time window in minutes
+RATE_LIMIT_MAX=rate_limit_max          # 🚦 Max requests per window  
 
 ###################################
 #  📦 COMPRESSION CONFIGURATION  #
 ###################################
-COMPRESSION_THRESHOLD=your_compression_threshold    # 📏 Min size in bytes to compress responses
-COMPRESSION_LEVEL=your_compression_level            # 🔽 Compression level (0-9)
+COMPRESSION_THRESHOLD=compression_threshold    # 📏 Min size in bytes to compress responses
+COMPRESSION_LEVEL=compression_level            # 🔽 Compression level (0-9)
 
 ##############################
 #  ⚡ CACHE CONFIGURATION   #
 ##############################
-CACHE_TTL=your_cache_ttl                      # ⏳ Cache lifetime in seconds
-CACHE_CHECK_PERIOD=your_cache_check_period    # 🔄 Interval to clear the cache in seconds
+CACHE_TTL=cache_ttl                      # ⏳ Cache lifetime in seconds
+CACHE_CHECK_PERIOD=cache_check_period    # 🔄 Interval to clear the cache in seconds
 ```
 
 >[!IMPORTANT]
@@ -87,23 +87,23 @@ npm start
 
 ```
 📂src
-├──📂cache
-├──📂common
-    ├──📂errors
-├──📂config
-├──📂controllers
-├──📂database
-├──📂middlewares
-├──📂routes
-├──📂schemas
-├──📂services
-├──📂swagger
-    ├──📂components
-    ├──📂paths
-├──📂utils
-📂assets
-├──📂images
-📂postman
+├──📂cache					# Cache initilization
+├──📂common					# Shared utilities and configurations
+|  ├──📂errors				# Custom error handling
+├──📂config					# Configuration files 
+├──📂controllers			# Request handlers that process HTTP requests and call services
+├──📂database				# Database connection setup and initilization
+├──📂middlewares			# Middleware definitions
+├──📂routes					# Route definitions
+├──📂schemas				# Validation schemas using Zod
+├──📂services				# Business logic and database interacions
+├──📂swagger				# Swagger documentation
+|    ├──📂components		# Components like schemas and responses
+|    ├──📂paths				# Path definitions for each endpoint
+├──📂utils					# Helper functions and reusable utilities
+📂postman					# Postman collections for testing endpoints
+📂assets					# Static resources (images, logos, etc.)
+├──📂images					# Screenshots of code or illustrations
 ```
 
 ## 📌 Endpoints
@@ -122,7 +122,7 @@ npm start
 
 | Method | Endpoint      | Description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
-| GET    | `/movies`     | Get all movies (supports filtering by `title`, `order`, `page`, `limit`)) |
+| GET    | `/movies`     | Get all movies (supports filtering by `title`, `order`, `page`, `limit`)  |
 | GET    | `/movies/:id` | Get movie by ID                                                           |
 | POST   | `/movies`     | Create a new movie                                                        |
 | PUT    | `/movies/:id` | Update an existing movie                                                  |
@@ -146,20 +146,30 @@ npm start
 📌 **Endpoint:** `POST /auth/register`<br>
 📌 **Description:** Creates a new user with an encrypted password.
 
-- **Request Body**
+📍 **Request Body:**
 ![RegisterUser](./assets/images/register-user-code.png)
 
 ### 2️⃣ User Login:
 
 📌 **Endpoint:** `POST /auth/login`<br>
-📌 **Description:** Authenticates the user and returns a JWT token in an HTTP-only cookie.
+📌 **Description:** Authenticates the user and returns a JWT token in an HTTP-only cookie. Because of this cookie's attribute, it means it's not accessible to JavaScript running in the browser.
+
+📍 **Request Body:**
+![RegisterUser](./assets/images/register-user-code.png)
 
 ### 3️⃣ Accessing Protected Routes:
+📌 **Description:** To access protected routes, the user must send the JWT token in their HTTP request. This is validated using a middleware that checks the presence of the token in the cookie or in the Authorization Header.
 
+This is the middleware mentioned above:
+![AuthMiddleware](./assets/images/auth-middleware.png)
 
 ### 4️⃣ Token Expiration & Refresh:
+
+📌 **Description:** Tokens have an expiration time. Once expired, users need to re-authenticate.
 
 ### 5️⃣ User Logout:
 
 📌 **Endpoint:** `POST /auth/logout`<br>
 📌 **Description:** Clears the authentication cookie, logging the user out.
+
+![LogoutUser](./assets/images/logout-user-code.png)
