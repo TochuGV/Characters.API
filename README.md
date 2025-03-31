@@ -168,9 +168,11 @@ npm start
 ~~~
 
 ### 3️⃣ Accessing Protected Routes:
+
 📌 **Description:** To access protected routes, the user must send the JWT token in their HTTP request. This is validated using a middleware that checks the presence of the token in the cookie or in the Authorization Header.
 
 This is the middleware mentioned above:
+
 ![AuthMiddleware](./assets/images/auth-middleware-code.png)
 
 ### 4️⃣ Token Expiration & Refresh:
