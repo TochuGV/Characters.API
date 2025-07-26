@@ -1,190 +1,190 @@
 {
-	"/characters": {
-		"get": {
-			"summary": "Get all characters",
-			"tags": ["Characters"],
-			"parameters": [
-				{ "$ref": "#/components/parameters/characterQuery/name"},
-				{ "$ref": "#/components/parameters/characterQuery/age"},
-				{ "$ref": "#/components/parameters/characterQuery/weight"},
-				{ "$ref": "#/components/parameters/characterQuery/movie"},
-				{ "$ref": "#/components/parameters/pagination/page"},
-				{ "$ref": "#/components/parameters/pagination/limit"}
-			],
-			"responses": {
-				"200": {
-					"description": "List of characters",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/responses/charactersListResponse"
-							}
-						}
-					}
-				},
-				"401": {
-					"description": "Unauthorized Error"
-				},
-				"422": {
-					"description": "Validation Error"
-				},
-				"503": {
-					"description": "Database Error"
-				}
-			},
-			"security": [
-				{
-					"BearerAuth": []
-				}
-			]
-		},
-		"post": {
-			"summary": "Create a new character",
-			"tags": ["Characters"],
-			"requestBody": {
-				"required": true,
-				"content": {
-					"application/json": {
-						"schema": {
-							"$ref": "#/components/schemas/Character"
-						}
-					}
-				}
-			},
-			"responses": {
-				"201": {
-					"description": "Character created successfully"
-				},
-				"401": {
-					"description": "Unauthorized Error"
-				},
-				"422": {
-					"description": "Validation Error"
-				},
-				"500": {
-					"description": "Internal Server Error"
-				},
-				"503": {
-					"description": "Database Error"
-				}
-			},
-			"security": [
-				{
-					"BearerAuth": []
-				}
-			]
-		}
-	},
-	"/characters/:id": {
-		"get": {
-			"summary": "Get a character by ID",
-			"tags": ["Characters"],
-			"parameters": [
-				{ "$ref": "#/components/parameters/characterPath/characterId" }
-			],
-			"responses": {
-				"200": {
-					"description": "Character found",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/responses/characterDetailsResponse"
-							}
-						}
-					}
-				},
-				"401": {
-					"description": "Unauthorized Error"
-				},
-				"404": {
-					"description": "NotFound Error"
-				},
-				"422": {
-					"description": "Validation Error"
-				},
-				"503": {
-					"description": "Database Error"
-				}
-			},
-			"security": [
-				{
-					"BearerAuth": []
-				}
-			]
-		},
-		"put": {
-			"summary": "Update a character by ID",
-			"tags": ["Characters"],
-			"parameters": [
-				{ "$ref": "#/components/parameters/characterPath/characterId" }
-			],
-			"requestBody": {
-				"required": true,
-				"content": {
-					"application/json": {
-						"schema": {
-							"$ref": "#/components/requests/characterUpdateRequest"
-						}
-					}
-				}
-			},
-			"responses": {
-				"200": {
-					"description": "Character updated successfully"
-				},
-				"401": {
-					"description": "Unauthorized Error"
-				},
-				"404": {
-					"description": "NotFound Error"
-				},
-				"422": {
-					"description": "Validation Error"
-				},
-				"500": {
-					"description": "Internal Server Error"
-				},
-				"503": {
-					"description": "Database Error"
-				}
-			},
-			"security": [
-				{
-					"BearerAuth": []
-				}
-			]
-		},
-		"delete": {
-			"summary": "Delete a character by ID",
-			"tags": ["Characters"],
-			"parameters": [
-				{ "$ref": "#/components/parameters/characterPath/characterId" }
-			],
-			"responses": {
-				"204": {
-					"description": "Character deleted successfully"
-				},
-				"401": {
-					"description": "Unauthorized Error"
-				},
-				"404": {
-					"description": "NotFound Error"
-				},
-				"422": {
-					"description": "Validation Error"
-				},
-				"500": {
-					"description": "Internal Server Error"
-				},
-				"503": {
-					"description": "Database Error"
-				}
-			},
-			"security": [
-			{
-				"BearerAuth": []
-			}
-			]
-		}
-	}
+  "/characters": {
+    "get": {
+      "summary": "Get all characters",
+      "tags": ["Characters"],
+      "parameters": [
+        { "$ref": "#/components/parameters/characterQuery/name"},
+        { "$ref": "#/components/parameters/characterQuery/age"},
+        { "$ref": "#/components/parameters/characterQuery/weight"},
+        { "$ref": "#/components/parameters/characterQuery/movie"},
+        { "$ref": "#/components/parameters/pagination/page"},
+        { "$ref": "#/components/parameters/pagination/limit"}
+      ],
+      "responses": {
+        "200": {
+          "description": "List of characters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/responses/charactersListResponse"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized Error"
+        },
+        "422": {
+          "description": "Validation Error"
+        },
+        "503": {
+          "description": "Database Error"
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    },
+    "post": {
+      "summary": "Create a new character",
+      "tags": ["Characters"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Character"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Character created successfully"
+        },
+        "401": {
+          "description": "Unauthorized Error"
+        },
+        "422": {
+          "description": "Validation Error"
+        },
+        "500": {
+          "description": "Internal Server Error"
+        },
+        "503": {
+          "description": "Database Error"
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    }
+  },
+  "/characters/:id": {
+    "get": {
+      "summary": "Get a character by ID",
+      "tags": ["Characters"],
+      "parameters": [
+        { "$ref": "#/components/parameters/characterPath/characterId" }
+      ],
+      "responses": {
+        "200": {
+          "description": "Character found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/responses/characterDetailsResponse"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized Error"
+        },
+        "404": {
+          "description": "NotFound Error"
+        },
+        "422": {
+          "description": "Validation Error"
+        },
+        "503": {
+          "description": "Database Error"
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    },
+    "put": {
+      "summary": "Update a character by ID",
+      "tags": ["Characters"],
+      "parameters": [
+        { "$ref": "#/components/parameters/characterPath/characterId" }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/requests/characterUpdateRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Character updated successfully"
+        },
+        "401": {
+          "description": "Unauthorized Error"
+        },
+        "404": {
+          "description": "NotFound Error"
+        },
+        "422": {
+          "description": "Validation Error"
+        },
+        "500": {
+          "description": "Internal Server Error"
+        },
+        "503": {
+          "description": "Database Error"
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    },
+    "delete": {
+      "summary": "Delete a character by ID",
+      "tags": ["Characters"],
+      "parameters": [
+        { "$ref": "#/components/parameters/characterPath/characterId" }
+      ],
+      "responses": {
+        "204": {
+          "description": "Character deleted successfully"
+        },
+        "401": {
+          "description": "Unauthorized Error"
+        },
+        "404": {
+          "description": "NotFound Error"
+        },
+        "422": {
+          "description": "Validation Error"
+        },
+        "500": {
+          "description": "Internal Server Error"
+        },
+        "503": {
+          "description": "Database Error"
+        }
+      },
+      "security": [
+      {
+        "BearerAuth": []
+      }
+      ]
+    }
+  }
 }

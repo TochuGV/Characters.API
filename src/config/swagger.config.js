@@ -1,5 +1,5 @@
 export const swaggerOptions = {
-	swaggerOptions: {
-		withCredentials: true
-	}
+  swaggerOptions: {
+    withCredentials: true
+  }
 };

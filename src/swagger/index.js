@@ -11,27 +11,27 @@ const parameters = readJSONFile("./src/swagger/components/parameters.json");
 const securitySchemes = readJSONFile("./src/swagger/components/securitySchemes.json");
 
 swagger.paths = {
-	...swagger.paths,
-	...characterPath
+  ...swagger.paths,
+  ...characterPath
 }
 
 swagger.components = {
-	...swagger.components,
-	schemas: {
-		...schemas
-	},
-	responses: {
-		...responses
-	},
-	requests: {
-		...requests
-	},
-	parameters: {
-		...parameters
-	},
-	securitySchemes: {
-		...securitySchemes
-	}
+  ...swagger.components,
+  schemas: {
+    ...schemas
+  },
+  responses: {
+    ...responses
+  },
+  requests: {
+    ...requests
+  },
+  parameters: {
+    ...parameters
+  },
+  securitySchemes: {
+    ...securitySchemes
+  }
 };
 
 export default swagger;

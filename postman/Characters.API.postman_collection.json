@@ -1,693 +1,693 @@
 {
-	"info": {
-		"_postman_id": "096beeb8-aa4e-47da-a9f6-2b6baaf37551",
-		"name": "Characters.API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "25207904"
-	},
-	"item": [
-		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Email\":\"example.user@gmail.com\", //string, must contain '@' , required\r\n    \"Password\":\"654321\" //string, >=6 characters , required\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/auth/register",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Email\":\"user.example@gmail.com\", //string, must contain '@' , required\r\n    \"Password\":\"123456\" //string, >=6 characters , required\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/auth/login",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/auth/logout",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"auth",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "Characters",
-			"item": [
-				{
-					"name": "GetAllCharacters",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "jwt",
-							"jwt": [
-								{
-									"key": "secret",
-									"value": "accesoSecreto",
-									"type": "string"
-								},
-								{
-									"key": "algorithm",
-									"value": "HS256",
-									"type": "string"
-								},
-								{
-									"key": "isSecretBase64Encoded",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "payload",
-									"value": "{}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "headerPrefix",
-									"value": "Bearer",
-									"type": "string"
-								},
-								{
-									"key": "queryParamKey",
-									"value": "token",
-									"type": "string"
-								},
-								{
-									"key": "header",
-									"value": "{}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-no-compression",
-								"value": "true",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/characters",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"characters"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "string",
-									"disabled": true
-								},
-								{
-									"key": "weight",
-									"value": "float",
-									"description": "Must be greater than 0.",
-									"disabled": true
-								},
-								{
-									"key": "age",
-									"value": "integer",
-									"description": "Must be positive.",
-									"disabled": true
-								},
-								{
-									"key": "movie",
-									"value": "UUID",
-									"description": "Related movie ID.",
-									"disabled": true
-								},
-								{
-									"key": "page",
-									"value": "integer",
-									"description": "Page number for pagination (default: 1).",
-									"disabled": true
-								},
-								{
-									"key": "limit",
-									"value": "integer",
-									"description": "Number of results per page (default: 10).",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetCharacterByID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZCRUREQkUxLUYxMjctNERDRi1CQzNDLTYwMDc2QjY1NkYxNSIsImVtYWlsIjoiYXNkZmdAZ21haWwuY29tIiwiaWF0IjoxNzQwNzA2NDUwLCJleHAiOjE3NDA3MDY1MTB9.SAW9BqqUVnbWsdzAUc2HfaGA9TyoSTrGekz6Djhs8Go",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/characters/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"characters",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "CreateCharacter",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJ6QkdRWTVXSkw2bDRwNVgwQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NTk0MzExLCJleHAiOjE2Nzc2Mjg4NzEsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJ6QkdRWTVXSkw2bDRwNVgwIn0.9EQ42JO4mRDQ7nJVJpvoBeIQf6pS_Q6MLHeWB1Miwp8",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Image\":\"https://example.com/embarrassment.jpg\", //string, required\r\n    \"Name\":\"Embarrassment\", //string, required\r\n    \"Age\": 14, //integer, >= 0\r\n    \"Weight\": 90, //float, > 0\r\n    \"Story\":\"Una de las nuevas emociones de Riley. Tímido y decididamente tranquilo.\" //string\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/characters",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"characters"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UpdateCharacterByID",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Image\":\"https://example.com/embarrassment.jpg\", //string, required\r\n    \"Name\":\"Embarrassment\", //string, required\r\n    \"Age\": 13, //integer, >= 0\r\n    \"Weight\": 80, //float, > 0\r\n    \"Story\":\"Vergüenza es silencioso, sin duda, y usa su sudadera con capucha como escondite incorporado. Es un gigante gentil y, desafortunadamente para él, quiere esconderse, pero es difícil pasarlo por alto.\" //string\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/characters/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"characters",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DeleteCharacterByID",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/characters/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"characters",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "Movies",
-			"item": [
-				{
-					"name": "GetAllMovies",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-no-compression",
-								"value": "true",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "localhost:3000/movies",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"movies"
-							],
-							"query": [
-								{
-									"key": "order",
-									"value": "string (ASC | DESC)",
-									"disabled": true
-								},
-								{
-									"key": "title",
-									"value": "string",
-									"disabled": true
-								},
-								{
-									"key": "page",
-									"value": "integer",
-									"disabled": true
-								},
-								{
-									"key": "limit",
-									"value": "integer",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetMovieByID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJBQm5UZzNVTGlrTjJuRUsxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NTk2MDk4LCJleHAiOjE2Nzc2MzA2NTgsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJBQm5UZzNVTGlrTjJuRUsxIn0.A92PefrgzPNYkrAhurTsAppnmCs50pC_Ga0Q2-QimOo",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/movies/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"movies",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "CreateMovie",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJiODBCSEt1R0d3Y2F6eklhQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NjExMDQ5LCJleHAiOjE2Nzc2NDU2MDksImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJiODBCSEt1R0d3Y2F6eklhIn0.UnJMd9iPS1EiL5TU0vIs3fiPN8JqfHOiXQWpmsvDNAc",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Image\": \"https://insideout2.jpg\", //string, required\r\n    \"Title\": \"Inside Out 2\", //string, required\r\n    \"CreationDate\": \"2024-06-13\", //date, required\r\n    \"Rating\": 4 //integer, >= 1 && <= 5\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/movies",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"movies"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UpdateMovieByID",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Image\": \"https://insideout2.jpg\", //string, required\r\n    \"Title\": \"Inside Out 2\", //string, required\r\n    \"CreationDate\": \"2024-06-13\", //date, required\r\n    \"Rating\": 5 //integer, >= 1 && <= 5\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/movies/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"movies",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DeleteMovieByID",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI3bWJyTHdqVnhGTkJPaGwwQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NjExMjMyLCJleHAiOjE2Nzc2NDU3OTIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI3bWJyTHdqVnhGTkJPaGwwIn0.549E2CpNQv00F8h-D4as7Um_oMeIg9JznBftMtdbGL4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/movies/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"movies",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "UUID"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "bearer"
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+  "info": {
+    "_postman_id": "096beeb8-aa4e-47da-a9f6-2b6baaf37551",
+    "name": "Characters.API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "25207904"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Email\":\"example.user@gmail.com\", //string, must contain '@' , required\r\n    \"Password\":\"654321\" //string, >=6 characters , required\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/auth/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Email\":\"user.example@gmail.com\", //string, must contain '@' , required\r\n    \"Password\":\"123456\" //string, >=6 characters , required\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/auth/logout",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Characters",
+      "item": [
+        {
+          "name": "GetAllCharacters",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "jwt",
+              "jwt": [
+                {
+                  "key": "secret",
+                  "value": "accesoSecreto",
+                  "type": "string"
+                },
+                {
+                  "key": "algorithm",
+                  "value": "HS256",
+                  "type": "string"
+                },
+                {
+                  "key": "isSecretBase64Encoded",
+                  "value": false,
+                  "type": "boolean"
+                },
+                {
+                  "key": "payload",
+                  "value": "{}",
+                  "type": "string"
+                },
+                {
+                  "key": "addTokenTo",
+                  "value": "header",
+                  "type": "string"
+                },
+                {
+                  "key": "headerPrefix",
+                  "value": "Bearer",
+                  "type": "string"
+                },
+                {
+                  "key": "queryParamKey",
+                  "value": "token",
+                  "type": "string"
+                },
+                {
+                  "key": "header",
+                  "value": "{}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-no-compression",
+                "value": "true",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/characters",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "characters"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "string",
+                  "disabled": true
+                },
+                {
+                  "key": "weight",
+                  "value": "float",
+                  "description": "Must be greater than 0.",
+                  "disabled": true
+                },
+                {
+                  "key": "age",
+                  "value": "integer",
+                  "description": "Must be positive.",
+                  "disabled": true
+                },
+                {
+                  "key": "movie",
+                  "value": "UUID",
+                  "description": "Related movie ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "integer",
+                  "description": "Page number for pagination (default: 1).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "integer",
+                  "description": "Number of results per page (default: 10).",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetCharacterByID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZCRUREQkUxLUYxMjctNERDRi1CQzNDLTYwMDc2QjY1NkYxNSIsImVtYWlsIjoiYXNkZmdAZ21haWwuY29tIiwiaWF0IjoxNzQwNzA2NDUwLCJleHAiOjE3NDA3MDY1MTB9.SAW9BqqUVnbWsdzAUc2HfaGA9TyoSTrGekz6Djhs8Go",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/characters/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "characters",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CreateCharacter",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJ6QkdRWTVXSkw2bDRwNVgwQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NTk0MzExLCJleHAiOjE2Nzc2Mjg4NzEsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJ6QkdRWTVXSkw2bDRwNVgwIn0.9EQ42JO4mRDQ7nJVJpvoBeIQf6pS_Q6MLHeWB1Miwp8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Image\":\"https://example.com/embarrassment.jpg\", //string, required\r\n    \"Name\":\"Embarrassment\", //string, required\r\n    \"Age\": 14, //integer, >= 0\r\n    \"Weight\": 90, //float, > 0\r\n    \"Story\":\"Una de las nuevas emociones de Riley. Tímido y decididamente tranquilo.\" //string\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/characters",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "characters"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateCharacterByID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Image\":\"https://example.com/embarrassment.jpg\", //string, required\r\n    \"Name\":\"Embarrassment\", //string, required\r\n    \"Age\": 13, //integer, >= 0\r\n    \"Weight\": 80, //float, > 0\r\n    \"Story\":\"Vergüenza es silencioso, sin duda, y usa su sudadera con capucha como escondite incorporado. Es un gigante gentil y, desafortunadamente para él, quiere esconderse, pero es difícil pasarlo por alto.\" //string\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/characters/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "characters",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteCharacterByID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/characters/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "characters",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "GetAllMovies",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI2VFBxMGUwM0wyVVc3eTRRQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NzEwNzIyLCJleHAiOjE2Nzc3NDUyODIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI2VFBxMGUwM0wyVVc3eTRRIn0.HyVvkDiccEDifSt8zD7s0ZC_b0bqpNssc_ZuMJonIrc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-no-compression",
+                "value": "true",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "localhost:3000/movies",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies"
+              ],
+              "query": [
+                {
+                  "key": "order",
+                  "value": "string (ASC | DESC)",
+                  "disabled": true
+                },
+                {
+                  "key": "title",
+                  "value": "string",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "integer",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "integer",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetMovieByID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJBQm5UZzNVTGlrTjJuRUsxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NTk2MDk4LCJleHAiOjE2Nzc2MzA2NTgsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJBQm5UZzNVTGlrTjJuRUsxIn0.A92PefrgzPNYkrAhurTsAppnmCs50pC_Ga0Q2-QimOo",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/movies/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CreateMovie",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiJiODBCSEt1R0d3Y2F6eklhQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NjExMDQ5LCJleHAiOjE2Nzc2NDU2MDksImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiJiODBCSEt1R0d3Y2F6eklhIn0.UnJMd9iPS1EiL5TU0vIs3fiPN8JqfHOiXQWpmsvDNAc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Image\": \"https://insideout2.jpg\", //string, required\r\n    \"Title\": \"Inside Out 2\", //string, required\r\n    \"CreationDate\": \"2024-06-13\", //date, required\r\n    \"Rating\": 4 //integer, >= 1 && <= 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/movies",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateMovieByID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Image\": \"https://insideout2.jpg\", //string, required\r\n    \"Title\": \"Inside Out 2\", //string, required\r\n    \"CreationDate\": \"2024-06-13\", //date, required\r\n    \"Rating\": 5 //integer, >= 1 && <= 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/movies/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteMovieByID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiY3VzdG9tIHBheWxvYWQiLCJ1c2VyRW1haWwiOiI3bWJyTHdqVnhGTkJPaGwwQGV4YW1wbGUuY29tIiwiaWF0IjoxNjc3NjExMjMyLCJleHAiOjE2Nzc2NDU3OTIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0LyJdLCJpc3MiOiJodHRwOi8vcGVyc29uYWplLm9ydC8iLCJzdWIiOiI3bWJyTHdqVnhGTkJPaGwwIn0.549E2CpNQv00F8h-D4as7Um_oMeIg9JznBftMtdbGL4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/movies/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "UUID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
 }
