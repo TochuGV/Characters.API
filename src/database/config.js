@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import sql from "mssql"
 import errorFactory from '../common/errors/error-factory.js';
 import { handleDatabaseError } from './errors.js';

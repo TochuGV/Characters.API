@@ -1,5 +1,4 @@
 import compression from "compression";
-import "dotenv/config";
 
 export const compressionConfig = {
   threshold: parseInt(process.env.COMPRESSION_THRESHOLD) || 1000,
