@@ -1,11 +1,8 @@
 import { Router } from "express";
-import CharacterService from "../services/character.service.js";
-import CharacterController from "../controllers/character.controller.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js"
+import { characterController } from "../container/index.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-const characterService = new CharacterService();
-const characterController = new CharacterController(characterService);
 
 router.get('/', authMiddleware, characterController.getAllCharacters);
 router.get('/:id', authMiddleware, characterController.getCharacterById);

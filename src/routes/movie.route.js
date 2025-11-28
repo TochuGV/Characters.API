@@ -1,11 +1,8 @@
 import { Router } from "express";
-import MovieService from "../services/movie.service.js";
-import MovieController from "../controllers/movie.controller.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js"
+import { movieController } from "../container/index.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-const movieService = new MovieService();
-const movieController = new MovieController(movieService);
 
 router.get('/', authMiddleware, movieController.getAllMovies);
 router.get('/:id', authMiddleware, movieController.getMovieById);

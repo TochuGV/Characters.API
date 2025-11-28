@@ -1,5 +1,5 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
-import UserService from "../services/user.service.js";
+import { userService } from "../container/index.js";
 import { CONFIG } from "../common/config.constants.js";
 
 const options = {
@@ -11,8 +11,6 @@ const options = {
   ignoreExpiration: false,
   //passReqToCallback: false
 };
-
-const userService = new UserService()
 
 export const jwtStrategy = new Strategy(options, async (jwt_payload, done) => {
   try {
