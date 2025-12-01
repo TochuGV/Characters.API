@@ -4,6 +4,7 @@ import { tryCatch } from "../utils/try-catch.js";
 import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
+import logger from "../logger/index.js";
 
 export default class MovieController {
   constructor(movieService) {
@@ -11,7 +12,7 @@ export default class MovieController {
   }
 
   getAllMovies = tryCatch(async (req, res) => {
-    console.log("This is a get operation");
+    logger.info("This is a get operation");
     validateRequest(movieQuerySchema, req.query);
     const {title, order, page, limit} = req.query;
     const cachedMovies = checkCache("getAllMovies", req.query);
@@ -23,8 +24,8 @@ export default class MovieController {
   });
   
   getMovieById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a get operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a get operation");
     validateRequest(uuidSchema, req.params);
     const cachedMovie = checkCache("getMovieById", req.params);
     if (cachedMovie) return res.status(200).json(cachedMovie);
@@ -35,7 +36,7 @@ export default class MovieController {
   });
   
   createMovie = tryCatch(async (req, res) => {
-    console.log("This is a get operation");
+    logger.info("This is a get operation");
     validateRequest(movieSchema, req.body);
     const movie = await this.movieService.create(req.body);
     if (!movie) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
@@ -44,8 +45,8 @@ export default class MovieController {
   });
   
   updateMovieById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a update operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a update operation");
     validateRequest(uuidSchema, req.params);
     validateRequest(movieSchema, req.body);
     const movie = await this.movieService.updateById(req.params.id, req.body);
@@ -56,8 +57,8 @@ export default class MovieController {
   });
   
   deleteMovieById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a delete operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a delete operation");
     validateRequest(uuidSchema, req.params);
     const movie = await this.movieService.deleteById(req.params.id);
     if (!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");

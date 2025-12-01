@@ -4,6 +4,7 @@ import { tryCatch } from "../utils/try-catch.js";
 import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
+import logger from "../logger/index.js";
 
 export default class CharacterController {
   constructor(characterService) {
@@ -11,7 +12,7 @@ export default class CharacterController {
   };
   
   getAllCharacters = tryCatch(async (req, res) => {
-    console.log("This is a get operation");
+    logger.info("This is a get operation");
     validateRequest(characterQuerySchema, req.query);
     const {name, age, weight, movie, page, limit} = req.query;
     const cachedCharacters = checkCache("getAllCharacters", req.query);
@@ -23,8 +24,8 @@ export default class CharacterController {
   });
   
   getCharacterById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a get operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a get operation");
     validateRequest(uuidSchema, req.params);
     const cachedCharacter = checkCache("getCharacterById", req.params);
     if (cachedCharacter) return res.status(200).json(cachedCharacter);
@@ -35,7 +36,7 @@ export default class CharacterController {
   });
   
   createCharacter = tryCatch(async (req, res) => {
-    console.log("This is a post operation");
+    logger.info("This is a post operation");
     validateRequest(characterSchema, req.body);
     const character = await this.characterService.create(req.body);
     if (!character) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create character");
@@ -44,8 +45,8 @@ export default class CharacterController {
   });
   
   updateCharacterById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a put operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a put operation");
     validateRequest(uuidSchema, req.params);
     validateRequest(characterSchema, req.body);
     const character = await this.characterService.updateById(req.params.id, req.body);
@@ -56,8 +57,8 @@ export default class CharacterController {
   });
   
   deleteCharacterById = tryCatch(async (req, res) => {
-    console.log(`Request URL Param: ${req.params.id}`);
-    console.log("This is a delete operation");
+    logger.info(`Request URL Param: ${req.params.id}`);
+    logger.info("This is a delete operation");
     validateRequest(uuidSchema, req.params);
     const character = await this.characterService.deleteById(req.params.id);
     if (!character) throw errorFactory.createError("NOT_FOUND", "Character not found");

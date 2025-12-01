@@ -5,6 +5,7 @@ import { tryCatch } from "../utils/try-catch.js";
 import { cookieOptions } from "../config/cookie.config.js";
 import errorFactory from "../common/errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
+import logger from "../logger/index.js";
 
 export default class AuthController {
   constructor(userService) {
@@ -12,7 +13,7 @@ export default class AuthController {
   };
 
   registerUser = tryCatch(async (req, res) => {
-    console.log("This is a post operation");
+    logger.info("This is a post operation");
     validateRequest(userSchema, req.body);
     const {Email: email, Password: password} = req.body;
     const userExists = await userService.getByEmail(email);
@@ -23,7 +24,7 @@ export default class AuthController {
   });
   
   loginUser = tryCatch(async (req, res) => {
-    console.log("This is a post operation");
+    logger.info("This is a post operation");
     validateRequest(userSchema, req.body);
     const {Email: email, Password: password} = req.body;
     const user = await this.userService.getByEmail(email);
@@ -36,7 +37,7 @@ export default class AuthController {
   });
   
   logoutUser = (req, res) => {
-    console.log("This is a post operation");
+    logger.info("This is a post operation");
     const token = req.cookies?.jwt;
     if(!token) throw errorFactory.createError("UNAUTHORIZED", "User is not logged in");
     if(!isValidToken(token)) throw errorFactory.createError("UNAUTHORIZED", "Invalid session");

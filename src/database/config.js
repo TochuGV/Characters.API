@@ -19,7 +19,7 @@ const dbSettings = {
 export const getConnection = async () => {
   try {
     return await sql.connect(dbSettings);
-  } catch(error){
+  } catch(error) {
     handleDatabaseError(error);
   };
 };
