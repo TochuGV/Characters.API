@@ -1,14 +1,13 @@
 import sql from "mssql"
 import errorFactory from '../common/errors/error-factory.js';
 import { handleDatabaseError } from './errors.js';
-
-if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_SERVER || !process.env.DB_NAME) throw errorFactory.createError("DATABASE", "Database must be configured in the .env file");
+import env from '../configuration/enviroment.configuration.js';
 
 const dbSettings = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
+  user: env.DB_USER,
+  password: env.DB_PASSWORD,
+  server: env.DB_SERVER,
+  database: env.DB_NAME,
   options: {
     encrypt: true,
     trustServerCertificate: true,

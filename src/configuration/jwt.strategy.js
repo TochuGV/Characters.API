@@ -1,10 +1,10 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { userService } from "../container/index.js";
-import { CONFIG } from "../common/config.constants.js";
+import env from "./enviroment.configuration.js";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.cookies?.jwt]),
-  secretOrKey: CONFIG.JWT_SECRET_KEY,
+  secretOrKey: env.JWT_SECRET_KEY,
   algorithms: ["HS256"],
   //issuer: "yourdomain.com",
   //audience: "yourdomain.com",

@@ -1,7 +1,8 @@
 import app from "./app.js"
+import env from "./configuration/enviroment.configuration.js";
 import logger from "./logger/index.js"
 
-const port = process.env.PORT || 3000;
+const port = env.PORT;
 
 app.get('/', (req, res) => res.send("Hello World!"));
 

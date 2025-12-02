@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt"
-import { CONFIG } from "../common/config.constants.js";
+import env from "../configuration/enviroment.configuration.js";
 
 export const getHashedPassword = (password) => {
-  return bcrypt.hash(password, CONFIG.SALT_ROUNDS);
+  return bcrypt.hash(password, env.SALT_ROUNDS);
 };
 
 export const comparePasswords = (plainPassword, hashedPassword) => {

@@ -1,5 +1,7 @@
+import env from "./enviroment.configuration.js";
+
 const loggerConfiguration = {
-  level: process.env.LOG_LEVEL || "info",
+  level: env.LOG_LEVEL,
   transport: {
     target: "pino-pretty",
     options: {

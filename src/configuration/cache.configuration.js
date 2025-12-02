@@ -1,6 +1,8 @@
+import env from "./enviroment.configuration.js";
+
 const cacheConfiguration = {
-  stdTTL: parseInt(process.env.CACHE_TTL) || 3600,
-  checkperiod: parseInt(process.env.CACHE_CHECK_PERIOD) || 600,
+  stdTTL: env.CACHE_TTL,
+  checkperiod: env.CACHE_CHECK_PERIOD,
   useClones: false,
   deleteOnExpire: true
 };
