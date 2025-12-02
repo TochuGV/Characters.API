@@ -1,5 +1,5 @@
 import sql from "mssql"
-import errorFactory from '../common/errors/error-factory.js';
+import errorFactory from '../errors/error-factory.js';
 import { handleDatabaseError } from './errors.js';
 import env from '../configuration/enviroment.configuration.js';
 

@@ -1,4 +1,4 @@
-import errorFactory from "../common/errors/error-factory.js";
+import errorFactory from "../errors/error-factory.js";
 
 /*
 const throwDatabaseError = (errorCode, message) => {

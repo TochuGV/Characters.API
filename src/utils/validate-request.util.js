@@ -1,4 +1,4 @@
-import errorFactory from "../common/errors/error-factory.js";
+import errorFactory from "../errors/error-factory.js";
 
 export const validateRequest = (schema, data) => {
   const validation = schema.safeParse(data);

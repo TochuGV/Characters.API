@@ -8,7 +8,7 @@ import {
   TooManyRequestsError,
   InternalServerError,
   DatabaseError
-} from "./custom-errors.js"
+} from "./custom-errors.js";
 
 export default class ErrorFactory {
   static createError(type, details = null, message){

@@ -3,7 +3,7 @@ import { generateToken, isValidToken } from "../utils/token.utils.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import tryCatch from "../utils/try-catch.js";
 import cookieConfiguration from "../configuration/cookie.configuration.js";
-import errorFactory from "../common/errors/error-factory.js";
+import errorFactory from "../errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import logger from "../logger/index.js";
 

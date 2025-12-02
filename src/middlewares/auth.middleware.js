@@ -1,5 +1,5 @@
 import passport from "passport";
-import errorFactory from "../common/errors/error-factory.js";
+import errorFactory from "../errors/error-factory.js";
 
 const authMiddleware = (req, res, next) => {
   let token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];

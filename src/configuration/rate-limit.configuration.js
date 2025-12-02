@@ -1,5 +1,5 @@
 import env from "./enviroment.configuration.js";
-import errorFactory from "../common/errors/error-factory.js";
+import errorFactory from "../errors/error-factory.js";
 
 const limiterConfiguration = {
   windowMs: env.RATE_LIMIT_WINDOW,
