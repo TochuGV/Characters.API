@@ -1,6 +1,6 @@
 import rateLimit from "express-rate-limit";
-import limiterConfig from "../config/rate-limit.config.js";
+import limiterConfiguration from "../configuration/rate-limit.configuration.js";
 
-const limiter = rateLimit(limiterConfig);
+const limiter = rateLimit(limiterConfiguration);
 
 export default limiter;

@@ -1,4 +1,4 @@
-const loggerConfig = {
+const loggerConfiguration = {
   level: process.env.LOG_LEVEL || "info",
   transport: {
     target: "pino-pretty",
@@ -10,4 +10,4 @@ const loggerConfig = {
   }
 };
 
-export default loggerConfig;
+export default loggerConfiguration;
