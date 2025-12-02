@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../database/config.js"
+import { getConnection, sql } from "../database/connection.js"
 
 export default class MovieRepository {
   async getAll(title, order, offset, limit){

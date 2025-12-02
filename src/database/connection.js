@@ -1,6 +1,5 @@
 import sql from "mssql"
-import errorFactory from '../errors/error-factory.js';
-import { handleDatabaseError } from './errors.js';
+import handleDatabaseError from './error-mapper.js';
 import env from '../configuration/enviroment.configuration.js';
 
 const dbSettings = {
