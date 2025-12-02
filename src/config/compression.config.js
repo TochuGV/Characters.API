@@ -1,6 +1,6 @@
 import compression from "compression";
 
-export const compressionConfig = {
+const compressionConfig = {
   threshold: parseInt(process.env.COMPRESSION_THRESHOLD) || 1000,
   level: parseInt(process.env.COMPRESSION_LEVEL) || 6,
   filter: (req, res) => {
@@ -8,3 +8,5 @@ export const compressionConfig = {
     return compression.filter(req, res);
   }
 };
+
+export default compressionConfig;

@@ -1,4 +1,6 @@
 import compression from "compression";
-import { compressionConfig } from "../config/compression.config.js";
+import compressionConfig from "../config/compression.config.js";
 
-export const compressionMiddleware = compression(compressionConfig);
+const compressionMiddleware = compression(compressionConfig);
+
+export default compressionMiddleware;

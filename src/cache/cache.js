@@ -1,5 +1,5 @@
 import NodeCache from "node-cache";
-import { cacheConfig } from "../config/cache.config.js";
+import cacheConfig from "../config/cache.config.js";
 
 const cache = new NodeCache(cacheConfig);
 
