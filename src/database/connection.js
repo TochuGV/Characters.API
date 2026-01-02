@@ -1,6 +1,6 @@
 import sql from "mssql"
 import handleDatabaseError from './error-mapper.js';
-import env from '../configuration/enviroment.configuration.js';
+import env from '../config/enviroment.config.js';
 
 const dbSettings = {
   user: env.DB_USER,

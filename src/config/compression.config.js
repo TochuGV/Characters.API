@@ -1,7 +1,7 @@
 import compression from "compression";
-import env from "./enviroment.configuration.js";
+import env from "./enviroment.config.js";
 
-const compressionConfiguration = {
+const compressionConfig = {
   threshold: env.COMPRESSION_THRESHOLD,
   level: env.COMPRESSION_LEVEL,
   filter: (req, res) => {
@@ -10,4 +10,4 @@ const compressionConfiguration = {
   }
 };
 
-export default compressionConfiguration;
+export default compressionConfig;

@@ -1,6 +1,6 @@
 import NodeCache from "node-cache";
-import cacheConfiguration from "../configuration/cache.configuration.js";
+import cacheConfig from "../config/cache.config.js";
 
-const cache = new NodeCache(cacheConfiguration);
+const cache = new NodeCache(cacheConfig);
 
 export default cache;

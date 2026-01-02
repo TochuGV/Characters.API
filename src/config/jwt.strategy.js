@@ -1,6 +1,6 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { userService } from "../container/index.js";
-import env from "./enviroment.configuration.js";
+import env from "./enviroment.config.js";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.cookies?.jwt]),

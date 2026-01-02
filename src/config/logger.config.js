@@ -1,6 +1,6 @@
-import env from "./enviroment.configuration.js";
+import env from "./enviroment.config.js";
 
-const loggerConfiguration = {
+const loggerConfig = {
   level: env.LOG_LEVEL,
   transport: {
     target: "pino-pretty",
@@ -12,4 +12,4 @@ const loggerConfiguration = {
   }
 };
 
-export default loggerConfiguration;
+export default loggerConfig;

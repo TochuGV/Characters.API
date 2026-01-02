@@ -1,10 +1,10 @@
-import env from "./enviroment.configuration.js";
+import env from "./enviroment.config.js";
 
-const cacheConfiguration = {
+const cacheConfig = {
   stdTTL: env.CACHE_TTL,
   checkperiod: env.CACHE_CHECK_PERIOD,
   useClones: false,
   deleteOnExpire: true
 };
 
-export default cacheConfiguration;
+export default cacheConfig;
