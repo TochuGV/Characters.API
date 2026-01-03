@@ -1,7 +1,8 @@
+import rateLimit from "express-rate-limit";
 import env from "./enviroment.config.js";
 import errorFactory from "../errors/error-factory.js";
 
-const limiterConfig = {
+const limiterOptions = {
   windowMs: env.RATE_LIMIT_WINDOW,
   max: env.RATE_LIMIT_MAX,
   standardHeaders: true,
@@ -9,4 +10,4 @@ const limiterConfig = {
   handler: (req, res, next) => next(errorFactory.createError("TOO_MANY_REQUESTS", "Rate limit exceeded, please try again later"))
 };
 
-export default limiterConfig;
+export default rateLimit(limiterOptions);

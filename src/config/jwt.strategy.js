@@ -3,7 +3,7 @@ import { userService } from "../container/index.js";
 import env from "./enviroment.config.js";
 
 const options = {
-  jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.cookies?.jwt]),
+  jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.signedCookies?.jwt]),
   secretOrKey: env.JWT_SECRET_KEY,
   algorithms: ["HS256"],
   //issuer: "yourdomain.com",

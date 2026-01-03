@@ -2,7 +2,7 @@ import { userSchema } from "../schemas/user.schema.js";
 import { generateToken, isValidToken } from "../utils/token.utils.js";
 import { comparePasswords } from "../utils/user.utils.js";
 import tryCatch from "../utils/try-catch.js";
-import cookieConfig from "../config/cookie.config.js";
+import cookieOptions from "../config/cookie.options.js";
 import errorFactory from "../errors/error-factory.js";
 import { validateRequest } from "../utils/validate-request.util.js";
 import logger from "../logger/index.js";
@@ -32,16 +32,16 @@ export default class AuthController {
     const isValidPassword = await comparePasswords(password, user.Password);
     if(!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const token = generateToken(user);
-    res.cookie("jwt", token, cookieConfig);
+    res.cookie("jwt", token, cookieOptions);
     return res.status(200).send("Login successful");
   });
   
   logoutUser = (req, res) => {
     logger.info("This is a post operation");
-    const token = req.cookies?.jwt;
+    const token = req.signedCookies?.jwt;
     if(!token) throw errorFactory.createError("UNAUTHORIZED", "User is not logged in");
     if(!isValidToken(token)) throw errorFactory.createError("UNAUTHORIZED", "Invalid session");
-    res.clearCookie("jwt", cookieConfig);
+    res.clearCookie("jwt", cookieOptions);
     return res.status(200).send("Logout successful");
   };
 };
