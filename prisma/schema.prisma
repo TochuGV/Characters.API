@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model Character {
+  ID                String              @id(map: "PK_Character_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Character_ID") @db.UniqueIdentifier
+  Image             String              @db.VarChar(255)
+  Name              String              @db.VarChar(100)
+  Age               Int?
+  Weight            Float?
+  Story             String?             @db.VarChar(Max)
+  CharactersXMovies CharactersXMovies[]
+}
+
+model CharactersXMovies {
+  ID          Int       @id(map: "PK_CharactersXMovies_ID") @default(autoincrement())
+  CharacterID String    @db.UniqueIdentifier
+  MovieID     String    @db.UniqueIdentifier
+  Character   Character @relation(fields: [CharacterID], references: [ID], onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
+  Movie       Movie     @relation(fields: [MovieID], references: [ID], onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
+
+  @@unique([CharacterID, MovieID], map: "UQ_CharactersXMovies_CharacterID_MovieID")
+}
+
+model Movie {
+  ID                String              @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Movie_ID") @db.UniqueIdentifier
+  Image             String              @db.VarChar(255)
+  Title             String              @db.VarChar(100)
+  CreationDate      DateTime            @db.Date
+  Rating            Int?
+  CharactersXMovies CharactersXMovies[]
+}
+
+model User {
+  ID       String @id(map: "PK_User_ID") @default(dbgenerated("newid()"), map: "DF_User_ID") @db.UniqueIdentifier
+  Email    String @db.VarChar(100)
+  Password String @db.VarChar(100)
+}
