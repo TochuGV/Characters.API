@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/adapter-mssql": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "bcrypt": "5.1.1",
     "compression": "1.8.0",
