@@ -9,4 +9,5 @@ export const validateRequest = (schema, data) => {
     }));
     throw errorFactory.createError("VALIDATION", formattedErrors);
   };
+  return validation.data;
 };

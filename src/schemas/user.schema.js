@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const userSchema = z.object({
-  Email: z.string({
+  email: z.string({
     required_error: "User email is required",
     invalid_type_error: "User email must be a string"
   }).email({ 
@@ -9,7 +9,7 @@ export const userSchema = z.object({
   }).max(100, { 
     message: "Must be 100 or fewer characters long" 
   }),
-  Password: z.string({
+  password: z.string({
     required_error: "User password is required",
     invalid_type_error: "User password must be a string"
   }).min(6, { 
