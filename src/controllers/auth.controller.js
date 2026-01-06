@@ -15,7 +15,7 @@ export default class AuthController {
   registerUser = tryCatch(async (req, res) => {
     logger.info("This is a post operation");
     validateRequest(userSchema, req.body);
-    const {Email: email, Password: password} = req.body;
+    const { email, password } = req.body;
     const userExists = await userService.getByEmail(email);
     if(userExists) throw errorFactory.createError("CONFLICT", "User already exists");
     const isUserCreated = await this.userService.create(email, password);
@@ -26,10 +26,10 @@ export default class AuthController {
   loginUser = tryCatch(async (req, res) => {
     logger.info("This is a post operation");
     validateRequest(userSchema, req.body);
-    const {Email: email, Password: password} = req.body;
+    const { email, password } = req.body;
     const user = await this.userService.getByEmail(email);
     if(!user) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
-    const isValidPassword = await comparePasswords(password, user.Password);
+    const isValidPassword = await comparePasswords(password, user.password);
     if(!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const token = generateToken(user);
     res.cookie("jwt", token, cookieOptions);
