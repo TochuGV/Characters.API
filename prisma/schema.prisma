@@ -7,36 +7,36 @@ datasource db {
 }
 
 model Character {
-  ID                String              @id(map: "PK_Character_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Character_ID") @db.UniqueIdentifier
-  Image             String              @db.VarChar(255)
-  Name              String              @db.VarChar(100)
-  Age               Int?
-  Weight            Float?
-  Story             String?             @db.VarChar(Max)
-  CharactersXMovies CharactersXMovies[]
+  id                String              @id(map: "PK_Character_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Character_ID") @map("ID") @db.UniqueIdentifier
+  image             String              @map("Image") @db.VarChar(255)
+  name              String              @map("Name") @db.VarChar(100)
+  age               Int?                @map("Age")
+  weight            Float?              @map("Weight")
+  story             String?             @map("Story") @db.VarChar(Max)
+  charactersXMovies CharactersXMovies[]
 }
 
 model CharactersXMovies {
-  ID          Int       @id(map: "PK_CharactersXMovies_ID") @default(autoincrement())
-  CharacterID String    @db.UniqueIdentifier
-  MovieID     String    @db.UniqueIdentifier
-  Character   Character @relation(fields: [CharacterID], references: [ID], onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
-  Movie       Movie     @relation(fields: [MovieID], references: [ID], onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
+  id          Int       @id(map: "PK_CharactersXMovies_ID") @default(autoincrement()) @map("ID")
+  characterId String    @map("CharacterID") @db.UniqueIdentifier
+  movieId     String    @map("MovieID") @db.UniqueIdentifier
+  character   Character @relation(fields: [characterId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
+  movie       Movie     @relation(fields: [movieId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
 
-  @@unique([CharacterID, MovieID], map: "UQ_CharactersXMovies_CharacterID_MovieID")
+  @@unique([characterId, movieId], map: "UQ_CharactersXMovies_CharacterID_MovieID")
 }
 
 model Movie {
-  ID                String              @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Movie_ID") @db.UniqueIdentifier
-  Image             String              @db.VarChar(255)
-  Title             String              @db.VarChar(100)
-  CreationDate      DateTime            @db.Date
-  Rating            Int?
-  CharactersXMovies CharactersXMovies[]
+  id           String   @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()")) @map("ID") @db.UniqueIdentifier
+  image        String   @map("Image") @db.VarChar(255)
+  title        String   @map("Title") @db.VarChar(100)
+  creationDate DateTime @map("CreationDate") @db.Date
+  rating       Int?     @map("Rating")
+  charactersXMovies CharactersXMovies[]
 }
 
 model User {
-  ID       String @id(map: "PK_User_ID") @default(dbgenerated("newid()"), map: "DF_User_ID") @db.UniqueIdentifier
-  Email    String @db.VarChar(100)
-  Password String @db.VarChar(100)
+  id       String @id(map: "PK_User_ID") @default(dbgenerated("newid()")) @map("ID") @db.UniqueIdentifier
+  email    String @map("Email") @db.VarChar(100)
+  password String @map("Password") @db.VarChar(100)
 }
