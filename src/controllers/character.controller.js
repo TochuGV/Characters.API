@@ -2,7 +2,7 @@ import { characterSchema, characterQuerySchema } from "../schemas/character.sche
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import tryCatch from "../utils/try-catch.js";
 import errorFactory from "../errors/error-factory.js";
-import { validateRequest } from "../utils/validate-request.util.js";
+import validateRequest from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 import logger from "../logger/index.js";
 

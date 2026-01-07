@@ -4,7 +4,7 @@ import { comparePasswords } from "../utils/user.utils.js";
 import tryCatch from "../utils/try-catch.js";
 import cookieOptions from "../config/cookie.options.js";
 import errorFactory from "../errors/error-factory.js";
-import { validateRequest } from "../utils/validate-request.util.js";
+import validateRequest from "../utils/validate-request.util.js";
 import logger from "../logger/index.js";
 
 export default class AuthController {

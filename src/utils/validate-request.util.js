@@ -1,6 +1,6 @@
 import errorFactory from "../errors/error-factory.js";
 
-export const validateRequest = (schema, data) => {
+const validateRequest = (schema, data) => {
   const validation = schema.safeParse(data);
   if(!validation.success){
     const formattedErrors = validation.error.issues.map(issue => ({
@@ -11,3 +11,5 @@ export const validateRequest = (schema, data) => {
   };
   return validation.data;
 };
+
+export default validateRequest;
