@@ -3,12 +3,14 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+const connectionString = `sqlserver://${process.env.DB_SERVER};database=${process.env.DB_NAME};user=${process.env.DB_USER};password=${process.env.DB_PASSWORD};encrypt=true;trustServerCertificate=true;`;
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DB_URL,
+    url: connectionString
   },
 });

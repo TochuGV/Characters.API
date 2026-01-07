@@ -1,4 +1,3 @@
-import { getConnection, sql } from "../database/connection.js"
 import prisma from "../config/prisma-client.config.js";
 
 export default class MovieRepository {

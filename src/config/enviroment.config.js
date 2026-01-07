@@ -8,9 +8,7 @@ const envSchema = z.object({
   DB_USER: z.string({ required_error: "DB_USER is required" }),
   DB_PASSWORD: z.string({ required_error: "DB_PASSWORD is required" }),
   DB_SERVER: z.string({ required_error: "DB_SERVER is required" }),
-  DB_PORT: z.coerce.number().default(1433), 
   DB_NAME: z.string({ required_error: "DB_NAME is required" }),
-  DB_URL: z.string({ required_error: "DB_URL is required" }),
 
   // --- DATABASE TABLES ---
   DB_CHARACTER_TABLE: z.string().default("Character"),
