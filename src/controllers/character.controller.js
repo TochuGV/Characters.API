@@ -62,6 +62,7 @@ export default class CharacterController {
     const result = await this.characterService.deleteById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Character not found");
     deleteCache('getAllCharacters', {});
+    deleteCache('getCharacterById', params);
     return res.status(204).send();
   });
-}
+};

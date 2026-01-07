@@ -62,6 +62,7 @@ export default class MovieController {
     const result = await this.movieService.deleteById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
     deleteCache('getAllMovies', {});
+    deleteCache('getMovieById', params);
     return res.status(204).send();
   });
 };
