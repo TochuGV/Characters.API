@@ -1,66 +1,58 @@
-import { getConnection, sql } from "../database/connection.js"
+import prisma from "../config/prisma-client.config.js";
 
 export default class CharacterRepository {
-  async getAll(name, age, weight, movie, offset, limit){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pName', sql.VarChar, name)
-      .input('pAge', sql.Int, age)
-      .input('pWeight', sql.Float, weight)
-      .input('pMovieID', sql.UniqueIdentifier, movie)
-      .input('pOffset', sql.Int, offset)
-      .input('pLimit', sql.Int, limit)
-      .execute('GetCharacters');
-    const totalResult = await pool.request()
-      .input('pName', sql.VarChar, name)
-      .input('pAge', sql.Int, age)
-      .input('pWeight', sql.Float, weight)
-      .input('pMovieID', sql.UniqueIdentifier, movie)
-      .execute('GetCharactersCount');
-    return {
-      items: result.recordset,
-      total: totalResult.recordset[0].Total,
+  async getAll({ name, age, weight, movieId, offset, limit }){
+    const where = {
+      ...(name && { name: { contains: name } }),
+      ...(age !== undefined && { age }),
+      ...(weight !== undefined && { weight }),
+      ...(movieId && { charactersXMovies: { some: { movieId } } })
     };
+    const [items, total] = await Promise.all([
+      prisma.character.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: { id: 'asc' },
+        select: {
+          id: true,
+          image: true,
+          name: true 
+        }
+      }),
+      prisma.character.count({ where })
+    ]);
+    return { items, total };
   };
 
   async getById(id){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .execute('GetCharacterById');
-    return result.recordset[0];
+    return await prisma.character.findUnique({
+      where: { id },
+      include: {
+        charactersXMovies: {
+          include: {
+            movie: true
+          }
+        }
+      }
+    });
   };
 
-  async create(character){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pImage', sql.VarChar, character.Image)
-      .input('pName', sql.VarChar, character.Name)
-      .input('pAge', sql.Int, character.Age)
-      .input('pWeight', sql.Float, character.Weight)
-      .input('pStory', sql.VarChar, character.Story)
-      .execute('CreateCharacter');
-    return result.recordset?.[0]?.RowsAffected > 0;
+  async create(data){
+    return await prisma.character.create({ data });
   };
 
-  async updateById(id, character){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .input('pImage', sql.VarChar, character.Image) 
-      .input('pName', sql.VarChar, character.Name)
-      .input('pAge', sql.Int, character.Age)
-      .input('pWeight', sql.Int, character.Weight)
-      .input('pStory', sql.VarChar, character.Story)
-      .execute('UpdateCharacterById');
-    return result.recordset?.[0]?.RowsAffected > 0;
+  async updateById(id, data){
+    return await prisma.character.update({
+      where: { id },
+      data: data
+    });
   };
 
   async deleteById(id){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .execute('DeleteCharacterById');
-    return result.recordset?.[0]?.RowsAffected > 0;
+    const character = await prisma.character.delete({
+      where: { id }
+    });
+    return !!character;
   };
 };

@@ -52,7 +52,7 @@ export const characterQuerySchema = z.object({
   }).positive({
     message: "Must be positive"
   }).optional(),
-  movie: z.string().uuid({ message: "Invalid UUID format" }).optional(),
+  movieId: z.string().uuid({ message: "Invalid UUID format" }).optional(),
   page: z.coerce.number({
     invalid_type_error: "Page must be a number"
   }).int({
