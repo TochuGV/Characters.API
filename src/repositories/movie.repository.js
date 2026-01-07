@@ -1,59 +1,58 @@
 import { getConnection, sql } from "../database/connection.js"
+import prisma from "../config/prisma-client.config.js";
 
 export default class MovieRepository {
-  async getAll(title, order, offset, limit){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pTitle', sql.VarChar, title)
-      .input('pOrder', sql.VarChar, order)
-      .input('pOffset', sql.Int, offset)
-      .input('pLimit', sql.Int, limit)
-      .execute('GetMovies');
-    const totalResult = await pool.request()
-      .input('pTitle', sql.VarChar, title)
-      .execute('GetMoviesCount');
-    return {
-      items: result.recordset,
-      total: totalResult.recordset[0].Total,
+  async getAll({ title, order, offset, limit }){
+    const where = {
+      ...(title && { title: { contains: title } })
     };
+    const orderBy = { creationDate: order === 'DESC' ? 'desc' : 'asc' };
+    const [items, total] = await Promise.all([
+      prisma.movie.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy,
+        select: {
+          id: true,
+          image: true,
+          title: true,
+          creationDate: true
+        }
+      }),
+      prisma.movie.count({ where })
+    ]);
+    return { items, total };
   };
 
   async getById(id){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .execute('GetMovieById');
-    return result.recordset[0];
+    return await prisma.movie.findUnique({
+      where: { id },
+      include: {
+        charactersXMovies: {
+          include: {
+            character: true
+          }
+        }
+      }
+    });
   };
 
-  async create(movie){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pImage', sql.VarChar, movie.Image)
-      .input('pTitle', sql.VarChar, movie.Title)
-      .input('pCreationDate', sql.Date, movie.CreationDate)
-      .input('pRating', sql.Int, movie.Rating)
-      .execute('CreateMovie');
-    return result.recordset?.[0]?.RowsAffected > 0;
+  async create(data){
+    return await prisma.movie.create({ data });
   };
 
-  async updateById(id, movie){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .input('pImage', sql.VarChar, movie.Image)
-      .input('pTitle', sql.VarChar, movie.Title)
-      .input('pCreationDate', sql.Date, movie.CreationDate)
-      .input('pRating', sql.Int, movie.Rating)
-      .execute('UpdateMovieById');
-    return result.recordset?.[0]?.RowsAffected > 0;
+  async updateById(id, data){
+    return await prisma.movie.update({
+      where: { id },
+      data: data
+    });
   };
 
   async deleteById(id){
-    const pool = await getConnection();
-    const result = await pool.request()
-      .input('pID', sql.UniqueIdentifier, id)
-      .execute('DeleteMovieById');
-    return result.recordset?.[0]?.RowsAffected > 0;
+    const movie = await prisma.movie.delete({
+      where: { id }
+    });
+    return !!movie;
   };
 };

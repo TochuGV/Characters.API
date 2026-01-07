@@ -17,10 +17,10 @@ export const movieSchema = z.object({
   }).max(100, { 
     message: "Must be 100 or fewer characters long" 
   }),
-  creationDate: z.string({
+  creationDate: z.coerce.date({
     required_error: "Movie creation date is required",
     invalid_type_error: "Movie creation date must be a date"
-  }).date(),
+  }),
   rating: z.number({
     invalid_type_error: "Movie rating must be a number"
   }).int({

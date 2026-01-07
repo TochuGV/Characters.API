@@ -5,31 +5,38 @@ export default class MovieService {
     this.movieRepository = movieRepository;
   };
 
-  async getAll(title, order, page = 1, limit = 10){
+  async getAll(queryParams){
     logger.info("This is a function on the service");
+    const { page, limit, ...filters } = queryParams;
     const offset = (page - 1) * limit;
-    const { items, total } = await this.movieRepository.getAll(title, order, offset, limit);
+    const { items, total } = await this.movieRepository.getAll({ ...filters, offset, limit });
     return {
-      movies: items,
-      total: total,
-      currentPage: Number(page),
+      items,
+      total,
+      currentPage: page,
       totalPages: Math.ceil(total/limit)
     };
   };
 
   async getById(id){
     logger.info("This is a function on the service");
-    return await this.movieRepository.getById(id);
+    const result = await this.movieRepository.getById(id);
+    if (!result) return null;
+    const { charactersXMovies, ...movieInfo } = result;
+    return {
+      ...movieInfo,
+      characters: charactersXMovies.map(relation => relation.character)
+    };
   };
 
-  async create(movie){
+  async create(data){
     logger.info("This is a function on the service");
-    return await this.movieRepository.create(movie);
+    return await this.movieRepository.create(data);
   };
 
-  async updateById(id, movie){
+  async updateById(id, data){
     logger.info("This is a function on the service");
-    return await this.movieRepository.updateById(id, movie);
+    return await this.movieRepository.updateById(id, data);
   };
 
   async deleteById(id){

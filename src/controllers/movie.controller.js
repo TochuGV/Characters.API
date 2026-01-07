@@ -13,55 +13,54 @@ export default class MovieController {
 
   getAllMovies = tryCatch(async (req, res) => {
     logger.info("This is a get operation");
-    validateRequest(movieQuerySchema, req.query);
-    const {title, order, page, limit} = req.query;
-    const cachedMovies = checkCache("getAllMovies", req.query);
-    if (cachedMovies) return res.status(200).json(cachedMovies);
-    const movies = await this.movieService.getAll(title, order, page, limit);
-    if (!movies || movies.movies.length === 0) return res.status(200).send("No movies found");
-    setCache("getAllMovies", req.query, movies);
-    return res.status(200).json(movies);
+    const queryData = validateRequest(movieQuerySchema, req.query);
+    const cachedResult = checkCache("getAllMovies", queryData);
+    if (cachedResult) return res.status(200).json(cachedResult);
+    const result = await this.movieService.getAll(queryData);
+    if (!result || result.items.length === 0) return res.status(200).send("No movies found");
+    setCache("getAllMovies", queryData, result);
+    return res.status(200).json(result);
   });
   
   getMovieById = tryCatch(async (req, res) => {
     logger.info(`Request URL Param: ${req.params.id}`);
     logger.info("This is a get operation");
-    validateRequest(uuidSchema, req.params);
-    const cachedMovie = checkCache("getMovieById", req.params);
-    if (cachedMovie) return res.status(200).json(cachedMovie);
-    const movie = await this.movieService.getById(req.params.id);
-    if (!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
-    setCache("getMovieById", req.params, movie);
-    return res.status(200).json(movie);
+    const params = validateRequest(uuidSchema, req.params);
+    const cachedResult = checkCache("getMovieById", params);
+    if (cachedResult) return res.status(200).json(cachedResult);
+    const result = await this.movieService.getById(params.id);
+    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    setCache("getMovieById", params, result);
+    return res.status(200).json(result);
   });
   
   createMovie = tryCatch(async (req, res) => {
-    logger.info("This is a get operation");
-    validateRequest(movieSchema, req.body);
-    const movie = await this.movieService.create(req.body);
-    if (!movie) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
+    logger.info("This is a post operation");
+    const data = validateRequest(movieSchema, req.body);
+    const result = await this.movieService.create(data);
+    if (!result) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
     deleteCache('getAllMovies', {});
-    return res.status(201).send("Movie created succesfully");
+    return res.status(201).json(result);
   });
   
   updateMovieById = tryCatch(async (req, res) => {
     logger.info(`Request URL Param: ${req.params.id}`);
     logger.info("This is a update operation");
-    validateRequest(uuidSchema, req.params);
-    validateRequest(movieSchema, req.body);
-    const movie = await this.movieService.updateById(req.params.id, req.body);
-    if (!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    const params = validateRequest(uuidSchema, req.params);
+    const data = validateRequest(movieSchema, req.body);
+    const result = await this.movieService.updateById(params.id, data);
+    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
     deleteCache('getAllMovies', {});
-    deleteCache('getMovieById', req.params);
-    return res.status(200).send("Movie updated succesfully");
+    deleteCache('getMovieById', params);
+    return res.status(200).json(result);
   });
   
   deleteMovieById = tryCatch(async (req, res) => {
     logger.info(`Request URL Param: ${req.params.id}`);
     logger.info("This is a delete operation");
-    validateRequest(uuidSchema, req.params);
-    const movie = await this.movieService.deleteById(req.params.id);
-    if (!movie) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    const params = validateRequest(uuidSchema, req.params);
+    const result = await this.movieService.deleteById(params.id);
+    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
     deleteCache('getAllMovies', {});
     return res.status(204).send();
   });
