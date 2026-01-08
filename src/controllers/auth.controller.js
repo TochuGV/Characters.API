@@ -13,35 +13,32 @@ export default class AuthController {
   };
 
   registerUser = tryCatch(async (req, res) => {
-    logger.info("This is a post operation");
-    validateRequest(userSchema, req.body);
-    const { email, password } = req.body;
-    const userExists = await userService.getByEmail(email);
-    if(userExists) throw errorFactory.createError("CONFLICT", "User already exists");
-    const isUserCreated = await this.userService.create(email, password);
-    if(!isUserCreated) throw errorFactory.createError("DATABASE", "User creation failed due to a database issue");
-    return res.status(201).send("User created successfully");
+    logger.info(`[POST] /auth/register - Registration attempt for: ${req.body.email}`);
+    const data = validateRequest(userSchema, req.body);
+    const userExists = await this.userService.getByEmail(data.email);
+    if (userExists) throw errorFactory.createError("CONFLICT", "User already exists");
+    const newUser = await this.userService.create(data);
+    return res.status(201).json({
+      message: "User created successfully",
+      userId: newUser.id
+    });
   });
   
   loginUser = tryCatch(async (req, res) => {
-    logger.info("This is a post operation");
-    validateRequest(userSchema, req.body);
-    const { email, password } = req.body;
+    logger.info(`[POST] /auth/login - Login attempt for: ${req.body.email}`);
+    const { email, password } = validateRequest(userSchema, req.body);
     const user = await this.userService.getByEmail(email);
-    if(!user) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+    if (!user) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.password);
-    if(!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+    if (!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
     const token = generateToken(user);
     res.cookie("jwt", token, cookieOptions);
-    return res.status(200).send("Login successful");
+    return res.status(200).json({ message: "Login successful" });
   });
   
   logoutUser = (req, res) => {
-    logger.info("This is a post operation");
-    const token = req.signedCookies?.jwt;
-    if(!token) throw errorFactory.createError("UNAUTHORIZED", "User is not logged in");
-    if(!isValidToken(token)) throw errorFactory.createError("UNAUTHORIZED", "Invalid session");
+    logger.info("[POST] /auth/logout - Clearing user session");
     res.clearCookie("jwt", cookieOptions);
-    return res.status(200).send("Logout successful");
+    return res.status(200).json({ message: "Logout successful" });
   };
 };

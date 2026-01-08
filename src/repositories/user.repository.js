@@ -4,13 +4,10 @@ export default class UserRepository {
   async getByEmail(email){
     return await prisma.user.findFirst({
       where: { email }
-    });
+    }); // Cambiar a 'findUnique' y convertir en @unique el campo 'email'.
   };
 
-  async create(email, password){
-    const user = await prisma.user.create({
-      data: { email, password }
-    });
-    return !!user;
+  async create(data){
+    return await prisma.user.create({ data });
   };
 };
