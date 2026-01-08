@@ -12,7 +12,7 @@ export default class MovieController {
   }
 
   getAllMovies = tryCatch(async (req, res) => {
-    logger.info("This is a get operation");
+    logger.info("[GET] /movies - Fetching all movies");
     const queryData = validateRequest(movieQuerySchema, req.query);
     const cachedResult = checkCache("getAllMovies", queryData);
     if (cachedResult) return res.status(200).json(cachedResult);
@@ -23,8 +23,7 @@ export default class MovieController {
   });
   
   getMovieById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a get operation");
+    logger.info(`[GET] /movies/:id - Fetching movie details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const cachedResult = checkCache("getMovieById", params);
     if (cachedResult) return res.status(200).json(cachedResult);
@@ -35,7 +34,7 @@ export default class MovieController {
   });
   
   createMovie = tryCatch(async (req, res) => {
-    logger.info("This is a post operation");
+    logger.info(`[POST] /movies - Creating new movie: "${req.body.title}"`);
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.create(data);
     if (!result) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create movie");
@@ -44,8 +43,7 @@ export default class MovieController {
   });
   
   updateMovieById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a update operation");
+    logger.info(`[PUT] /movies/:id - Updating movie with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.updateById(params.id, data);
@@ -56,8 +54,7 @@ export default class MovieController {
   });
   
   deleteMovieById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a delete operation");
+    logger.info(`[DELETE] /movies/:id - Deleting movie with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const result = await this.movieService.deleteById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");

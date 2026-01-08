@@ -12,7 +12,7 @@ export default class CharacterController {
   };
   
   getAllCharacters = tryCatch(async (req, res) => {
-    logger.info("This is a get operation");
+    logger.info("[GET] /characters - Fetching all characters");
     const queryData = validateRequest(characterQuerySchema, req.query);
     const cachedResult = checkCache("getAllCharacters", queryData);
     if (cachedResult) return res.status(200).json(cachedResult);
@@ -23,8 +23,7 @@ export default class CharacterController {
   });
   
   getCharacterById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a get operation");
+    logger.info(`[GET] /characters/:id - Fetching character details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const cachedResult = checkCache("getCharacterById", params);
     if (cachedResult) return res.status(200).json(cachedResult);
@@ -35,7 +34,7 @@ export default class CharacterController {
   });
   
   createCharacter = tryCatch(async (req, res) => {
-    logger.info("This is a post operation");
+    logger.info(`[POST] /characters - Creating new character: "${req.body.name}"`);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.create(data);
     if (!result) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create character");
@@ -44,8 +43,7 @@ export default class CharacterController {
   });
   
   updateCharacterById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a put operation");
+    logger.info(`[PUT] /characters/:id - Updating character with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.updateById(params.id, data);
@@ -56,8 +54,7 @@ export default class CharacterController {
   });
   
   deleteCharacterById = tryCatch(async (req, res) => {
-    logger.info(`Request URL Param: ${req.params.id}`);
-    logger.info("This is a delete operation");
+    logger.info(`[DELETE] /characters/:id - Deleting character with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const result = await this.characterService.deleteById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Character not found");
