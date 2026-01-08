@@ -6,7 +6,7 @@ export default class MovieService {
   };
 
   async getAll(queryParams){
-    logger.info("This is a function on the service");
+    logger.debug("Service: Retrieving all movies from database");
     const { page, limit, ...filters } = queryParams;
     const offset = (page - 1) * limit;
     const { items, total } = await this.movieRepository.getAll({ ...filters, offset, limit });
@@ -19,7 +19,7 @@ export default class MovieService {
   };
 
   async getById(id){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Fetching movie by unique ID: ${id}`);
     const result = await this.movieRepository.getById(id);
     if (!result) return null;
     const { charactersXMovies, ...movieInfo } = result;
@@ -30,17 +30,17 @@ export default class MovieService {
   };
 
   async create(data){
-    logger.info("This is a function on the service");
+    logger.debug("Service: Persisting new movie record in database");
     return await this.movieRepository.create(data);
   };
 
   async updateById(id, data){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Updating movie record with ID: ${id}`);
     return await this.movieRepository.updateById(id, data);
   };
 
   async deleteById(id){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Deleting movie record with ID: ${id}`);
     return await this.movieRepository.deleteById(id);
   };
 };

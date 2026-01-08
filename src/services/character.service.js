@@ -6,7 +6,7 @@ export default class CharacterService {
   };
 
   async getAll(queryParams){
-    logger.info("This is a function on the service");
+    logger.debug("Service: Retrieving all characters from database");
     const { page, limit, ...filters } = queryParams;
     const offset = (page - 1) * limit;
     const { items, total } = await this.characterRepository.getAll({ ...filters, offset, limit });
@@ -19,7 +19,7 @@ export default class CharacterService {
   };
 
   async getById(id){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Fetching character by unique ID: ${id}`);
     const result = await this.characterRepository.getById(id);
     if (!result) return null;
     const { charactersXMovies, ...rest } = result;
@@ -30,17 +30,17 @@ export default class CharacterService {
   };
 
   async create(data){
-    logger.info("This is a function on the service");
+    logger.debug("Service: Persisting new character record in database");
     return await this.characterRepository.create(data);
   };
 
   async updateById(id, data){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Updating character record with ID: ${id}`);
     return await this.characterRepository.updateById(id, data);
   };
 
   async deleteById(id){
-    logger.info("This is a function on the service");
+    logger.debug(`Service: Deleting character record with ID: ${id}`);
     return await this.characterRepository.deleteById(id);
   };
 };
