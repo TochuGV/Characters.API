@@ -17,7 +17,7 @@ export default class CharacterController {
     const cachedResult = checkCache("getAllCharacters", queryData);
     if (cachedResult) return res.status(200).json(cachedResult);
     const result = await this.characterService.getAll(queryData);
-    if (!result || result.items.length === 0) return res.status(200).send("No characters found");
+    if (!result || result.items.length === 0) return res.status(200).json([]);
     setCache("getAllCharacters", queryData, result);
     return res.status(200).json(result);
   });

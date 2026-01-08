@@ -17,7 +17,7 @@ export default class MovieController {
     const cachedResult = checkCache("getAllMovies", queryData);
     if (cachedResult) return res.status(200).json(cachedResult);
     const result = await this.movieService.getAll(queryData);
-    if (!result || result.items.length === 0) return res.status(200).send("No movies found");
+    if (!result || result.items.length === 0) return res.status(200).json([]);
     setCache("getAllMovies", queryData, result);
     return res.status(200).json(result);
   });
