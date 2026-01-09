@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const userSchema = z.object({
+const userSchema = z.object({
   email: z.string({
     required_error: "User email is required",
     invalid_type_error: "User email must be a string"
@@ -16,5 +16,22 @@ export const userSchema = z.object({
     message: "Must be 6 or more characters long" 
   }).max(100, { 
     message: "Must be 100 or fewer characters long" 
-  })
+  }),
+  name: z.string({
+    invalid_type_error: "User name must be a string"
+  }).max(100, {
+    message: "Must be 100 or fewer characters long"
+  }).optional(),
+  role: z.enum(["USER", "ADMIN"])
+});
+
+export const registerSchema = userSchema.pick({
+  email: true,
+  password: true,
+  name: true
+});
+
+export const loginSchema = userSchema.pick({
+  email: true,
+  password: true
 });

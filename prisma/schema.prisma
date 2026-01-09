@@ -39,4 +39,6 @@ model User {
   id       String @id(map: "PK_User_ID") @default(dbgenerated("newid()")) @map("ID") @db.UniqueIdentifier
   email    String @map("Email") @db.VarChar(100)
   password String @map("Password") @db.VarChar(100)
+  name     String? @map("Name") @db.VarChar(100)
+  role     String @default("USER") @map("Role") @db.VarChar(5)
 }
