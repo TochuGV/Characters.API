@@ -17,7 +17,6 @@ export default class CharacterController {
     const cachedResult = checkCache("getAllCharacters", queryData);
     if (cachedResult) return res.status(200).json(cachedResult);
     const result = await this.characterService.getAll(queryData);
-    if (!result || result.items.length === 0) return res.status(200).json([]);
     setCache("getAllCharacters", queryData, result);
     return res.status(200).json(result);
   });
@@ -37,7 +36,6 @@ export default class CharacterController {
     logger.info(`[POST] /characters - Creating new character: "${req.body.name}"`);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.create(data);
-    if (!result) throw errorFactory.createError("INTERNAL_SERVER", "Failed to create character");
     deleteCache('getAllCharacters', {});
     return res.status(201).json(result);
   });
@@ -47,7 +45,6 @@ export default class CharacterController {
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.updateById(params.id, data);
-    if (!result) throw errorFactory.createError("NOT_FOUND", "Character not found");
     deleteCache('getAllCharacters', {});
     deleteCache('getCharacterById', params);
     return res.status(200).json(result);
@@ -56,8 +53,7 @@ export default class CharacterController {
   deleteCharacterById = tryCatch(async (req, res) => {
     logger.info(`[DELETE] /characters/:id - Deleting character with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
-    const result = await this.characterService.deleteById(params.id);
-    if (!result) throw errorFactory.createError("NOT_FOUND", "Character not found");
+    await this.characterService.deleteById(params.id);
     deleteCache('getAllCharacters', {});
     deleteCache('getCharacterById', params);
     return res.status(204).send();

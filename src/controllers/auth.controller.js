@@ -15,8 +15,6 @@ export default class AuthController {
   registerUser = tryCatch(async (req, res) => {
     logger.info(`[POST] /auth/register - Registration attempt for: ${req.body.email}`);
     const data = validateRequest(registerSchema, req.body);
-    const userExists = await this.userService.getByEmail(data.email);
-    if (userExists) throw errorFactory.createError("CONFLICT", "User already exists");
     const newUser = await this.userService.create(data);
     return res.status(201).json({
       message: "User created successfully",
