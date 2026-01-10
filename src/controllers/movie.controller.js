@@ -47,7 +47,7 @@ export default class MovieController {
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.updateById(params.id, data);
-    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found"); //NO ENTRA NUNCA ACÁ
     deleteCache('getAllMovies', {});
     deleteCache('getMovieById', params);
     return res.status(200).json(result);
@@ -57,9 +57,27 @@ export default class MovieController {
     logger.info(`[DELETE] /movies/:id - Deleting movie with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const result = await this.movieService.deleteById(params.id);
-    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found"); // Y ACÁ???
     deleteCache('getAllMovies', {});
     deleteCache('getMovieById', params);
     return res.status(204).send();
+  });
+
+  addCharacterToMovie = tryCatch(async (req, res) => {
+    logger.info(`[POST] /movies/:id/characters - Adding character to movie: "${req.params.id}"`);
+    const params = validateRequest(uuidSchema, req.params);
+    const data = validateRequest(uuidSchema, { id: req.body.characterId });
+    const result = await this.movieService.addCharacter(params.id, data.id);
+    deleteCache('getMovieById', params);
+    return res.status(200).json(result);
+  });
+
+  removeCharacterFromMovie = tryCatch(async (req, res) => {
+    logger.info(`[DELETE] /movies/:id/characters/:characterId - Removing character from movie: "${req.params.id}"`);
+    const params = validateRequest(uuidSchema, { id: req.params.id });
+    const characterParams = validateRequest(uuidSchema, { id: req.params.characterId });
+    const result = await this.movieService.removeCharacter(params.id, characterParams.id);
+    deleteCache('getMovieById', params);
+    return res.status(200).json(result);
   });
 };

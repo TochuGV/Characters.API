@@ -43,4 +43,12 @@ export default class MovieService {
     logger.debug(`Service: Deleting movie record with ID: ${id}`);
     return await this.movieRepository.deleteById(id);
   };
+
+  async addCharacter(movieId, characterId){
+    return await this.movieRepository.addCharacter(movieId, characterId);
+  };
+
+  async removeCharacter(movieId, characterId){
+    return await this.movieRepository.removeCharacter(movieId, characterId);
+  };
 };

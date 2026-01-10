@@ -10,5 +10,7 @@ router.get('/:id', authMiddleware, movieController.getMovieById);
 router.post('', authMiddleware, isAdmin, movieController.createMovie);
 router.put('/:id', authMiddleware, isAdmin, movieController.updateMovieById);
 router.delete('/:id', authMiddleware, isAdmin, movieController.deleteMovieById);
+router.post('/:id/characters', authMiddleware, isAdmin, movieController.addCharacterToMovie);
+router.delete('/:id/characters/:characterId', authMiddleware, isAdmin, movieController.removeCharacterFromMovie);
 
 export default router;

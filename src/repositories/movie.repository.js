@@ -54,4 +54,28 @@ export default class MovieRepository {
     });
     return !!movie;
   };
+
+  async addCharacter(movieId, characterId){
+    return await prisma.charactersXMovies.create({
+      data: {
+        movieId: movieId,
+        characterId: characterId
+      },
+      include: {
+        movie: true,
+        character: true
+      }
+    });
+  };
+
+  async removeCharacter(movieId, characterId){
+    return await prisma.charactersXMovies.delete({
+      where: {
+        characterId_movieId: {
+          characterId: characterId,
+          movieId: movieId
+        }
+      }
+    });
+  };
 };

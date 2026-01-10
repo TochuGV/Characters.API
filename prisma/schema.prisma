@@ -27,11 +27,11 @@ model CharactersXMovies {
 }
 
 model Movie {
-  id           String   @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()")) @map("ID") @db.UniqueIdentifier
-  image        String   @map("Image") @db.VarChar(255)
-  title        String   @map("Title") @db.VarChar(100)
-  creationDate DateTime @map("CreationDate") @db.Date
-  rating       Int?     @map("Rating")
+  id                String   @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()")) @map("ID") @db.UniqueIdentifier
+  image             String   @map("Image") @db.VarChar(255)
+  title             String   @map("Title") @db.VarChar(100)
+  creationDate      DateTime @map("CreationDate") @db.Date
+  rating            Int?     @map("Rating")
   charactersXMovies CharactersXMovies[]
 }
 
