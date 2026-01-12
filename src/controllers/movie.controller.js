@@ -2,6 +2,7 @@ import { movieSchema, movieQuerySchema } from "../schemas/movie.schema.js";
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import tryCatch from "../utils/try-catch.js";
 import errorFactory from "../errors/error-factory.js";
+import successResponse from "../utils/response.util.js";
 import validateRequest from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 import logger from "../logger/index.js";
@@ -15,21 +16,21 @@ export default class MovieController {
     logger.info("[GET] /movies - Fetching all movies");
     const queryData = validateRequest(movieQuerySchema, req.query);
     const cachedResult = checkCache("getAllMovies", queryData);
-    if (cachedResult) return res.status(200).json(cachedResult);
+    if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getAll(queryData);
     setCache("getAllMovies", queryData, result);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   getMovieById = tryCatch(async (req, res) => {
     logger.info(`[GET] /movies/:id - Fetching movie details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const cachedResult = checkCache("getMovieById", params);
-    if (cachedResult) return res.status(200).json(cachedResult);
+    if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
     setCache("getMovieById", params, result);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   createMovie = tryCatch(async (req, res) => {
@@ -37,7 +38,7 @@ export default class MovieController {
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.create(data);
     deleteCache('getAllMovies', {});
-    return res.status(201).json(result);
+    return successResponse(res, result, 201);
   });
   
   updateMovieById = tryCatch(async (req, res) => {
@@ -47,7 +48,7 @@ export default class MovieController {
     const result = await this.movieService.updateById(params.id, data);
     deleteCache('getAllMovies', {});
     deleteCache('getMovieById', params);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   deleteMovieById = tryCatch(async (req, res) => {
@@ -56,7 +57,7 @@ export default class MovieController {
     await this.movieService.deleteById(params.id);
     deleteCache('getAllMovies', {});
     deleteCache('getMovieById', params);
-    return res.status(204).send();
+    return successResponse(res, result, 204);
   });
 
   addCharacterToMovie = tryCatch(async (req, res) => {
@@ -65,7 +66,7 @@ export default class MovieController {
     const data = validateRequest(uuidSchema, { id: req.body.characterId });
     const result = await this.movieService.addCharacter(params.id, data.id);
     deleteCache('getMovieById', params);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
 
   removeCharacterFromMovie = tryCatch(async (req, res) => {
@@ -74,6 +75,6 @@ export default class MovieController {
     const characterParams = validateRequest(uuidSchema, { id: req.params.characterId });
     const result = await this.movieService.removeCharacter(params.id, characterParams.id);
     deleteCache('getMovieById', params);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
 };

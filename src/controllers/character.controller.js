@@ -15,21 +15,21 @@ export default class CharacterController {
     logger.info("[GET] /characters - Fetching all characters");
     const queryData = validateRequest(characterQuerySchema, req.query);
     const cachedResult = checkCache("getAllCharacters", queryData);
-    if (cachedResult) return res.status(200).json(cachedResult);
+    if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.characterService.getAll(queryData);
     setCache("getAllCharacters", queryData, result);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   getCharacterById = tryCatch(async (req, res) => {
     logger.info(`[GET] /characters/:id - Fetching character details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     const cachedResult = checkCache("getCharacterById", params);
-    if (cachedResult) return res.status(200).json(cachedResult);
+    if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.characterService.getById(params.id);
     if (!result) throw errorFactory.createError("NOT_FOUND", "Character not found");
     setCache("getCharacterById", params, result);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   createCharacter = tryCatch(async (req, res) => {
@@ -37,7 +37,7 @@ export default class CharacterController {
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.create(data);
     deleteCache('getAllCharacters', {});
-    return res.status(201).json(result);
+    return successResponse(res, result, 201);
   });
   
   updateCharacterById = tryCatch(async (req, res) => {
@@ -47,7 +47,7 @@ export default class CharacterController {
     const result = await this.characterService.updateById(params.id, data);
     deleteCache('getAllCharacters', {});
     deleteCache('getCharacterById', params);
-    return res.status(200).json(result);
+    return successResponse(res, result);
   });
   
   deleteCharacterById = tryCatch(async (req, res) => {
@@ -56,6 +56,6 @@ export default class CharacterController {
     await this.characterService.deleteById(params.id);
     deleteCache('getAllCharacters', {});
     deleteCache('getCharacterById', params);
-    return res.status(204).send();
+    return successResponse(res, result, 204);
   });
 };
