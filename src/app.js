@@ -9,6 +9,7 @@ import passport from "./config/passport.config.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
+import notFoundHandler from "./middlewares/not-found.middleware.js";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 
 import swaggerUi from "swagger-ui-express";
@@ -31,6 +32,7 @@ app.use('/auth', authRouter);
 app.use('/characters', characterRouter);
 app.use('/movies', movieRouter);
 
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 export default app;
