@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import errorFactory from "./error-factory.js";
+import ErrorFactory from "./error-factory.js";
 
 export const isPrismaError = (error) => {
   return (
@@ -19,25 +19,25 @@ export const handlePrismaError = (error) => {
       case "P2002":
         message = "Unique constraint violation: Data already exists";
         if (details?.operation) delete details.operation;
-        return errorFactory.conflict(message, details);
+        return ErrorFactory.conflict(message, details);
       case "P2025":
         message = "Record not found to perform the operation";
         if (details?.operation) delete details.operation;
-        return errorFactory.notFound(message, details);
+        return ErrorFactory.notFound(message, details);
       case "P2003":
         message = "Foreign key constraint failed: Related record not found";
-        return errorFactory.badRequest(message, details);
+        return ErrorFactory.badRequest(message, details);
       default:
         message = `Database error code: ${error.code}`;
-        return errorFactory.database(message, details);
+        return ErrorFactory.database(message, details);
     };
   } else if (error instanceof Prisma.PrismaClientInitializationError) {
     message = "Failed to connect to the database server";
-    return errorFactory.database(message, details);
+    return ErrorFactory.database(message, details);
   } else if (error instanceof Prisma.PrismaClientValidationError) {
     message = "Invalid database query structure or data types";
-    return errorFactory.badRequest(message, details);
+    return ErrorFactory.badRequest(message, details);
   };
 
-  return errorFactory.database(message, details);
+  return ErrorFactory.database(message, details);
 };

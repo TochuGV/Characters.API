@@ -1,4 +1,4 @@
-import errorFactory from "../errors/error-factory.js";
+import ErrorFactory from "../errors/error-factory.js";
 
 const validateRequest = (schema, data) => {
   const validation = schema.safeParse(data);
@@ -7,7 +7,7 @@ const validateRequest = (schema, data) => {
       field: issue.path.join("."),
       message: issue.message
     }));
-    throw errorFactory.validation("Invalid input data", formattedErrors);
+    throw ErrorFactory.validation("Invalid input data", formattedErrors);
   };
   return validation.data;
 };

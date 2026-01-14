@@ -3,7 +3,7 @@ import { comparePasswords } from "../utils/user.utils.js";
 import generateToken from "../utils/token.utils.js";
 import tryCatch from "../utils/try-catch.js";
 import cookieOptions from "../config/cookie.options.js";
-import errorFactory from "../errors/error-factory.js";
+import ErrorFactory from "../errors/error-factory.js";
 import successResponse from "../utils/response.util.js";
 import validateRequest from "../utils/validate-request.util.js";
 import logger from "../logger/index.js";
@@ -31,9 +31,9 @@ export default class AuthController {
     logger.info(`[POST] /auth/login - Login attempt for: ${req.body.email}`);
     const { email, password } = validateRequest(loginSchema, req.body);
     const user = await this.userService.getByEmail(email);
-    if (!user) throw errorFactory.unauthorized("Invalid credentials");
+    if (!user) throw ErrorFactory.unauthorized("Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.password);
-    if (!isValidPassword) throw errorFactory.unauthorized("Invalid credentials");
+    if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
     const token = generateToken(user);
     res.cookie("jwt", token, cookieOptions);
     return successResponse(res, {

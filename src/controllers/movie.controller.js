@@ -1,7 +1,7 @@
 import { movieSchema, movieQuerySchema } from "../schemas/movie.schema.js";
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import tryCatch from "../utils/try-catch.js";
-import errorFactory from "../errors/error-factory.js";
+import ErrorFactory from "../errors/error-factory.js";
 import successResponse from "../utils/response.util.js";
 import validateRequest from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
@@ -28,7 +28,7 @@ export default class MovieController {
     const cachedResult = checkCache("getMovieById", params);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getById(params.id);
-    if (!result) throw errorFactory.notFound("Movie not found");
+    if (!result) throw ErrorFactory.notFound("Movie not found");
     setCache("getMovieById", params, result);
     return successResponse(res, result);
   });

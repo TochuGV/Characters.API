@@ -2,7 +2,7 @@ import { characterSchema, characterQuerySchema } from "../schemas/character.sche
 import { uuidSchema } from "../schemas/uuid.schema.js";
 import tryCatch from "../utils/try-catch.js";
 import successResponse from "../utils/response.util.js";
-import errorFactory from "../errors/error-factory.js";
+import ErrorFactory from "../errors/error-factory.js";
 import validateRequest from "../utils/validate-request.util.js";
 import { checkCache, setCache, deleteCache } from "../utils/cache.utils.js";
 import logger from "../logger/index.js";
@@ -28,7 +28,7 @@ export default class CharacterController {
     const cachedResult = checkCache("getCharacterById", params);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.characterService.getById(params.id);
-    if (!result) throw errorFactory.notFound("Character not found");
+    if (!result) throw ErrorFactory.notFound("Character not found");
     setCache("getCharacterById", params, result);
     return successResponse(res, result);
   });
