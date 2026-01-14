@@ -7,7 +7,7 @@ const limiterOptions = {
   max: env.RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req, res, next) => next(errorFactory.createError("TOO_MANY_REQUESTS", "Rate limit exceeded, please try again later"))
+  handler: (req, res, next) => next(errorFactory.tooManyRequests("Rate limit exceeded, please try again later"))
 };
 
 export default rateLimit(limiterOptions);

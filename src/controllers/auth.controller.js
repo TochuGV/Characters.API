@@ -31,9 +31,9 @@ export default class AuthController {
     logger.info(`[POST] /auth/login - Login attempt for: ${req.body.email}`);
     const { email, password } = validateRequest(loginSchema, req.body);
     const user = await this.userService.getByEmail(email);
-    if (!user) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+    if (!user) throw errorFactory.unauthorized("Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.password);
-    if (!isValidPassword) throw errorFactory.createError("UNAUTHORIZED", "Invalid credentials");
+    if (!isValidPassword) throw errorFactory.unauthorized("Invalid credentials");
     const token = generateToken(user);
     res.cookie("jwt", token, cookieOptions);
     return successResponse(res, {

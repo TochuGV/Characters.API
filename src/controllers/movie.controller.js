@@ -28,7 +28,7 @@ export default class MovieController {
     const cachedResult = checkCache("getMovieById", params);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getById(params.id);
-    if (!result) throw errorFactory.createError("NOT_FOUND", "Movie not found");
+    if (!result) throw errorFactory.notFound("Movie not found");
     setCache("getMovieById", params, result);
     return successResponse(res, result);
   });

@@ -7,7 +7,7 @@ const validateRequest = (schema, data) => {
       field: issue.path.join("."),
       message: issue.message
     }));
-    throw errorFactory.createError("VALIDATION", formattedErrors);
+    throw errorFactory.validation("Invalid input data", formattedErrors);
   };
   return validation.data;
 };

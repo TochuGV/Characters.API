@@ -10,7 +10,6 @@ export const isPrismaError = (error) => {
 };
 
 export const handlePrismaError = (error) => {
-  let type = "INTERNAL_SERVER";
   let message = "Unexpected database error";
   let details = null;
 
@@ -18,29 +17,27 @@ export const handlePrismaError = (error) => {
     details = error.meta || null;
     switch (error.code) {
       case "P2002":
-        type = "CONFLICT";
         message = "Unique constraint violation: Data already exists";
-        break;
+        if (details?.operation) delete details.operation;
+        return errorFactory.conflict(message, details);
       case "P2025":
-        type = "NOT_FOUND";
         message = "Record not found to perform the operation";
         if (details?.operation) delete details.operation;
-        break;
+        return errorFactory.notFound(message, details);
       case "P2003":
-        type = "BAD_REQUEST";
         message = "Foreign key constraint failed: Related record not found";
-        break;
+        return errorFactory.badRequest(message, details);
       default:
-        type = "DATABASE";
         message = `Database error code: ${error.code}`;
+        return errorFactory.database(message, details);
     };
   } else if (error instanceof Prisma.PrismaClientInitializationError) {
-    type = "DATABASE";
     message = "Failed to connect to the database server";
+    return errorFactory.database(message, details);
   } else if (error instanceof Prisma.PrismaClientValidationError) {
-    type = "BAD_REQUEST";
     message = "Invalid database query structure or data types";
+    return errorFactory.badRequest(message, details);
   };
 
-  return errorFactory.createError(type, details, message);
+  return errorFactory.database(message, details);
 };

@@ -8,7 +8,7 @@ const authMiddleware = (req, res, next) => {
       let message = info?.message || "Invalid credentials";
       if (message.toLowerCase().includes("jwt")) message = message.replace(/jwt/i, "Token");
       message = message.charAt(0).toUpperCase() + message.slice(1);
-      return next(errorFactory.createError("UNAUTHORIZED", message));
+      return next(errorFactory.unauthorized(message));
     };
     req.user = user
     next();
