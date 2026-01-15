@@ -1,5 +1,8 @@
 # 🎭 Characters.API
 
+> [!WARNING]
+> **Documentation Outdated:** This project has been recently refactored, but this README still reflects the old architecture (March 2025). Updates coming soon.
+
 📌 **Characters.API** is a RESTful API for managing characters and movies, built with **Node.js**, **Express** and **SQL Server**. It includes secure authentication, data validation, performance optimization, enhanced security, and comprehensive API documentation.
 
 ## 🚀 Installation Guide
