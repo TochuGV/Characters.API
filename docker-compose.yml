@@ -1,0 +1,29 @@
+services:
+  redis_cache:
+    image: redis:alpine
+    container_name: characters_api_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  redis_commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_ui
+    environment:
+      - REDIS_HOSTS=local:redis_cache:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis_cache
+    networks:
+      - app_network
+
+volumes:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge
