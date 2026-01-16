@@ -15,21 +15,21 @@ export default class CharacterController {
   getAllCharacters = tryCatch(async (req, res) => {
     logger.info("[GET] /characters - Fetching all characters");
     const queryData = validateRequest(characterQuerySchema, req.query);
-    const cachedResult = checkCache("getAllCharacters", queryData);
+    const cachedResult = await checkCache("getAllCharacters", queryData);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.characterService.getAll(queryData);
-    setCache("getAllCharacters", queryData, result);
+    await setCache("getAllCharacters", queryData, result);
     return successResponse(res, result);
   });
   
   getCharacterById = tryCatch(async (req, res) => {
     logger.info(`[GET] /characters/:id - Fetching character details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
-    const cachedResult = checkCache("getCharacterById", params);
+    const cachedResult = await checkCache("getCharacterById", params);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.characterService.getById(params.id);
     if (!result) throw ErrorFactory.notFound("Character not found");
-    setCache("getCharacterById", params, result);
+    await setCache("getCharacterById", params, result);
     return successResponse(res, result);
   });
   
@@ -37,7 +37,7 @@ export default class CharacterController {
     logger.info(`[POST] /characters - Creating new character: "${req.body.name}"`);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.create(data);
-    deleteCache('getAllCharacters', {});
+    await deleteCache('getAllCharacters', {});
     return successResponse(res, result, 201);
   });
   
@@ -46,8 +46,8 @@ export default class CharacterController {
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.updateById(params.id, data);
-    deleteCache('getAllCharacters', {});
-    deleteCache('getCharacterById', params);
+    await deleteCache('getAllCharacters', {});
+    await deleteCache('getCharacterById', params);
     return successResponse(res, result);
   });
   
@@ -55,8 +55,8 @@ export default class CharacterController {
     logger.info(`[DELETE] /characters/:id - Deleting character with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     await this.characterService.deleteById(params.id);
-    deleteCache('getAllCharacters', {});
-    deleteCache('getCharacterById', params);
+    await deleteCache('getAllCharacters', {});
+    await deleteCache('getCharacterById', params);
     return successResponse(res, result, 204);
   });
 };

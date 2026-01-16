@@ -1,48 +1,51 @@
-import cache from "../cache/cache.js"
+import cacheManager from "../cache/cache.manager.js";
+import logger from "../logger/index.js";
 
-const generateCacheKey = (type, params) => {
-  switch(type){
-    case "getAllCharacters":
-      const { name, age, weight, movie, page: characterPage, limit: characterLimit } = params;
-      return `characters:${name}:${age}:${weight}:${movie}:${characterPage}:${characterLimit}`
-    case "getCharacterById":
-      const { id: characterId } = params;
-      return `character:${characterId}`
-    case "getAllMovies":
-      const { title, order, page: moviePage, limit: movieLimit } = params;
-      return `movies:${title}:${order}:${moviePage}:${movieLimit}`
-    case "getMovieById":
-      const { id: movieId } = params;
-      return `movie:${movieId}`
-    default:
-      return null;
+const generateCacheKey = (prefix, params) => {
+  if (!params || Object.keys(params).length === 0) return prefix;
+
+  const sortedParams = Object.keys(params)
+    .sort()
+    .reduce((acc, key) => {
+      acc[key] = params[key];
+      return acc;
+    }, {});
+  
+  return `${prefix}:${JSON.stringify(sortedParams)}`;
+};
+
+export const checkCache = async (prefix, params) => {
+  try {
+    const cacheKey = generateCacheKey(prefix, params);
+    const result = await cacheManager.get(cacheKey);
+
+    if (result) {
+      logger.debug(`Cache: [HIT] --> ${cacheKey}`);
+      return result;
+    };
+    logger.debug(`Cache: [MISS] --> ${cacheKey}`);
+    return null;
+  } catch (error) {
+    logger.error({ error }, "Cache: Check operation failed");
+    return null;
+  }
+};
+
+export const setCache = async (prefix, params, data, ttl) => {
+  try {
+    const cacheKey = generateCacheKey(prefix, params);
+    await cacheManager.set(cacheKey, data, ttl);
+    logger.debug(`Cache: [SET] --> ${cacheKey}`);
+  } catch (error) {
+    logger.error({ error }, "Cache: Set operation failed");
   };
 };
 
-export const checkCache = (type, params) => {
-  const cacheKey = generateCacheKey(type, params);
-  return cache.get(cacheKey);
-};
-
-export const setCache = (type, params, data) => {
-  const cacheKey = generateCacheKey(type, params);
-  cache.set(cacheKey, data);
-};
-
-const clearCacheByType = (type) => {
-  const prefix = type === "characters" ? "characters" : type === "movies" ? "movies" : null;
-  if(prefix) {
-    cache.keys().forEach(key => {
-      if(key.startsWith(prefix)) cache.del(key);
-    });
-  };
-};
-
-export const deleteCache = (type, params) => {
-  if(type === "getAllCharacters" || type === "getAllMovies"){
-    clearCacheByType(type === "getAllCharacters" ? "characters" : "movies");
-  } else {
-    const cacheKey = generateCacheKey(type, params);
-    cache.del(cacheKey);
+export const deleteCache = async (prefix) => {
+  try {
+    await cacheManager.deleteByPrefix(prefix);
+    logger.debug(`Cache: [DELETE] --> Prefix: ${prefix}`);
+  } catch (error) {
+    logger.error({ error }, "Cache: Delete operation failed");
   };
 };

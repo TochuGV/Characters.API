@@ -15,21 +15,21 @@ export default class MovieController {
   getAllMovies = tryCatch(async (req, res) => {
     logger.info("[GET] /movies - Fetching all movies");
     const queryData = validateRequest(movieQuerySchema, req.query);
-    const cachedResult = checkCache("getAllMovies", queryData);
+    const cachedResult = await checkCache("getAllMovies", queryData);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getAll(queryData);
-    setCache("getAllMovies", queryData, result);
+    await setCache("getAllMovies", queryData, result);
     return successResponse(res, result);
   });
   
   getMovieById = tryCatch(async (req, res) => {
     logger.info(`[GET] /movies/:id - Fetching movie details for ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
-    const cachedResult = checkCache("getMovieById", params);
+    const cachedResult = await checkCache("getMovieById", params);
     if (cachedResult) return successResponse(res, cachedResult);
     const result = await this.movieService.getById(params.id);
     if (!result) throw ErrorFactory.notFound("Movie not found");
-    setCache("getMovieById", params, result);
+    await setCache("getMovieById", params, result);
     return successResponse(res, result);
   });
   
@@ -37,7 +37,7 @@ export default class MovieController {
     logger.info(`[POST] /movies - Creating new movie: "${req.body.title}"`);
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.create(data);
-    deleteCache('getAllMovies', {});
+    await deleteCache('getAllMovies', {});
     return successResponse(res, result, 201);
   });
   
@@ -46,8 +46,8 @@ export default class MovieController {
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.updateById(params.id, data);
-    deleteCache('getAllMovies', {});
-    deleteCache('getMovieById', params);
+    await deleteCache('getAllMovies', {});
+    await deleteCache('getMovieById', params);
     return successResponse(res, result);
   });
   
@@ -55,8 +55,8 @@ export default class MovieController {
     logger.info(`[DELETE] /movies/:id - Deleting movie with ID: ${req.params.id}`);
     const params = validateRequest(uuidSchema, req.params);
     await this.movieService.deleteById(params.id);
-    deleteCache('getAllMovies', {});
-    deleteCache('getMovieById', params);
+    await deleteCache('getAllMovies', {});
+    await deleteCache('getMovieById', params);
     return successResponse(res, result, 204);
   });
 
@@ -65,7 +65,7 @@ export default class MovieController {
     const params = validateRequest(uuidSchema, req.params);
     const data = validateRequest(uuidSchema, { id: req.body.characterId });
     const result = await this.movieService.addCharacter(params.id, data.id);
-    deleteCache('getMovieById', params);
+    await deleteCache('getMovieById', params);
     return successResponse(res, result);
   });
 
@@ -74,7 +74,7 @@ export default class MovieController {
     const params = validateRequest(uuidSchema, { id: req.params.id });
     const characterParams = validateRequest(uuidSchema, { id: req.params.characterId });
     const result = await this.movieService.removeCharacter(params.id, characterParams.id);
-    deleteCache('getMovieById', params);
+    await deleteCache('getMovieById', params);
     return successResponse(res, result);
   });
 };
