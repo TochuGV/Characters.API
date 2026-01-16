@@ -32,8 +32,15 @@ const envSchema = z.object({
   COMPRESSION_LEVEL: z.coerce.number().default(6),
 
   // --- CACHE ---
-  CACHE_TTL: z.coerce.number().default(3600),
-  CACHE_CHECK_PERIOD: z.coerce.number().default(600),
+  CACHE_TTL_REDIS: z.coerce.number().int().positive().default(3600),
+  CACHE_TTL_LOCAL: z.coerce.number().int().positive().default(60),
+  CACHE_CHECK_PERIOD: z.coerce.number().int().positive().default(600),
+
+  // --- REDIS ---
+  USE_REDIS: z.enum(["true", "false"]).transform((val) => val === "true").default("true"),
+  REDIS_HOST: z.string().default("localhost"),
+  REDIS_PORT: z.coerce.number().int().default(6379),
+  REDIS_PASSWORD: z.string().optional(),
 
   // --- LOGGER ---
   LOG_LEVEL: z.string().default("info"),
