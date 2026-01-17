@@ -1,8 +1,9 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { userService } from "../container/index.js";
 import env from "./enviroment.config.js";
+import tryCatch from "../utils/try-catch.js";
 
-const options = {
+const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.signedCookies?.jwt]),
   secretOrKey: env.JWT_SECRET_KEY,
   algorithms: ["HS256"],
@@ -12,12 +13,15 @@ const options = {
   //passReqToCallback: false
 };
 
-export const jwtStrategy = new Strategy(options, async (jwt_payload, done) => {
-  try {
-    const user = await userService.getByEmail(jwt_payload.email);
-    if(!user) return done(null, false);
-    return done(null, user);
-  } catch(error){
+const verifyUser = async (payload, done) => {
+  const user = await userService.getByEmail(payload.email);
+  if (!user) return done(null, false);
+  return done(null, user);
+};
+
+export const jwtStrategy = new Strategy(
+  jwtOptions,
+  tryCatch(verifyUser, (error, payload, done) => {
     return done(error, false);
-  };
-});
+  })
+);

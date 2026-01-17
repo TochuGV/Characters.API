@@ -1,4 +1,5 @@
 import cacheManager from "../cache/cache.manager.js";
+import tryCatch from "./try-catch.js";
 import logger from "../logger/index.js";
 
 const generateCacheKey = (prefix, params) => {
@@ -14,38 +15,39 @@ const generateCacheKey = (prefix, params) => {
   return `${prefix}:${JSON.stringify(sortedParams)}`;
 };
 
-export const checkCache = async (prefix, params) => {
-  try {
+const handleError = (operation) => (error) => {
+  logger.error({ error }, `Cache: [ERROR] -> ${operation} operation failed`);
+  return null;
+};
+
+export const checkCache = tryCatch(
+  async (prefix, params) => {
     const cacheKey = generateCacheKey(prefix, params);
     const result = await cacheManager.get(cacheKey);
 
     if (result) {
-      logger.debug(`Cache: [HIT] --> ${cacheKey}`);
+      logger.debug(`Cache: [HIT]  --> ${cacheKey}`);
       return result;
     };
     logger.debug(`Cache: [MISS] --> ${cacheKey}`);
     return null;
-  } catch (error) {
-    logger.error({ error }, "Cache: Check operation failed");
-    return null;
-  }
-};
+  },
+  handleError("Check")
+);
 
-export const setCache = async (prefix, params, data, ttl) => {
-  try {
+export const setCache = tryCatch(
+  async (prefix, params, data, ttl) => {
     const cacheKey = generateCacheKey(prefix, params);
     await cacheManager.set(cacheKey, data, ttl);
     logger.debug(`Cache: [SET] --> ${cacheKey}`);
-  } catch (error) {
-    logger.error({ error }, "Cache: Set operation failed");
-  };
-};
+  },
+  handleError("Set")
+);
 
-export const deleteCache = async (prefix) => {
-  try {
+export const deleteCache = tryCatch(
+  async (prefix) => {
     await cacheManager.deleteByPrefix(prefix);
     logger.debug(`Cache: [DELETE] --> Prefix: ${prefix}`);
-  } catch (error) {
-    logger.error({ error }, "Cache: Delete operation failed");
-  };
-};
+  },
+  handleError("Delete")
+);
