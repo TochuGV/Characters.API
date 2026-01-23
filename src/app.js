@@ -6,6 +6,7 @@ import cookieParser from "./config/cookie-parser.config.js";
 import limiter from "./config/rate-limit.config.js";
 import passport from "./config/passport.config.js";
 
+import healthRouter from "./routes/health.route.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
@@ -28,6 +29,7 @@ app.use(limiter);
 
 app.use(passport);
 
+app.use('/health', healthRouter);
 app.use('/auth', authRouter);
 app.use('/characters', characterRouter);
 app.use('/movies', movieRouter);
