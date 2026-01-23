@@ -30,7 +30,7 @@ const checkDatabase = tryCatch(async () => {
 }, silentErrorHandler);
 
 const checkRedis = tryCatch(async () => {
-  return await timeoutPromise(1000, cacheManager.client.ping());
+  return await timeoutPromise(1000, cacheManager.redisClient.ping());
 }, silentErrorHandler);
 
 const getHealth = tryCatch(async (req, res) => {
