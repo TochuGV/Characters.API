@@ -22,7 +22,6 @@ model CharactersXMovies {
   movieId     String    @map("MovieID") @db.UniqueIdentifier
   character   Character @relation(fields: [characterId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
   movie       Movie     @relation(fields: [movieId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
-
   @@unique([characterId, movieId], map: "UQ_CharactersXMovies_CharacterID_MovieID")
 }
 
@@ -41,4 +40,16 @@ model User {
   password String @map("Password") @db.VarChar(100)
   name     String? @map("Name") @db.VarChar(100)
   role     String @default("USER") @map("Role") @db.VarChar(5)
+  sessions UserSession[]
+}
+
+model UserSession {
+  id        String   @id(map: "PK_UserSession_ID") @default(dbgenerated("newid()")) @map("ID") @db.UniqueIdentifier
+  userId    String   @map("UserID") @db.UniqueIdentifier
+  token     String   @map("Token") @db.VarChar(Max)
+  revoked   Boolean  @default(false) @map("Revoked")
+  expiresAt DateTime @map("ExpiresAt")
+  createdAt DateTime @default(now()) @map("CreatedAt")
+  updatedAt DateTime @updatedAt @map("UpdatedAt")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "FK_UserSession_User_ID")
 }
