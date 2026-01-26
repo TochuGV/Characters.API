@@ -1,9 +1,6 @@
 import { registerSchema, loginSchema } from "../schemas/user.schema.js";
-import { comparePasswords } from "../utils/user.utils.js";
-import generateToken from "../utils/token.utils.js";
 import tryCatch from "../utils/try-catch.js";
 import cookieOptions from "../config/cookie.options.js";
-import ErrorFactory from "../errors/error-factory.js";
 import successResponse from "../utils/response.util.js";
 import validateRequest from "../utils/validate-request.util.js";
 import logger from "../logger/index.js";
@@ -30,26 +27,27 @@ export default class AuthController {
   loginUser = tryCatch(async (req, res) => {
     logger.info(`[POST] /auth/login - Login attempt for: ${req.body.email}`);
     const { email, password } = validateRequest(loginSchema, req.body);
-    const user = await this.userService.getByEmail(email);
-    if (!user) throw ErrorFactory.unauthorized("Invalid credentials");
-    const isValidPassword = await comparePasswords(password, user.password);
-    if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
-    const token = generateToken(user);
-    res.cookie("jwt", token, cookieOptions);
+    const { user, accessToken, refreshToken } = await this.userService.login(email, password);
+    res.cookie("refreshToken", refreshToken, cookieOptions);
     return successResponse(res, {
       message: "Login successful",
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      }
+      user,
+      accessToken
     });
   });
   
-  logoutUser = (req, res) => {
+  logoutUser = tryCatch(async (req, res) => {
     logger.info("[POST] /auth/logout - Clearing user session");
-    res.clearCookie("jwt", cookieOptions);
+    const { refreshToken } = req.signedCookies;
+    await this.userService.logout(refreshToken);
+    res.clearCookie("refreshToken", cookieOptions);
     return successResponse(res, { message: "Logout successful" } );
-  };
+  });
+
+  refreshUserToken = tryCatch(async (req, res) => {
+    const { refreshToken } = req.signedCookies;
+    const { accessToken, refreshToken: newRefreshToken } = await this.userService.refresh(refreshToken);
+    res.cookie("refreshToken", newRefreshToken, cookieOptions);
+    return successResponse(res, { accessToken });
+  });
 };
