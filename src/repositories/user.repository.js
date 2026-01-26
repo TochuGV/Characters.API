@@ -10,4 +10,29 @@ export default class UserRepository {
   async create(data){
     return await prisma.user.create({ data });
   };
+
+  async createUserSession(data) {
+    return await prisma.userSession.create({ data });
+  };
+
+  async findUserSessionById(id) {
+    return await prisma.userSession.findUnique({
+      where: { id },
+      include: { user: true }
+    });
+  };
+
+  async updateUserSession(id, data) {
+    return await prisma.userSession.update({
+      where: { id },
+      data
+    });
+  };
+
+  async revokeAllUserSessions(userId) {
+    return await prisma.userSession.updateMany({
+      where: { userId },
+      data: { revoked: true }
+    });
+  };
 };
