@@ -4,8 +4,8 @@ import env from "./enviroment.config.js";
 import tryCatch from "../utils/try-catch.js";
 
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.signedCookies?.jwt]),
-  secretOrKey: env.JWT_SECRET_KEY,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: env.JWT_ACCESS_SECRET_KEY,
   algorithms: ["HS256"],
   //issuer: "yourdomain.com",
   //audience: "yourdomain.com",

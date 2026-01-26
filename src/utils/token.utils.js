@@ -1,15 +1,36 @@
 import jwt from "jsonwebtoken";
 import env from "../config/enviroment.config.js";
+import crypto from 'node:crypto';
 
-const secret = env.JWT_SECRET_KEY;
-
-const generateToken = (user) => {
-  const expiresIn = env.JWT_EXPIRES_IN;
-  return jwt.sign({
-    id: user.id,
-    email: user.email,
-    role: user.role
-  }, secret, { expiresIn });
+const signToken = (payload, secret, expiresIn) => {
+  return jwt.sign(payload, secret, { expiresIn });
 };
 
-export default generateToken;
+export const generateAccessToken = (user) => {
+  return signToken(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    },
+    env.JWT_ACCESS_SECRET_KEY,
+    env.JWT_ACCESS_EXPIRES_IN
+  );
+};
+
+export const generateRefreshToken = (user) => {
+  const tokenId = crypto.randomUUID();
+  const token = signToken(
+    {
+      id: user.id,
+      tokenId
+    },
+    env.JWT_REFRESH_SECRET_KEY,
+    env.JWT_REFRESH_EXPIRES_IN
+  );
+  return { token, tokenId };
+};
+
+export const verifyRefreshToken = (token) => {
+  return jwt.verify(token, env.JWT_REFRESH_SECRET_KEY);
+};
