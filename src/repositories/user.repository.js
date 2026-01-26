@@ -35,4 +35,13 @@ export default class UserRepository {
       data: { revoked: true }
     });
   };
+
+  async deleteExpiredSessions(userId) {
+    return await prisma.userSession.deleteMany({
+      where: {
+        userId,
+        expiresAt: { lt: new Date() }
+      }
+    });
+  };
 };

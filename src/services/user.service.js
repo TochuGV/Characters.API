@@ -34,6 +34,8 @@ export default class UserService {
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
     
+    await this.userRepository.deleteExpiredSessions(user.id).catch(() => {});
+    
     const accessToken = generateAccessToken(user);
     const { token: refreshToken, tokenId } = generateRefreshToken(user);
 
