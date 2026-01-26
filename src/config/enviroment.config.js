@@ -17,10 +17,10 @@ const envSchema = z.object({
   DB_USER_TABLE: z.string().default("User"),
 
   // --- SECURITY ---
-  JWT_SECRET_KEY: z.string({ required_error: "JWT_SECRET_KEY is required" }),
-  JWT_ACCESS_SECRET_KEY: z.string().default("AccessToken"),
-  JWT_REFRESH_SECRET_KEY: z.string().default("RefreshToken"),
-  JWT_EXPIRES_IN: z.string().default("1h"),
+  JWT_ACCESS_SECRET_KEY: z.string({ required_error: "JWT_ACCESS_SECRET_KEY is required" }),
+  JWT_REFRESH_SECRET_KEY: z.string({ required_error: "JWT_REFRESH_SECRET_KEY is required" }),
+  JWT_ACCESS_EXPIRES_IN: z.string().default("1h"),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
   SALT_ROUNDS: z.coerce.number().default(10),
 
   // --- RATE LIMIT ---
