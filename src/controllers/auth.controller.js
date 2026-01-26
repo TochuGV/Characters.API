@@ -45,6 +45,7 @@ export default class AuthController {
   });
 
   refreshUserToken = tryCatch(async (req, res) => {
+    logger.info("[POST] /auth/refresh - Refreshing access token");
     const { refreshToken } = req.signedCookies;
     const { accessToken, refreshToken: newRefreshToken } = await this.userService.refresh(refreshToken);
     res.cookie("refreshToken", newRefreshToken, cookieOptions);
