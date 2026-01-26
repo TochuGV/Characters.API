@@ -16,11 +16,7 @@ export default class AuthController {
     const newUser = await this.userService.create(data);
     return successResponse(res, {
       message: "User created successfully",
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name
-      }
+      user: newUser
     }, 201);
   });
   
@@ -41,7 +37,7 @@ export default class AuthController {
     const { refreshToken } = req.signedCookies;
     await this.userService.logout(refreshToken);
     res.clearCookie("refreshToken", cookieOptions);
-    return successResponse(res, { message: "Logout successful" } );
+    return successResponse(res, { message: "Logout successful" });
   });
 
   refreshUserToken = tryCatch(async (req, res) => {

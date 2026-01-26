@@ -22,12 +22,17 @@ export default class UserService {
       ...data,
       password: hashedPassword
     };
-    return await this.userRepository.create(userData);
+    const newUser = await this.userRepository.create(userData);
+    return {
+      id: newUser.id,
+      name: newUser.name,
+      role: newUser.role
+    };
   };
 
   async login(email, password) {
     logger.debug(`Service: Login attempt for ${email}`);
-    
+
     const user = await this.userRepository.getByEmail(email);
     if (!user) throw ErrorFactory.unauthorized("Invalid credentials");
     
@@ -35,7 +40,7 @@ export default class UserService {
     if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
     
     await this.userRepository.deleteExpiredSessions(user.id).catch(() => {});
-    
+
     const accessToken = generateAccessToken(user);
     const { token: refreshToken, tokenId } = generateRefreshToken(user);
 
@@ -49,7 +54,6 @@ export default class UserService {
     return {
       user: {
         id: user.id,
-        email: user.email,
         name: user.name,
         role: user.role
       },
@@ -95,6 +99,9 @@ export default class UserService {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     });
 
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    };
   }
 };
