@@ -1,4 +1,5 @@
 import logger from "../logger/index.js";
+import createPaginationMeta from "../utils/pagination.util.js";
 
 export default class MovieService {
   constructor(movieRepository){
@@ -12,11 +13,7 @@ export default class MovieService {
     const { items, total } = await this.movieRepository.getAll({ ...filters, offset, limit });
     return {
       movies: items,
-      pagination: {
-        total,
-        currentPage: page,
-        totalPages: Math.ceil(total/limit)
-      }
+      pagination: createPaginationMeta(total, page, limit)
     };
   };
 

@@ -1,4 +1,5 @@
 import logger from "../logger/index.js";
+import createPaginationMeta from "../utils/pagination.util.js";
 
 export default class CharacterService {
   constructor(characterRepository) {
@@ -12,11 +13,7 @@ export default class CharacterService {
     const { items, total } = await this.characterRepository.getAll({ ...filters, offset, limit });
     return {
       characters: items,
-      pagination: {
-        total,
-        currentPage: page,
-        totalPages: Math.ceil(total/limit)
-      }
+      pagination: createPaginationMeta(total, page, limit)
     };
   };
 
