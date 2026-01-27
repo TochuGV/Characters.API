@@ -38,7 +38,7 @@ export default class MovieController {
     const data = validateRequest(movieSchema, req.body);
     const result = await this.movieService.create(data);
     await deleteCache('getAllMovies', {});
-    return successResponse(res, result, 201);
+    return successResponse(res, result, 201, `/movies/${result.id}`);
   });
   
   updateMovieById = tryCatch(async (req, res) => {

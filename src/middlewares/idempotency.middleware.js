@@ -18,6 +18,7 @@ const idempotencyMiddleware = tryCatch(async (req, res, next) => {
     const parsedResponse = typeof cachedData === 'string'
       ? JSON.parse(cachedData)
       : cachedData;
+    if (parsedResponse.headers) res.set(parsedResponse.headers);
     return res.status(parsedResponse.statusCode).json(parsedResponse.body);
   };
 
@@ -26,7 +27,8 @@ const idempotencyMiddleware = tryCatch(async (req, res, next) => {
     const { statusCode } = res;
 
     if (statusCode >= 200 && statusCode < 300) {
-      const responseToCache = { statusCode, body };
+      const headers = res.getHeaders ? res.getHeaders() : {};
+      const responseToCache = { statusCode, body, headers };
       logger.debug(`Saving idempotency key: ${cacheKey}`);
       
       const ttl = CACHE_TTL * 24;

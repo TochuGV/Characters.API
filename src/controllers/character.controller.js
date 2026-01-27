@@ -38,7 +38,7 @@ export default class CharacterController {
     const data = validateRequest(characterSchema, req.body);
     const result = await this.characterService.create(data);
     await deleteCache('getAllCharacters', {});
-    return successResponse(res, result, 201);
+    return successResponse(res, result, 201, `/characters/${result.id}`);
   });
   
   updateCharacterById = tryCatch(async (req, res) => {
