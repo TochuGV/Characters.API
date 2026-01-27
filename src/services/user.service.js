@@ -31,20 +31,14 @@ export default class UserService {
 
   async login(email, password) {
     logger.debug(`Service: Login attempt for ${email}`);
-
     const user = await this.userRepository.getByEmail(email);
     if (!user) throw ErrorFactory.unauthorized("Invalid credentials");
-    
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
-    
     await this.userRepository.deleteExpiredSessions(user.id).catch(() => {});
-
     const accessToken = generateAccessToken(user);
     const { token: refreshToken, tokenId } = generateRefreshToken(user);
-
     await this.userRepository.createUserSession(createSessionPayload(user.id, refreshToken, tokenId));
-
     return {
       user: {
         id: user.id,
@@ -57,40 +51,31 @@ export default class UserService {
   };
 
   async logout(refreshToken) {
+    logger.debug("Service: Revoking user session");
     if (!refreshToken) return;
     const decoded = decodeToken(refreshToken);
-    if (decoded?.tokenId) {
-      await this.userRepository.updateUserSession(decoded.tokenId, { revoked: true })
-        .catch(() => {});
-    }
-  }
+    if (decoded?.tokenId) await this.userRepository.updateUserSession(decoded.tokenId, { revoked: true }).catch(() => {});
+  };
 
   async refresh(refreshToken) {
+    logger.debug("Service: Rotating user session tokens");
     if (!refreshToken) throw ErrorFactory.unauthorized("No refresh token provided");
-
     const validateToken = tryCatch(verifyRefreshToken, () => {
       throw ErrorFactory.forbidden("Invalid or expired refresh token");
     });
-
     const decoded = await validateToken(refreshToken);
-
     const session = await this.userRepository.findUserSessionById(decoded.tokenId);
-
     if (!session || session.revoked) {
       if (session) await this.userRepository.revokeAllUserSessions(session.userId);
       throw ErrorFactory.forbidden("Invalid session or token reuse detected");
-    }
-
+    };
     await this.userRepository.updateUserSession(session.id, { revoked: true });
-    
     const newAccessToken = generateAccessToken(session.user);
     const { token: newRefreshToken, tokenId } = generateRefreshToken(session.user);
-
     await this.userRepository.createUserSession(createSessionPayload(session.user.id, newRefreshToken, tokenId));
-
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken
     };
-  }
+  };
 };
