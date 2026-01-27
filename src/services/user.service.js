@@ -1,9 +1,8 @@
 import logger from "../logger/index.js";
 import { getHashedPassword, comparePasswords } from "../utils/user.utils.js";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/token.utils.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken, decodeToken, createSessionPayload } from "../utils/token.utils.js";
 import tryCatch from "../utils/try-catch.js";
 import ErrorFactory from "../errors/error-factory.js";
-import jwt from "jsonwebtoken";
 
 export default class UserService {
   constructor(userRepository) {
@@ -44,12 +43,7 @@ export default class UserService {
     const accessToken = generateAccessToken(user);
     const { token: refreshToken, tokenId } = generateRefreshToken(user);
 
-    await this.userRepository.createUserSession({
-      id: tokenId,
-      token: refreshToken,
-      userId: user.id,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
-    });
+    await this.userRepository.createUserSession(createSessionPayload(user.id, refreshToken, tokenId));
 
     return {
       user: {
@@ -64,7 +58,7 @@ export default class UserService {
 
   async logout(refreshToken) {
     if (!refreshToken) return;
-    const decoded = jwt.decode(refreshToken);
+    const decoded = decodeToken(refreshToken);
     if (decoded?.tokenId) {
       await this.userRepository.updateUserSession(decoded.tokenId, { revoked: true })
         .catch(() => {});
@@ -92,12 +86,7 @@ export default class UserService {
     const newAccessToken = generateAccessToken(session.user);
     const { token: newRefreshToken, tokenId } = generateRefreshToken(session.user);
 
-    await this.userRepository.createUserSession({
-      id: tokenId,
-      token: newRefreshToken,
-      userId: session.user.id,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    });
+    await this.userRepository.createUserSession(createSessionPayload(session.user.id, newRefreshToken, tokenId));
 
     return {
       accessToken: newAccessToken,

@@ -34,3 +34,16 @@ export const generateRefreshToken = (user) => {
 export const verifyRefreshToken = (token) => {
   return jwt.verify(token, env.JWT_REFRESH_SECRET_KEY);
 };
+
+export const decodeToken = (token) => {
+  return jwt.decode(token);
+};
+
+export const createSessionPayload = (userId, token, tokenId) => {
+  return {
+    id: tokenId,
+    token,
+    userId,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  };
+};
