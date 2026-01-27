@@ -11,10 +11,12 @@ export default class MovieService {
     const offset = (page - 1) * limit;
     const { items, total } = await this.movieRepository.getAll({ ...filters, offset, limit });
     return {
-      items,
-      total,
-      currentPage: page,
-      totalPages: Math.ceil(total/limit)
+      movies: items,
+      pagination: {
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total/limit)
+      }
     };
   };
 

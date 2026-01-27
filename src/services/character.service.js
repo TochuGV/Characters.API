@@ -11,10 +11,12 @@ export default class CharacterService {
     const offset = (page - 1) * limit;
     const { items, total } = await this.characterRepository.getAll({ ...filters, offset, limit });
     return {
-      items,
-      total,
-      currentPage: page,
-      totalPages: Math.ceil(total/limit)
+      characters: items,
+      pagination: {
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total/limit)
+      }
     };
   };
 
