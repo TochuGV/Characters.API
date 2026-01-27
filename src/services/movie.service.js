@@ -45,10 +45,16 @@ export default class MovieService {
   };
 
   async addCharacter(movieId, characterId){
-    return await this.movieRepository.addCharacter(movieId, characterId);
+    logger.debug(`Service: Adding character [${characterId}] to movie [${movieId}]`);
+    await this.movieRepository.addCharacter(movieId, characterId);
+    logger.debug(`Service: Character added successfully. Fetching updated movie data...`);
+    return await this.getById(movieId);
   };
 
   async removeCharacter(movieId, characterId){
-    return await this.movieRepository.removeCharacter(movieId, characterId);
+    logger.debug(`Service: Removing character [${characterId}] from movie [${movieId}]`);
+    await this.movieRepository.removeCharacter(movieId, characterId);
+    logger.debug(`Service: Character removed successfully. Fetching updated movie data...`);
+    return await this.getById(movieId);
   };
 };
