@@ -57,7 +57,7 @@ export default class MovieController {
     await this.movieService.deleteById(params.id);
     await deleteCache('getAllMovies', {});
     await deleteCache('getMovieById', params);
-    return successResponse(res, result, 204);
+    return successResponse(res, null, 204);
   });
 
   addCharacterToMovie = tryCatch(async (req, res) => {

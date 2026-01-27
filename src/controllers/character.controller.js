@@ -57,6 +57,6 @@ export default class CharacterController {
     await this.characterService.deleteById(params.id);
     await deleteCache('getAllCharacters', {});
     await deleteCache('getCharacterById', params);
-    return successResponse(res, result, 204);
+    return successResponse(res, null, 204);
   });
 };
