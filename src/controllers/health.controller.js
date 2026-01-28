@@ -38,8 +38,8 @@ const getHealth = tryCatch(async (req, res) => {
 
   const healthStatus = {
     status: "UP",
-    uptime: process.uptime(),
     timestamp: new Date(),
+    uptime: Math.floor(process.uptime()),
     responseTime: 0,
     services: {
       database: { status: "UNKNOWN", responseTime: 0 },
