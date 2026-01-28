@@ -5,6 +5,7 @@ import compression from "./config/compression.config.js";
 import cookieParser from "./config/cookie-parser.config.js";
 import limiter from "./config/rate-limit.config.js";
 import passport from "./config/passport.config.js";
+import statusMonitor from "./config/monitor.config.js";
 
 import healthRouter from "./routes/health.route.js";
 import authRouter from "./routes/auth.route.js";
@@ -26,8 +27,8 @@ app.use(compression);
 app.use(express.json());
 app.use(cookieParser);
 app.use(limiter);
-
 app.use(passport);
+app.use(statusMonitor);
 
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
