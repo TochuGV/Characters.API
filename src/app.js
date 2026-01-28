@@ -8,11 +8,13 @@ import passport from "./config/passport.config.js";
 import statusMonitor from "./config/monitor.config.js";
 
 import healthRouter from "./routes/health.route.js";
+import metricsRouter from "./routes/metrics.route.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
 
 import ignoredRoutes from "./middlewares/ignored-routes.middleware.js";
+import metricsMiddleware from "./middlewares/metrics.middleware.js";
 import notFoundHandler from "./middlewares/not-found.middleware.js";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 
@@ -32,8 +34,10 @@ app.use(limiter);
 app.use(passport);
 app.use(statusMonitor);
 app.use(ignoredRoutes);
+app.use(metricsMiddleware);
 
 app.use('/health', healthRouter);
+app.use('/metrics', metricsRouter);
 app.use('/auth', authRouter);
 app.use('/characters', characterRouter);
 app.use('/movies', movieRouter);
