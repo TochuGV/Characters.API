@@ -11,6 +11,8 @@ import healthRouter from "./routes/health.route.js";
 import authRouter from "./routes/auth.route.js";
 import characterRouter from "./routes/character.route.js";
 import movieRouter from "./routes/movie.route.js";
+
+import ignoredRoutes from "./middlewares/ignored-routes.middleware.js";
 import notFoundHandler from "./middlewares/not-found.middleware.js";
 import errorHandler from "./middlewares/error-handler.middleware.js";
 
@@ -29,6 +31,7 @@ app.use(cookieParser);
 app.use(limiter);
 app.use(passport);
 app.use(statusMonitor);
+app.use(ignoredRoutes);
 
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
