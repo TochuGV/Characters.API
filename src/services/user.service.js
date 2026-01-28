@@ -24,10 +24,37 @@ export default class UserService {
     const newUser = await this.userRepository.create(userData);
     return {
       id: newUser.id,
+      email: newUser.email,
       name: newUser.name,
       role: newUser.role
     };
   };
+
+  async #createTokensAndSession(user) {
+    logger.debug(`Service: Creating tokens and session for user: ${user.id}`);
+    const accessToken = generateAccessToken(user);
+    const { token: refreshToken, tokenId } = generateRefreshToken(user);
+    await this.userRepository.createUserSession(
+      createSessionPayload(user.id, refreshToken, tokenId)
+    );
+    return { accessToken, refreshToken };
+  };
+
+  async generateUserSession(user) {
+    logger.debug(`Service: Generating session for user: ${user.email}`);
+    await this.userRepository.deleteExpiredSessions(user.id).catch(() => {});
+    const { accessToken, refreshToken } = await this.#createTokensAndSession(user);
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      accessToken,
+      refreshToken
+    };
+  }
 
   async login(email, password) {
     logger.debug(`Service: Login attempt for ${email}`);
@@ -35,26 +62,16 @@ export default class UserService {
     if (!user) throw ErrorFactory.unauthorized("Invalid credentials");
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) throw ErrorFactory.unauthorized("Invalid credentials");
-    await this.userRepository.deleteExpiredSessions(user.id).catch(() => {});
-    const accessToken = generateAccessToken(user);
-    const { token: refreshToken, tokenId } = generateRefreshToken(user);
-    await this.userRepository.createUserSession(createSessionPayload(user.id, refreshToken, tokenId));
-    return {
-      user: {
-        id: user.id,
-        name: user.name,
-        role: user.role
-      },
-      accessToken,
-      refreshToken
-    };
+    return await this.generateUserSession(user);
   };
 
   async logout(refreshToken) {
     logger.debug("Service: Revoking user session");
     if (!refreshToken) return;
     const decoded = decodeToken(refreshToken);
-    if (decoded?.tokenId) await this.userRepository.updateUserSession(decoded.tokenId, { revoked: true }).catch(() => {});
+    if (decoded?.tokenId) await this.userRepository.updateUserSession(
+      decoded.tokenId, { revoked: true }
+    ).catch(() => {});
   };
 
   async refresh(refreshToken) {
@@ -70,11 +87,9 @@ export default class UserService {
       throw ErrorFactory.forbidden("Invalid session or token reuse detected");
     };
     await this.userRepository.updateUserSession(session.id, { revoked: true });
-    const newAccessToken = generateAccessToken(session.user);
-    const { token: newRefreshToken, tokenId } = generateRefreshToken(session.user);
-    await this.userRepository.createUserSession(createSessionPayload(session.user.id, newRefreshToken, tokenId));
+    const { accessToken, refreshToken: newRefreshToken } = await this.#createTokensAndSession(session.user);
     return {
-      accessToken: newAccessToken,
+      accessToken,
       refreshToken: newRefreshToken
     };
   };
