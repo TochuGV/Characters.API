@@ -1,38 +1,18 @@
 import fs from 'fs';
 import path from 'path';
+import pino from 'pino';
 
-const log = {
-  info: (msg, data = null) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${msg}`);
-    if (data) {
-      Object.entries(data).forEach(([key, value]) => {
-        console.log(`   • ${key}: ${value}`);
-      });
-      console.log('');
-    }
-  },
-  error: (msg, data = null) => {
-    const timestamp = new Date().toISOString();
-    console.error(`[${timestamp}] ❌ ${msg}`);
-    if (data) {
-      Object.entries(data).forEach(([key, value]) => {
-        console.error(`   • ${key}: ${value}`);
-      });
-      console.log('');
-    }
-  },
-  success: (msg, data = null) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ✅ ${msg}`);
-    if (data) {
-      Object.entries(data).forEach(([key, value]) => {
-        console.log(`   • ${key}: ${value}`);
-      });
-      console.log('');
+const logger = pino({
+  level: 'info',
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      translateTime: "SYS:dd-mm-yyyy HH:MM:ss.l",
+      ignore: 'pid,hostname'
     }
   }
-};
+});
 
 const CONFIG = {
   baseUrl: "http://localhost:3000",
@@ -46,7 +26,7 @@ const CONFIG = {
 
 if (!fs.existsSync(CONFIG.logsDir)) {
   fs.mkdirSync(CONFIG.logsDir, { recursive: true });
-  log.info(`Created logs directory: ${CONFIG.logsDir}`);
+  logger.info(`Created logs directory: ${CONFIG.logsDir}`);
 };
 
 const METRICS_LOG = path.join(CONFIG.logsDir, CONFIG.files.metrics);
@@ -60,54 +40,43 @@ const writeLogLine = (filepath, data) => {
 const fetchAndLogMetrics = async () => {
   try {
     const response = await fetch(`${CONFIG.baseUrl}/metrics`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 
     const result = await response.json();
-    
-    // Extraer solo los datos (sin el wrapper de "status" y "data")
     const metrics = result.data || result;
     
     writeLogLine(METRICS_LOG, metrics);
     
-    log.success('Metrics logged', {
+    logger.info({
       totalRequests: metrics.http?.totalRequests || 0,
       uptime: metrics.uptime
-    });
-    
+    }, 'Metrics logged');
   } catch (error) {
-    log.error('Failed to fetch metrics', {
+    logger.error({
       endpoint: '/metrics',
       error: error.message
-    });
+    }, 'Failed to fetch metrics');
   }
 };
 
 const fetchAndLogHealth = async () => {
   try {
     const response = await fetch(`${CONFIG.baseUrl}/health`);
-    
     const result = await response.json();
-    
     const health = result.data || result;
     
     writeLogLine(HEALTH_LOG, health);
     
-    const statusIcon = health.status === 'UP' ? '✅' : 
-                      health.status === 'DEGRADED' ? '⚠️' : '❌';
-    
-    log.info(`${statusIcon} Health logged`, {
+    logger.info({
       status: health.status,
-      dbResponseTime: health.services?.database?.responseTime
-    });
+      databaseResponseTime: health.services?.database?.responseTime
+    }, 'Health logged');
     
   } catch (error) {
-    log.error('Failed to fetch health', {
+    logger.error({
       endpoint: '/health',
       error: error.message
-    });
+    }, 'Failed to fetch health');
   }
 };
 
@@ -119,7 +88,7 @@ const runMonitoringCycle = async () => {
 };
 
 const startMonitor = async () => {
-  console.log('\n========================================');
+  console.log('========================================');
   console.log('   📊 Monitoring Script Started');
   console.log('========================================');
   console.log(`Metrics log:  ${METRICS_LOG}`);
@@ -128,33 +97,29 @@ const startMonitor = async () => {
   console.log(`Base URL:     ${CONFIG.baseUrl}`);
   console.log('========================================\n');
 
-  // Primera ejecución inmediata
-  log.info('Running initial check...');
+  logger.info('Running initial check...');
   await runMonitoringCycle();
-  
-  // Configurar ejecución periódica
+
   setInterval(async () => {
     await runMonitoringCycle();
   }, CONFIG.interval);
 
-  log.info(`Monitoring active. Logging every ${CONFIG.interval / 1000} seconds...`);
+  logger.info(`Monitoring active. Logging every ${CONFIG.interval / 1000} seconds...`);
 };
 
 process.on('SIGINT', () => {
-  console.log('\n');
-  log.info('Shutting down monitor...');
-  log.info(`Logs saved in: ${CONFIG.logsDir}`);
+  logger.debug('Shutting down monitor...');
+  logger.debug(`Logs saved in: '${CONFIG.logsDir}'`);
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-  console.log('\n');
-  log.info('Shutting down monitor...');
-  log.info(`Logs saved in: ${CONFIG.logsDir}`);
+  logger.debug('Shutting down monitor...');
+  logger.debug(`Logs saved in: '${CONFIG.logsDir}'`);
   process.exit(0);
 });
 
 startMonitor().catch((error) => {
-  log.error('Fatal error starting monitor', { error: error.message });
+  logger.error('Fatal error starting monitor', { error: error.message });
   process.exit(1);
 });
