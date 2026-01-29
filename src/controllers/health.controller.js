@@ -34,6 +34,8 @@ const checkRedis = tryCatch(async () => {
 }, silentErrorHandler);
 
 const getHealth = tryCatch(async (req, res) => {
+  logger.debug("[GET] /health - Performing health check");
+
   const startTime = Date.now();
 
   const healthStatus = {
@@ -75,9 +77,6 @@ const getHealth = tryCatch(async (req, res) => {
   };
 
   healthStatus.responseTime = Date.now() - startTime;
-
-  logger.info({ healthStatus }, "Health check completed");
-
   const statusCode = healthStatus.status === "DOWN" ? 503 : 200;
   
   return res.status(statusCode).json({
