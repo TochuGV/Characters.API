@@ -1,4 +1,22 @@
 services:
+  api:
+    build: .
+    container_name: characters_api_server
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_SERVER=characters_api_sqlserver 
+      - REDIS_HOST=characters_api_redis
+    env_file:
+      - .env
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis_cache:
+        condition: service_started
+    networks:
+      - app_network
+  
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: characters_api_sqlserver
