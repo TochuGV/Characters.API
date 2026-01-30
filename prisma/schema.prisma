@@ -26,30 +26,30 @@ model CharactersXMovies {
 }
 
 model Movie {
-  id                String   @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()")) @map("ID") @db.UniqueIdentifier
-  image             String   @map("Image") @db.VarChar(255)
-  title             String   @map("Title") @db.VarChar(100)
-  creationDate      DateTime @map("CreationDate") @db.Date
-  rating            Int?     @map("Rating")
+  id                String              @id(map: "PK_Movie_ID") @default(dbgenerated("newsequentialid()"), map: "DF_Movie_ID") @map("ID") @db.UniqueIdentifier
+  image             String              @map("Image") @db.VarChar(255)
+  title             String              @map("Title") @db.VarChar(100)
+  creationDate      DateTime            @map("CreationDate") @db.Date
+  rating            Int?                @map("Rating")
   charactersXMovies CharactersXMovies[]
 }
 
 model User {
-  id       String @id(map: "PK_User_ID") @default(dbgenerated("newid()")) @map("ID") @db.UniqueIdentifier
-  email    String @map("Email") @db.VarChar(100)
-  password String @map("Password") @db.VarChar(100)
-  name     String? @map("Name") @db.VarChar(100)
-  role     String @default("USER") @map("Role") @db.VarChar(5)
-  sessions UserSession[]
+  id       String         @id(map: "PK_User_ID") @default(dbgenerated("newid()"), map: "DF_User_ID") @map("ID") @db.UniqueIdentifier
+  email    String         @map("Email") @db.VarChar(100)
+  password String         @map("Password") @db.VarChar(100)
+  name     String?        @map("Name") @db.VarChar(100)
+  role     String         @default("USER", map: "DF_User_Role") @map("Role") @db.VarChar(5)
+  sessions UserSession[]  
 }
 
 model UserSession {
-  id        String   @id(map: "PK_UserSession_ID") @default(dbgenerated("newid()")) @map("ID") @db.UniqueIdentifier
+  id        String   @id(map: "PK_UserSession_ID") @default(dbgenerated("newid()"), map: "DF_UserSession_ID") @map("ID") @db.UniqueIdentifier
   userId    String   @map("UserID") @db.UniqueIdentifier
   token     String   @map("Token") @db.VarChar(Max)
-  revoked   Boolean  @default(false) @map("Revoked")
+  revoked   Boolean  @default(false, map: "DF_UserSession_Revoked") @map("Revoked")
   expiresAt DateTime @map("ExpiresAt")
-  createdAt DateTime @default(now()) @map("CreatedAt")
+  createdAt DateTime @default(now(), map: "DF_UserSession_CreatedAt") @map("CreatedAt")
   updatedAt DateTime @updatedAt @map("UpdatedAt")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "FK_UserSession_User_ID")
 }

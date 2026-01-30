@@ -24,7 +24,7 @@ CREATE TABLE [dbo].[CharactersXMovies] (
 
 -- CreateTable
 CREATE TABLE [dbo].[Movie] (
-    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [Movie_ID_df] DEFAULT newsequentialid(),
+    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [DF_Movie_ID] DEFAULT newsequentialid(),
     [Image] VARCHAR(255) NOT NULL,
     [Title] VARCHAR(100) NOT NULL,
     [CreationDate] DATE NOT NULL,
@@ -34,22 +34,22 @@ CREATE TABLE [dbo].[Movie] (
 
 -- CreateTable
 CREATE TABLE [dbo].[User] (
-    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [User_ID_df] DEFAULT newid(),
+    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [DF_User_ID] DEFAULT newid(),
     [Email] VARCHAR(100) NOT NULL,
     [Password] VARCHAR(100) NOT NULL,
     [Name] VARCHAR(100),
-    [Role] VARCHAR(5) NOT NULL CONSTRAINT [User_Role_df] DEFAULT 'USER',
+    [Role] VARCHAR(5) NOT NULL CONSTRAINT [DF_User_Role] DEFAULT 'USER',
     CONSTRAINT [PK_User_ID] PRIMARY KEY CLUSTERED ([ID])
 );
 
 -- CreateTable
 CREATE TABLE [dbo].[UserSession] (
-    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [UserSession_ID_df] DEFAULT newid(),
+    [ID] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [DF_UserSession_ID] DEFAULT newid(),
     [UserID] UNIQUEIDENTIFIER NOT NULL,
     [Token] VARCHAR(max) NOT NULL,
-    [Revoked] BIT NOT NULL CONSTRAINT [UserSession_Revoked_df] DEFAULT 0,
+    [Revoked] BIT NOT NULL CONSTRAINT [DF_UserSession_Revoked] DEFAULT 0,
     [ExpiresAt] DATETIME2 NOT NULL,
-    [CreatedAt] DATETIME2 NOT NULL CONSTRAINT [UserSession_CreatedAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [CreatedAt] DATETIME2 NOT NULL CONSTRAINT [DF_UserSession_CreatedAt] DEFAULT CURRENT_TIMESTAMP,
     [UpdatedAt] DATETIME2 NOT NULL,
     CONSTRAINT [PK_UserSession_ID] PRIMARY KEY CLUSTERED ([ID])
 );
