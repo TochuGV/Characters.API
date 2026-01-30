@@ -4,9 +4,20 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch --env-file=.env src/index.js",
-    "monitor": "node src/scripts/monitor.js"
+    "start": "node src/index.js",
+    "dev": "node --watch --env-file=.env src/index.js",
+    "monitor": "node src/scripts/monitor.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "prisma:pull": "prisma db pull",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "node --env-file=.env prisma/seed.js",
+    "services:up": "docker compose up -d sqlserver redis_cache redis_commander",
+    "services:stop": "docker compose stop",
+    "services:down": "docker compose down",
+    "docker:full": "docker compose up --build",
+    "docker:nuke": "docker compose down -v"
   },
   "author": "",
   "license": "ISC",
