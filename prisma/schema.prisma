@@ -20,8 +20,8 @@ model CharactersXMovies {
   id          Int       @id(map: "PK_CharactersXMovies_ID") @default(autoincrement()) @map("ID")
   characterId String    @map("CharacterID") @db.UniqueIdentifier
   movieId     String    @map("MovieID") @db.UniqueIdentifier
-  character   Character @relation(fields: [characterId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
-  movie       Movie     @relation(fields: [movieId], references: [id], onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_CharactersXMovies_CharacterID")
+  movie       Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_CharactersXMovies_MovieID")
   @@unique([characterId, movieId], map: "UQ_CharactersXMovies_CharacterID_MovieID")
 }
 
@@ -35,8 +35,8 @@ model Movie {
 }
 
 model User {
-  id       String         @id(map: "PK_User_ID") @default(dbgenerated("newid()"), map: "DF_User_ID") @map("ID") @db.UniqueIdentifier
-  email    String         @map("Email") @db.VarChar(100)
+  id       String         @id(map: "PK_User_ID") @default(dbgenerated("newsequentialid()"), map: "DF_User_ID") @map("ID") @db.UniqueIdentifier
+  email    String         @unique(map: "UQ_User_Email") @map("Email") @db.VarChar(100)
   password String         @map("Password") @db.VarChar(100)
   name     String?        @map("Name") @db.VarChar(100)
   role     String         @default("USER", map: "DF_User_Role") @map("Role") @db.VarChar(5)
@@ -44,7 +44,7 @@ model User {
 }
 
 model UserSession {
-  id        String   @id(map: "PK_UserSession_ID") @default(dbgenerated("newid()"), map: "DF_UserSession_ID") @map("ID") @db.UniqueIdentifier
+  id        String   @id(map: "PK_UserSession_ID") @default(dbgenerated("newsequentialid()"), map: "DF_UserSession_ID") @map("ID") @db.UniqueIdentifier
   userId    String   @map("UserID") @db.UniqueIdentifier
   token     String   @map("Token") @db.VarChar(Max)
   revoked   Boolean  @default(false, map: "DF_UserSession_Revoked") @map("Revoked")
