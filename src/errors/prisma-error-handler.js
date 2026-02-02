@@ -23,7 +23,7 @@ export const handlePrismaError = (error) => {
           { modelName: error.meta?.modelName || "Unknown model" }
         );
       case "P2003":
-        return ErrorFactory.badRequest(
+        return ErrorFactory.notFound(
           "Foreign key constraint failed: Related record not found",
           {
             modelName: error.meta?.modelName || "Unknown model",
