@@ -28,7 +28,7 @@
 
     "test:setup": "node --env-file=.env.test node_modules/prisma/build/index.js db push --accept-data-loss",
     "test:seed": "node --env-file=.env.test prisma/seed.js",
-    "test:run": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test:run": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
 
     "monitor": "node src/scripts/monitor.js"
   },
