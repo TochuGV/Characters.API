@@ -6,4 +6,4 @@ RUN npm install
 COPY . .
 RUN npx prisma generate
 EXPOSE 3000
-CMD ["npm", "run", "docker:boot"]
+CMD ["npm", "run", "docker:entrypoint"]
