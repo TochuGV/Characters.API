@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "node --watch --env-file=.env src/index.js",
 
-    "services:up": "docker compose up -d sqlserver redis_cache redis_commander",
+    "services:up": "docker compose up -d --wait sqlserver redis_cache redis_commander",
     "services:stop": "docker compose stop",
     "services:down": "docker compose down",
     "services:nuke": "docker compose down -v",
@@ -20,12 +20,16 @@
     "prisma:studio": "prisma studio",
     "prisma:seed": "node --env-file=.env prisma/seed.js",
     
-    "docker:run": "docker compose up --build",
+    "docker:up": "docker compose up --build",
     "docker:entrypoint": "npm run prisma:deploy && node prisma/seed.js && npm run start",
 
-    "test": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "test:watch": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test": "npm run test:setup && npm run test:seed && npm run test:run",
+    "test:watch": "npm run test:setup && npm run test:seed && npm run test:run -- --watch",
+
+    "test:setup": "node --env-file=.env.test node_modules/prisma/build/index.js db push --accept-data-loss",
     "test:seed": "node --env-file=.env.test prisma/seed.js",
+    "test:run": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+
     "monitor": "node src/scripts/monitor.js"
   },
   "author": "",
