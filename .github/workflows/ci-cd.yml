@@ -1,0 +1,89 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Run Tests & Validate
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Create .env.test
+        run: |
+          echo "NODE_ENV=test" >> .env.test
+          echo "PORT=3000" >> .env.test
+          echo "DB_USER=sa" >> .env.test
+          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env.test
+          echo "DB_SERVER=localhost" >> .env.test  
+          echo "DB_NAME=Characters.API_TEST" >> .env.test
+          echo "JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env.test
+          echo "JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env.test
+          echo "JWT_ACCESS_EXPIRES_IN=1h" >> .env.test
+          echo "JWT_REFRESH_EXPIRES_IN=7d" >> .env.test
+          echo "SALT_ROUNDS=10" >> .env.test
+          echo "RATE_LIMIT_WINDOW=60000" >> .env.test
+          echo "RATE_LIMIT_MAX=1000" >> .env.test
+          echo "COMPRESSION_THRESHOLD=1000" >> .env.test
+          echo "COMPRESSION_LEVEL=6" >> .env.test
+          echo "CACHE_TTL_REDIS=60" >> .env.test
+          echo "CACHE_TTL_LOCAL=60" >> .env.test
+          echo "CACHE_CHECK_PERIOD=600" >> .env.test
+          echo "USE_REDIS=true" >> .env.test
+          echo "REDIS_HOST=localhost" >> .env.test
+          echo "REDIS_PORT=6379" >> .env.test
+          echo "REDIS_PASSWORD=" >> .env.test
+          echo "LOG_LEVEL=error" >> .env.test
+
+      - name: Start Infrastructure
+        run: npm run services:up
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Cleanup
+        if: always()
+        run: npm run services:down
+
+  push-to-dockerhub:
+    name: Build & Push Image
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/characters-api:latest
+            ${{ secrets.DOCKER_USERNAME }}/characters-api:${{ github.sha }}
