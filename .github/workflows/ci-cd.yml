@@ -24,31 +24,33 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Create .env.test
+      - name: Create .env
         run: |
-          echo "NODE_ENV=test" >> .env.test
-          echo "PORT=3000" >> .env.test
-          echo "DB_USER=sa" >> .env.test
-          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env.test
-          echo "DB_SERVER=localhost" >> .env.test  
-          echo "DB_NAME=Characters.API_TEST" >> .env.test
-          echo "JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env.test
-          echo "JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env.test
-          echo "JWT_ACCESS_EXPIRES_IN=1h" >> .env.test
-          echo "JWT_REFRESH_EXPIRES_IN=7d" >> .env.test
-          echo "SALT_ROUNDS=10" >> .env.test
-          echo "RATE_LIMIT_WINDOW=60000" >> .env.test
-          echo "RATE_LIMIT_MAX=1000" >> .env.test
-          echo "COMPRESSION_THRESHOLD=1000" >> .env.test
-          echo "COMPRESSION_LEVEL=6" >> .env.test
-          echo "CACHE_TTL_REDIS=60" >> .env.test
-          echo "CACHE_TTL_LOCAL=60" >> .env.test
-          echo "CACHE_CHECK_PERIOD=600" >> .env.test
-          echo "USE_REDIS=true" >> .env.test
-          echo "REDIS_HOST=localhost" >> .env.test
-          echo "REDIS_PORT=6379" >> .env.test
-          echo "REDIS_PASSWORD=" >> .env.test
-          echo "LOG_LEVEL=error" >> .env.test
+          echo "NODE_ENV=test" >> .env
+          echo "PORT=3000" >> .env
+          echo "DB_USER=sa" >> .env
+          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env
+          echo "DB_SERVER=localhost" >> .env  
+          echo "DB_NAME=Characters.API_TEST" >> .env
+          echo "JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_ACCESS_EXPIRES_IN=1h" >> .env
+          echo "JWT_REFRESH_EXPIRES_IN=7d" >> .env
+          echo "SALT_ROUNDS=10" >> .env
+          echo "RATE_LIMIT_WINDOW=60000" >> .env
+          echo "RATE_LIMIT_MAX=1000" >> .env
+          echo "COMPRESSION_THRESHOLD=1000" >> .env
+          echo "COMPRESSION_LEVEL=6" >> .env
+          echo "CACHE_TTL_REDIS=60" >> .env
+          echo "CACHE_TTL_LOCAL=60" >> .env
+          echo "CACHE_CHECK_PERIOD=600" >> .env
+          echo "USE_REDIS=true" >> .env
+          echo "REDIS_HOST=localhost" >> .env
+          echo "REDIS_PORT=6379" >> .env
+          echo "REDIS_PASSWORD=" >> .env
+          echo "LOG_LEVEL=error" >> .env
+
+          cp .env .env.test
 
       - name: Start Infrastructure
         run: npm run services:up
