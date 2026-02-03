@@ -51,7 +51,7 @@ jobs:
           echo "REDIS_HOST=localhost" >> .env
           echo "REDIS_PORT=6379" >> .env
           echo "REDIS_PASSWORD=" >> .env
-          echo "LOG_LEVEL=error" >> .env
+          echo "LOG_LEVEL=silent" >> .env
           cp .env .env.test
 
       - name: Start Infrastructure
