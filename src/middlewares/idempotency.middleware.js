@@ -31,7 +31,7 @@ const idempotencyMiddleware = tryCatch(async (req, res, next) => {
       const responseToCache = { statusCode, body, headers };
       logger.debug(`Saving idempotency key: ${cacheKey}`);
       
-      const ttl = CACHE_TTL * 24;
+      const ttl = CACHE_TTL.STANDARD * 24;
       await cacheManager.set(cacheKey, JSON.stringify(responseToCache), ttl);
     };
     return originalJson.call(res, body);
