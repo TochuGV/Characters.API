@@ -4,85 +4,58 @@ import env from "../config/environment.config.js";
 import tryCatch from "../utils/try-catch.js";
 import logger from "../logger/index.js";
 
-const timeoutPromise = (ms, promise) => {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-      reject(new Error("Timeout"));
-    }, ms);
-    
-    promise.then(
-      (res) => {
-        clearTimeout(timeoutId);
-        resolve(res);
-      },
-      (err) => {
-        clearTimeout(timeoutId);
-        reject(err);
-      }
-    );
-  });
+const TIMEOUT_MS = 5000;
+
+const timeoutPromise = (ms) => new Promise((_, reject) =>
+  setTimeout(() => reject(new Error("Operation timed out")), ms)
+);
+
+const serviceDownHandler = (error) => {
+  logger.error({ error: error.message }, "Health check service failed");
+  return { status: 'DOWN', latency: null };
 };
 
-const silentErrorHandler = () => null;
-
-const checkDatabase = tryCatch(async () => {
-  return await timeoutPromise(3000, prisma.$queryRaw`SELECT 1`);
-}, silentErrorHandler);
-
-const checkRedis = tryCatch(async () => {
-  return await timeoutPromise(1000, cacheManager.redisClient.ping());
-}, silentErrorHandler);
+const checkService = tryCatch(async (promise) => {
+  const start = Date.now();
+  await Promise.race([promise, timeoutPromise(TIMEOUT_MS)]);
+  return { status: 'UP', latency: `${Date.now() - start}ms` };
+}, serviceDownHandler);
 
 const getHealth = tryCatch(async (req, res) => {
-  logger.debug("[GET] /health - Performing health check");
+  const cacheHealthPromise = env.USE_REDIS
+    ? cacheManager.redisClient.ping()
+    : Promise.resolve();
 
-  const startTime = Date.now();
+  const [database, cache] = await Promise.all([
+    checkService(prisma.$queryRaw`SELECT 1`),
+    checkService(cacheHealthPromise)
+  ]);
+
+  let status = 'UP';
+  let httpCode = 200;
+
+  if (database.status !== 'UP') {
+    status = 'DOWN';
+    httpCode = 503;
+  } else if (cache.status !== 'UP') {
+    status = 'DEGRADED';
+    httpCode = 200;
+  }
 
   const healthStatus = {
-    status: "UP",
+    status,
     timestamp: new Date(),
     uptime: Math.floor(process.uptime()),
-    responseTime: 0,
     services: {
-      database: { status: "UNKNOWN", responseTime: 0 },
-      cache: { status: "UNKNOWN", responseTime: 0 }
+      database,
+      cache: {
+        ...cache,
+        strategy: env.USE_REDIS ? 'Redis' : 'Local Memory'
+      }
     }
   };
 
-  const databaseStart = Date.now();
-  const databaseResult = await checkDatabase();
-  healthStatus.services.database.responseTime = Date.now() - databaseStart;
-
-  if (databaseResult) {
-    healthStatus.services.database.status = "UP";
-  } else {
-    healthStatus.services.database.status = "DOWN";
-    healthStatus.status = "DOWN";
-  };
-
-  if (env.USE_REDIS) {
-    const cacheStart = Date.now();
-    const redisResult = await checkRedis();
-    healthStatus.services.cache.responseTime = Date.now() - cacheStart;
-
-    if (redisResult === "PONG") {
-      healthStatus.services.cache.status = "UP (Redis)";
-    } else {
-      healthStatus.services.cache.status = "DOWN (Redis)";
-      if (healthStatus.status !== "DOWN") healthStatus.status = "DEGRADED";
-    };
-  } else {
-    healthStatus.services.cache.status = "UP (Local Memory)";
-    healthStatus.services.cache.responseTime = 0;
-  };
-
-  healthStatus.responseTime = Date.now() - startTime;
-  const statusCode = healthStatus.status === "DOWN" ? 503 : 200;
-  
-  return res.status(statusCode).json({
-    status: healthStatus.status === "DOWN" ? "error" : "success",
-    data: healthStatus
-  });
+  return res.status(httpCode).json(healthStatus);
 });
 
 export default getHealth;
