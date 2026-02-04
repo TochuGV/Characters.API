@@ -46,7 +46,7 @@ jobs:
           echo "COMPRESSION_LEVEL=6" >> .env
           echo "CACHE_TTL_REDIS=60" >> .env
           echo "CACHE_TTL_LOCAL=60" >> .env
-          echo "CACHE_CHECK_PERIOD=600" >> .env
+          echo "CACHE_CHECK_PERIOD_LOCAL=600" >> .env
           echo "USE_REDIS=true" >> .env
           echo "REDIS_HOST=localhost" >> .env
           echo "REDIS_PORT=6379" >> .env

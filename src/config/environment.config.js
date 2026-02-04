@@ -34,7 +34,7 @@ const envSchema = z.object({
   // --- CACHE ---
   CACHE_TTL_REDIS: z.coerce.number().int().positive().default(3600),
   CACHE_TTL_LOCAL: z.coerce.number().int().positive().default(60),
-  CACHE_CHECK_PERIOD: z.coerce.number().int().positive().default(600),
+  CACHE_CHECK_PERIOD_LOCAL: z.coerce.number().int().positive().default(600),
 
   // --- REDIS ---
   USE_REDIS: z.enum(["true", "false"]).transform((val) => val === "true").default("true"),
