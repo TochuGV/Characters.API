@@ -19,51 +19,7 @@ npm install
 - Create a `.env` file in the root directory.
 - Copy and paste the following template, then replace the values with your own:
 
-```
-################################
-#  🌐 DATABASE CONFIGURATION  #
-################################
-DB_USER=database_user            # 👤 Database username          
-DB_PASSWORD=database_password    # 🔑 Database password
-DB_SERVER=database_server        # 🖥️ Database server address
-DB_NAME=database_name            # 📂 Database name
-
-#########################
-#  📌 DATABASE TABLES  #
-#########################
-DB_CHARACTER_TABLE=character_table_name                    # 🎭 Table for characters
-DB_MOVIE_TABLE=movie_table_name                            # 🎬 Table for movies
-DB_CHARACTERSXMOVIES_TABLE=charactersxmovies_table_name    # 🔗 Relationship table
-DB_USER_TABLE=user_table_name                              # 👥 Table for users
-
-###############################
-#  🚀 SERVER CONFIGURATION   #
-###############################
-PORT=port    # 🔌 Server port
-
-####################
-#  🔐 SECURITY    #
-####################
-JWT_SECRET_KEY=jwt_secret_key    # 🛡️ Use a secure key and store it safely!
-
-##################################
-#  ⏳ RATE LIMIT CONFIGURATION   #
-##################################
-RATE_LIMIT_WINDOW=rate_limit_window    # ⏲️ Time window in minutes
-RATE_LIMIT_MAX=rate_limit_max          # 🚦 Max requests per window  
-
-###################################
-#  📦 COMPRESSION CONFIGURATION  #
-###################################
-COMPRESSION_THRESHOLD=compression_threshold    # 📏 Min size in bytes to compress responses
-COMPRESSION_LEVEL=compression_level            # 🔽 Compression level (0-9)
-
-##############################
-#  ⚡ CACHE CONFIGURATION   #
-##############################
-CACHE_TTL=cache_ttl                      # ⏳ Cache lifetime in seconds
-CACHE_CHECK_PERIOD=cache_check_period    # 🔄 Interval to clear the cache in seconds
-```
+![EnvironmentVariables](./assets/images/env-example.png)
 
 >[!IMPORTANT]
 >Before starting the server, make sure to execute the `script.sql` file inside your **SQL Server** database.
