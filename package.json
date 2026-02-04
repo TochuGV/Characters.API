@@ -6,12 +6,10 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch --env-file=.env src/index.js",
-
     "services:up": "docker compose up -d --wait sqlserver redis_cache redis_commander",
     "services:stop": "docker compose stop",
     "services:down": "docker compose down",
     "services:nuke": "docker compose down -v",
-    
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
@@ -19,17 +17,13 @@
     "prisma:pull": "prisma db pull",
     "prisma:studio": "prisma studio",
     "prisma:seed": "node --env-file=.env prisma/seed.js",
-    
     "docker:up": "docker compose up --build",
     "docker:entrypoint": "npm run prisma:deploy && node prisma/seed.js && npm run start",
-
     "test": "npm run test:setup && npm run test:seed && npm run test:run",
     "test:watch": "npm run test:setup && npm run test:seed && npm run test:run -- --watch",
-
     "test:setup": "node --env-file=.env.test node_modules/prisma/build/index.js db push --accept-data-loss",
     "test:seed": "node --env-file=.env.test prisma/seed.js",
     "test:run": "node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-
     "monitor": "node src/scripts/monitor.js"
   },
   "author": "",
@@ -44,7 +38,6 @@
     "cors": "2.8.5",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
-    "express-status-monitor": "^1.3.4",
     "helmet": "8.0.0",
     "ioredis": "^5.9.2",
     "jest": "^30.2.0",
