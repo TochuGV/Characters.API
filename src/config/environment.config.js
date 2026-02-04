@@ -46,13 +46,13 @@ const envSchema = z.object({
   LOG_LEVEL: z.string().default("info"),
 });
 
-const enviromentVariables = envSchema.safeParse(process.env);
+const environmentVariables = envSchema.safeParse(process.env);
 
-if (!enviromentVariables.success) {
+if (!environmentVariables.success) {
   console.error("❌ FATAL ERROR: Invalid Environment Variables");
   console.error("---------------------------------------------");
 
-  const formattedErrors = enviromentVariables.error.issues.map((issue) => ({
+  const formattedErrors = environmentVariables.error.issues.map((issue) => ({
     Variable: issue.path.join("."),
     Error: issue.message,
   }));
@@ -61,4 +61,4 @@ if (!enviromentVariables.success) {
   process.exit(1);
 };
 
-export default enviromentVariables.data;
+export default environmentVariables.data;

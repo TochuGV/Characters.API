@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import env from "../config/enviroment.config.js";
+import env from "../config/environment.config.js";
 import crypto from 'node:crypto';
 
 const signToken = (payload, secret, expiresIn) => {

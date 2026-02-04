@@ -1,4 +1,4 @@
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 import CACHE_TTL from "./cache.constants.js";
 
 const nodeCacheOptions = {

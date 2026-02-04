@@ -1,5 +1,5 @@
 import compression from "compression";
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 
 const compressionOptions = {
   threshold: env.COMPRESSION_THRESHOLD,

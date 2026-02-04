@@ -1,4 +1,4 @@
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 
 const redisOptions = {
   host: env.REDIS_HOST,

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaMssql } from "@prisma/adapter-mssql";
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 
 const sqlConfig = {
   user: env.DB_USER,

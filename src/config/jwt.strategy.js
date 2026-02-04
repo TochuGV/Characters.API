@@ -1,6 +1,6 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { userService } from "../container/index.js";
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 import tryCatch from "../utils/try-catch.js";
 
 const jwtOptions = {

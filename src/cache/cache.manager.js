@@ -2,7 +2,7 @@ import NodeCache from "node-cache";
 import Redis from "ioredis";
 import logger from "../logger/index.js";
 import tryCatch from "../utils/try-catch.js";
-import env from "../config/enviroment.config.js";
+import env from "../config/environment.config.js";
 import redisOptions from "../config/redis.options.js";
 import nodeCacheOptions from "../config/node-cache.options.js";
 import CACHE_TTL from "../config/cache.constants.js";

@@ -1,6 +1,6 @@
 import prisma from "../config/prisma-client.config.js";
 import cacheManager from "../cache/cache.manager.js";
-import env from "../config/enviroment.config.js";
+import env from "../config/environment.config.js";
 import tryCatch from "../utils/try-catch.js";
 import logger from "../logger/index.js";
 

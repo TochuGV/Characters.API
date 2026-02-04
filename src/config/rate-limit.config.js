@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import env from "./enviroment.config.js";
+import env from "./environment.config.js";
 import ErrorFactory from "../errors/error-factory.js";
 
 const limiterOptions = {
