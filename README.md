@@ -1,35 +1,208 @@
 # 🎭 Characters.API
 
-> [!WARNING]
-> **Documentation Outdated:** This project has been recently refactored, but this README still reflects the old architecture (March 2025). Updates coming soon.
-
 📌 **Characters.API** is a RESTful API for managing characters and movies, built with **Node.js**, **Express** and **SQL Server**. It includes secure authentication, data validation, performance optimization, enhanced security, and comprehensive API documentation.
 
-## 🚀 Installation Guide
+---
+
+## 🚀 Getting Started
+
+You can run the full application stack (API + DB + Redis) instantly using Docker, without cloning the source code.
+
+### Prerequisites
+
+- [**Docker**](https://docs.docker.com/get-docker/)
+- [**Docker Compose**](https://docs.docker.com/compose/install/)
+- [**Node.js**](https://nodejs.org/en) (If you want to install for local development)
+
+---
+
+## ⚡ Quick Start (Recommended)
+
+### 1️⃣ Create the compose file:
+
+Create a new folder and inside it, create a file named `docker-compose.yml` with the following content:
+
+```yaml
+services:
+  api:
+    image: tochugv/characters-api:latest
+    container_name: characters_api_server
+    ports:
+      - "3000:3000"
+    environment:
+      # --- Server configuration ---
+      - NODE_ENV=production
+      - PORT=3000
+          
+      # --- Database configuration ---
+      - DB_SERVER=sqlserver
+      - DB_NAME=Characters.API
+      - DB_USER=sa
+      - DB_PASSWORD=P@ssw0rd
+          
+      # --- Security ---
+      - JWT_ACCESS_SECRET_KEY=AccessToken
+      - JWT_REFRESH_SECRET_KEY=RefreshToken
+      - JWT_ACCESS_EXPIRES_IN=15m
+      - JWT_REFRESH_EXPIRES_IN=7d
+      - SALT_ROUNDS=10
+
+      # --- Rate limit configuration ---
+      - RATE_LIMIT_WINDOW=900000
+      - RATE_LIMIT_MAX=60
+
+      # --- Compression configuration ---
+      - COMPRESSION_THRESHOLD=1000
+      - COMPRESSION_LEVEL=6
+          
+      # --- Caching (Redis enabled) ---
+      - USE_REDIS=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_TTL_REDIS=3600
+      - CACHE_TTL_LOCAL=60
+      - CACHE_CHECK_PERIOD_LOCAL=600
+
+      # --- Logging ---
+      - LOG_LEVEL=info
+
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - app_network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: characters_api_sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P P@ssw0rd -Q "SELECT 1" -C
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - app_network
+
+  redis:
+    image: redis:alpine
+    container_name: characters_api_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  redis_commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_ui
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - app_network
+
+volumes:
+  sqlserver_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge
+```
+
+### 2️⃣ Run the stack:
+
+Open your terminal in that folder and run:
+
+```bash
+docker-compose up -d
+```
+
+> [!NOTE]
+> The API image will be pulled automatically from [Docker Hub](https://hub.docker.com/r/tochugv/characters-api).
+> First startup takes ~30 seconds while SQL Server initializes and migrations run.
+
+### 3️⃣ Verify it's running:
+
+Once all containers are up, you can access:
+
+- 🚀 **API**: http://localhost:3000
+- 📚 **API Documentation (Swagger)**: http://localhost:3000/api-docs
+- ❤️ **Health Check**: http://localhost:3000/health
+- 📊 **Metrics**: http://localhost:3000/metrics
+- 🔴 **Redis Commander (GUI)**: http://localhost:8081
+
+#### 🛑 Stop the stack
+
+```bash
+docker-compose down
+```
+
+To remove all data (volumes):
+```bash
+docker-compose down -v
+```
+
+---
+
+### 💻 Local Development (Optional)
+
 ### 1️⃣ Clone the repository:
-~~~
+
+```bash
 git clone https://github.com/TochuGV/Characters.API.git
 cd Characters.API
-~~~
+```
+
 ### 2️⃣ Install dependencies:
-~~~
+
+```bash
 npm install
-~~~
+```
+
 ### 3️⃣ Set up the environment variables:
-- Create a `.env` file in the root directory.
-- Copy and paste the following template, then replace the values with your own:
+- Into `server`, rename `.env.example` file to `.env`.
+- Open that file and replace the values with your own:
 
-![EnvironmentVariables](./assets/images/env-example.pngd)
+![EnvironmentVariables](./assets/images/env-example.png)
 
->[!IMPORTANT]
->Before starting the server, make sure to execute the `script.sql` file inside your **SQL Server** database.
->This will create the required tables and relationships for the API to function correctly.
+### 4️⃣ Start infrastructure services:
 
-### 4️⃣ Start the server:
-~~~
-npm start
-~~~
+```bash
+npm run services:up
+```
+
+### 5️⃣ Run database migrations and seed
+
+```bash
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+### 6️⃣ Start the development server
+
+```bash
+npm run dev
+```
+
 ✅ The API should now be running on `http://localhost:your_port`.
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -46,6 +219,8 @@ npm start
 | **Testing** | [**Jest**](https://jestjs.io/) / [**Supertest**](https://www.npmjs.com/package/supertest) | Integration testing for API endpoints. |
 | **Infrastructure** | [**Docker**](https://www.docker.com/) / [**Docker Compose**](https://docs.docker.com/compose/) | Containerization and local service orchestration. |
 | **Documentation** | [**Swagger UI**](https://swagger.io/tools/swagger-ui/) | Interactive API documentation and testing interface. |
+
+---
 
 ## 🏗️ Architecture & Design Decisions
 
@@ -86,6 +261,8 @@ To prevent data inconsistency during network retries, **Idempotency** is impleme
 * **Health Checks:** A dedicated `/health` endpoint monitors the uptime and the connectivity status of the Database and Redis.
 * **Custom Metrics:** The `/metrics` endpoint provides real-time insights into memory usage (Heap/RSS) and request throughput without external heavy dependencies.
 
+---
+
 ## 📂 Project Structure
 
 ```bash
@@ -115,95 +292,81 @@ To prevent data inconsistency during network retries, **Idempotency** is impleme
 └──🐋Dockerfile             # 📦 Application container image definition
 ```
 
-## 📌 Endpoints
+---
 
-### 🎭 Characters
+## 🔐 Authentication & Security
 
-| Method | Endpoint | 🔒 Access | Description |
+The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cookies) to balance security and usability.
+
+### 1️⃣ The Dual-Token Flow
+
+| Token | Storage | Lifespan | Purpose |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/characters` | 🟢 Public | Get all characters (supports filtering by `name`, `age`, `weight`, `movie`, `page`, `limit`). |
-| **GET** | `/characters/:id` | 🟢 Public | Get character by ID. |
-| **POST** | `/characters` | 🛡️ Admin | Create a new character. **(Supports 🔄 Idempotency)** |
-| **PUT** | `/characters/:id` | 🛡️ Admin | Update an existing character. |
-| **DELETE** | `/characters/:id` | 🛡️ Admin | Delete a character. |
+| **Access Token** | Memory (JSON Response) | ⏱️ 15m | Access protected resources via `Authorization: Bearer` header. |
+| **Refresh Token** | `HttpOnly` Cookie | 🗓️ 7d | Securely obtain new access tokens without re-login. |
 
-### 🎬 Movies
+### 2️⃣ Auth Endpoints
 
-| Method | Endpoint | 🔒 Access | Description |
-| :--- | :--- | :--- | :--- |
-| **GET** | `/movies` | 🟢 Public | Get all movies (supports filtering by `title`, `order`, `page`, `limit`). |
-| **GET** | `/movies/:id` | 🟢 Public | Get movie by ID. |
-| **POST** | `/movies` | 🛡️ Admin | Create a new movie. **(Supports 🔄 Idempotency)** |
-| **PUT** | `/movies/:id` | 🛡️ Admin | Update an existing movie. |
-| **DELETE** | `/movies/:id` | 🛡️ Admin | Delete a movie. |
-| **POST** | `/movies/:id/characters` | 🛡️ Admin | Add a character to a movie. **(Supports 🔄 Idempotency)** |
-| **DELETE** | `/movies/:id/characters/:characterId` | 🛡️ Admin | Remove a character from a movie. |
-
-### 🔐 Authentication
-
-| Method | Endpoint | 🔒 Access | Description |
+| Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
 | **POST** | `/auth/register` | 🟢 Public | Register a new user. |
 | **POST** | `/auth/login` | 🟢 Public | Login an existing user and receive access/refresh tokens. |
 | **POST** | `/auth/logout` | 🟢 Public | Logout the current user revoking refresh token. |
 | **POST** | `/auth/refresh` | 🟢 Public | Request a new access token using a valid refresh token cookie. |
 
-### ⚙️ System & Monitoring
+---
+## 📚 Domain Resources
 
-| Method | Endpoint | 🔒 Access | Description |
+### 🔑 Access Levels
+| Icon | Scope | Requirement |
+| :--- | :--- | :--- |
+| 👤 | **User** | Requires a valid **Access Token** in the Header. |
+| 🛡️ | **Admin** | Requires **Access Token** + **Admin Role**. |
+
+### 🎭 Characters
+
+| Method | Endpoint | 🔒 Scope | Description |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/characters` | 👤 User | Get all characters (supports filtering by `name`, `age`, `weight`, `movie`, `page`, `limit`). |
+| **GET** | `/characters/:id` | 👤 User | Get character by ID. |
+| **POST** | `/characters` | 🛡️ Admin | Create a new character. **(Supports 🔄 Idempotency)** |
+| **PUT** | `/characters/:id` | 🛡️ Admin | Update an existing character. |
+| **DELETE** | `/characters/:id` | 🛡️ Admin | Delete a character. |
+
+### 🎬 Movies
+
+| Method | Endpoint | 🔒 Scope | Description |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/movies` | 👤 User | Get all movies (supports filtering by `title`, `order`, `page`, `limit`). |
+| **GET** | `/movies/:id` | 👤 User | Get movie by ID. |
+| **POST** | `/movies` | 🛡️ Admin | Create a new movie. **(Supports 🔄 Idempotency)** |
+| **PUT** | `/movies/:id` | 🛡️ Admin | Update an existing movie. |
+| **DELETE** | `/movies/:id` | 🛡️ Admin | Delete a movie. |
+| **POST** | `/movies/:id/characters` | 🛡️ Admin | Associate a character to a movie. **(Supports 🔄 Idempotency)** |
+| **DELETE** | `/movies/:id/characters/:characterId` | 🛡️ Admin | Remove a character from a movie. |
+
+## 🩺 Observability & Monitoring
+
+Designed for production reliability, the API provides tools to track uptime, resource usage, and connectivity.
+
+### 1️⃣ HTTP Endpoints (DevOps)
+These endpoints are optimized for automated health checks (Docker/Kubernetes) and metric scrapers (Prometheus).
+
+| Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
 | **GET** | `/health` | 🟢 Public | **Health Check.** Returns server status and database connectivity. |
 | **GET** | `/metrics` | 🟢 Public | **Custom System Metrics.** Returns process memory, uptime, and request statistics (JSON). |
 
-> [!NOTE]  
-> The full API documentation can be found at [http://localhost:3000/api-docs](http://localhost:3000/api-docs). This includes all available endpoints, query parameters, request bodies, and responses.
+### 2️⃣ Terminal Monitor (CLI)
+A lightweight script to view real-time server stats directly in your console, without external tools.
 
-## 🔐 Authentication
+**How to use:**
+1. Ensure the API is running (`npm run dev` or via Docker).
+2. Open a new terminal window and run:
 
-### 1️⃣ User Registration:
-
-📌 **Endpoint:** `POST /auth/register`<br>
-📌 **Description:** Creates a new user with an encrypted password.
-
-📍 **Request Body:**
-~~~
-{
-  "Email": "user.example@gmail.com",
-  "Password": 123456
-}
-~~~
-
-### 2️⃣ User Login:
-
-📌 **Endpoint:** `POST /auth/login`<br>
-📌 **Description:** Authenticates the user and returns a JWT token in an HTTP-only cookie. Because of this cookie's attribute, it means it's not accessible to JavaScript running in the browser.
-
-📍 **Request Body:**
-~~~
-{
-  "Email": "user.example@gmail.com",
-  "Password": 123456
-}
-~~~
-
-### 3️⃣ Accessing Protected Routes:
-
-📌 **Description:** To access protected routes, the user must send the JWT token in their HTTP request. This is validated using a middleware that checks the presence of the token in the cookie or in the Authorization Header.
-
-This is the middleware mentioned above:
-
-![AuthMiddleware](./assets/images/auth-middleware-code.png)
-
-### 4️⃣ Token Expiration & Refresh:
-
-📌 **Description:** Tokens have an expiration time. Once expired, users need to re-authenticate.
-
-### 5️⃣ User Logout:
-
-📌 **Endpoint:** `POST /auth/logout`<br>
-📌 **Description:** Clears the authentication cookie, logging the user out.
-
-![LogoutUser](./assets/images/logout-user-code.png)
+```bash
+npm run monitor
+```
 
 ## 🌱 Future Improvements
 
