@@ -134,27 +134,30 @@ docker-compose up -d
 ```
 
 > [!NOTE]
-> The API image will be pulled automatically from [Docker Hub](https://hub.docker.com/r/tochugv/characters-api).
-> First startup takes ~30 seconds while SQL Server initializes and migrations run.
+> The API image will be pulled automatically from [**Docker Hub**](https://hub.docker.com/r/tochugv/characters-api). <br>
+> First startup takes around 30 seconds while SQL Server initializes and migrations run.
 
 ### 3️⃣ Verify it's running:
 
 Once all containers are up, you can access:
 
-- 🚀 **API**: http://localhost:3000
-- 📚 **API Documentation (Swagger)**: http://localhost:3000/api-docs
-- ❤️ **Health Check**: http://localhost:3000/health
-- 📊 **Metrics**: http://localhost:3000/metrics
-- 🔴 **Redis Commander (GUI)**: http://localhost:8081
+| Service | URL |
+| :--- | :--- |
+| 🚀 **API** | [http://localhost:3000](http://localhost:3000) |
+| 📚 **API Documentation (Swagger)** | [http://localhost:3000/api-docs](http://localhost:3000/api-docs) |
+| ❤️ **Health Check** | [http://localhost:3000/health](http://localhost:3000/health) |
+| 📊 **Metrics** | [http://localhost:3000/metrics](http://localhost:3000/metrics) |
+| 🔴 **Redis Commander (GUI)** | [http://localhost:8081](http://localhost:8081) |
 
 #### 🛑 Stop the stack
 
-```bash
-docker-compose down
-```
+To stop the containers, run:
 
-To remove all data (volumes):
 ```bash
+# Stop containers and remove network:
+docker-compose down
+
+# Stop and remove volumes:
 docker-compose down -v
 ```
 
