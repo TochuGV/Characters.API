@@ -305,8 +305,8 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 | Token | Storage | Lifespan | Purpose |
 | :--- | :--- | :--- | :--- |
-| **Access Token** | Memory (JSON Response) | ⏱️ 15m | Access protected resources via `Authorization: Bearer` header. |
-| **Refresh Token** | `HttpOnly` Cookie | 🗓️ 7d | Securely obtain new access tokens without re-login. |
+| **Access Token** | Header | ⏱️ 15m | Access protected resources via `Authorization: Bearer`. |
+| **Refresh Token** | Cookie (**HttpOnly**) | 🗓️ 7d | Securely obtain new access tokens without re-login. |
 
 ### 2️⃣ Auth Endpoints
 
