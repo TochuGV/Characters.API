@@ -330,9 +330,9 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 | Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/characters` | 👤 User | Get all characters (supports filtering by `name`, `age`, `weight`, `movie`, `page`, `limit`). |
+| **GET** | `/characters` | 👤 User | Get all characters. <br><sub>🔍 *Supports filtering by: `name`, `age`, `weight`, `movie`, `page`, `limit`.*</sub> |
 | **GET** | `/characters/:id` | 👤 User | Get character by ID. |
-| **POST** | `/characters` | 🛡️ Admin | Create a new character. **(Supports 🔄 Idempotency)** |
+| **POST** | `/characters` | 🛡️ Admin | Create a new character. <br><sub>🔄 *Supports **Idempotency**.*</sub> |
 | **PUT** | `/characters/:id` | 🛡️ Admin | Update an existing character. |
 | **DELETE** | `/characters/:id` | 🛡️ Admin | Delete a character. |
 
@@ -340,12 +340,12 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 | Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/movies` | 👤 User | Get all movies (supports filtering by `title`, `order`, `page`, `limit`). |
+| **GET** | `/movies` | 👤 User | Get all movies. <br><sub>🔍 *Supports filtering by: `title`, `order`, `page`, `limit`.*</sub> |
 | **GET** | `/movies/:id` | 👤 User | Get movie by ID. |
-| **POST** | `/movies` | 🛡️ Admin | Create a new movie. **(Supports 🔄 Idempotency)** |
+| **POST** | `/movies` | 🛡️ Admin | Create a new movie. <br><sub>🔄 *Supports **Idempotency**.*</sub> |
 | **PUT** | `/movies/:id` | 🛡️ Admin | Update an existing movie. |
 | **DELETE** | `/movies/:id` | 🛡️ Admin | Delete a movie. |
-| **POST** | `/movies/:id/characters` | 🛡️ Admin | Associate a character to a movie. **(Supports 🔄 Idempotency)** |
+| **POST** | `/movies/:id/characters` | 🛡️ Admin | Associate a character to a movie. <br><sub>🔄 *Supports **Idempotency**.*</sub> |
 | **DELETE** | `/movies/:id/characters/:characterId` | 🛡️ Admin | Remove a character from a movie. |
 
 ## 🩺 Observability & Monitoring
