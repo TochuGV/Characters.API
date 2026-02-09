@@ -371,11 +371,24 @@ A lightweight script to view real-time server stats directly in your console, wi
 npm run monitor
 ```
 
-## 🌱 Future Improvements
+---
 
-- [ ] 🔐 Implement roles and permissions for users.
-- [ ] 📊 Add logs and monitoring to the API.
-- [ ] 🔑 Implement access and refresh tokens for enhanced security.
-- [ ] 📌 Implement automated tests.
-- [ ] 📄 More detailed documentation of the endpoints in Swagger.
-- [ ] 🗄️ Improve error handling with more specific error codes, especially for SQL Server database errors.
+## 🔮 Future Improvements
+
+### ☁️ Infrastructure & Database
+- [ ] 🐘 **Migrate to Supabase:** Transition from local **SQL Server** to a managed, cloud-native **PostgreSQL** instance for better scalability and ease of deployment.
+- [ ] ⚡ **Performance Optimization:** Implement a `CircularBuffer` class for `MetricsCollector` to ensure predictable memory usage (constant `O(1)` space complexity).
+
+### 🏗️ API & Architecture
+- [ ] 📘 **Migrate to TypeScript:** Refactor the entire codebase from **JavaScript** to **TypeScript** to enhance type safety, maintainability, and developer experience.
+- [ ] 🚀 **Cursor-Based Pagination:** Implement high-performance pagination using cursors (instead of offset-based) for optimized scrolling on large datasets.
+- [ ] 🧩 **Microservices Architecture:** Decouple the Authentication module into a standalone service to isolate responsibilities.
+
+### 💻 Client & Security
+- [ ] 🎨 **Frontend Development:** Build a **React/Next.js** interface to consume the API.
+- [ ] 🛡️ **Strict CSP Implementation:** Research and implement `nonce` or `hash` strategies for Helmet to allow safe inline scripts in the new Frontend.
+
+### 🧪 Testing & QA
+- [ ] 🤖 **CI/CD Pipeline:** Integrate **Postman/Newman** into GitHub Actions for automated E2E testing.
+- [ ] ♻️ **Test Suite Refactoring:** Improve expressiveness and maintainability of existing integration tests.
+- [ ] 🎯 **Unit Testing:** Increase coverage with **Jest** for specific business logic edge cases.
