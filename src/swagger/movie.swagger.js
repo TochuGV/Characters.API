@@ -11,7 +11,7 @@ const registerMoviePaths = (registry) => {
     method: 'get',
     path: '/movies',
     tags: ['Movies'],
-    summary: 'List all movies',
+    summary: 'Get all movies',
     description: 'Retrieve a list of movies with pagination and sorting support.',
     request: {
       query: movieQuerySchema
@@ -32,37 +32,22 @@ const registerMoviePaths = (registry) => {
   });
 
   registry.registerPath({
-    method: 'get',
-    path: '/movies/{id}',
-    tags: ['Movies'],
-    summary: 'Get movie details',
-    request: {
-      params: uuidSchema
-    },
-    responses: {
-      200: {
-        description: 'Movie details',
-        content: {
-          'application/json': {
-            schema: movieSchema
-          }
-        }
-      },
-      404: { description: 'Movie not found' }
-    }
-  });
-
-  registry.registerPath({
     method: 'post',
     path: '/movies',
     tags: ['Movies'],
-    summary: 'Create a movie',
+    summary: 'Create a new movie',
     security: [{ bearerAuth: [] }],
     request: {
       body: {
         content: {
           'application/json': {
-            schema: movieSchema
+            schema: movieSchema,
+            example: {
+              title: 'Lilo & Stitch',
+              image: 'https://ejemplo.com/lilostitch.jpeg',
+              creationDate: '2002-06-21',
+              rating: 4
+            }
           }
         }
       }
@@ -88,17 +73,44 @@ const registerMoviePaths = (registry) => {
   });
 
   registry.registerPath({
+    method: 'get',
+    path: '/movies/{id}',
+    tags: ['Movies'],
+    summary: 'Get movie by ID',
+    request: {
+      params: uuidSchema
+    },
+    responses: {
+      200: {
+        description: 'Movie details',
+        content: {
+          'application/json': {
+            schema: movieSchema
+          }
+        }
+      },
+      404: { description: 'Movie not found' }
+    }
+  });
+
+  registry.registerPath({
     method: 'put',
     path: '/movies/{id}',
     tags: ['Movies'],
-    summary: 'Update a movie',
+    summary: 'Update an existing movie',
     security: [{ bearerAuth: [] }],
     request: {
       params: uuidSchema,
       body: {
         content: {
           'application/json': {
-            schema: movieSchema
+            schema: movieSchema,
+            example: {
+              title: 'Lilo & Stitch',
+              image: 'https://ejemplo.com/lilostitch.jpeg',
+              creationDate: '2002-06-21',
+              rating: 5
+            }
           }
         }
       }
@@ -121,6 +133,51 @@ const registerMoviePaths = (registry) => {
     responses: {
       200: { description: 'Movie deleted successfully' },
       404: { description: 'Movie not found' }
+    }
+  });
+
+  registry.registerPath({
+    method: 'post',
+    path: '/movies/{id}/characters',
+    tags: ['Movies'],
+    summary: 'Add character to movie',
+    security: [{ bearerAuth: [] }],
+    request: {
+      params: uuidSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              characterId: z.string().uuid()
+            }),
+            example: {
+              characterId: '550e8400-e29b-41d4-a716-446655440000'
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: { description: 'Character added successfully' },
+      404: { description: 'Movie or Character not found' }
+    }
+  });
+
+  registry.registerPath({
+    method: 'delete',
+    path: '/movies/{id}/characters/{characterId}',
+    tags: ['Movies'],
+    summary: 'Remove character from movie',
+    security: [{ bearerAuth: [] }],
+    request: {
+      params: z.object({
+        id: z.string().uuid(),
+        characterId: z.string().uuid()
+      })
+    },
+    responses: {
+      200: { description: 'Character removed successfully' },
+      404: { description: 'Movie or Character not found' }
     }
   });
 };

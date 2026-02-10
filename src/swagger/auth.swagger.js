@@ -14,7 +14,12 @@ const registerAuthPaths = (registry) => {
       body: {
         content: {
           'application/json': {
-            schema: registerSchema
+            schema: registerSchema,
+            example: {
+              name: 'Prueba',
+              email: 'test@gmail.com',
+              password: '456123'
+            }
           }
         }
       }
@@ -47,7 +52,11 @@ const registerAuthPaths = (registry) => {
       body: {
         content: {
           'application/json': {
-            schema: loginSchema
+            schema: loginSchema,
+            example: {
+              email: 'admin@gmail.com',
+              password: '123456'
+            }
           }
         }
       }

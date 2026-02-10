@@ -8,8 +8,8 @@ import registerSystemPaths from '../swagger/system.swagger.js';
 export const registry = new OpenAPIRegistry();
 
 registerCharacterPaths(registry);
-registerAuthPaths(registry);
 registerMoviePaths(registry);
+registerAuthPaths(registry);
 registerSystemPaths(registry);
 
 registry.registerComponent('securitySchemes', 'bearerAuth', {

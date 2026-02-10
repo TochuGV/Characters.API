@@ -40,7 +40,7 @@ const registerSystemPaths = (registry) => {
     method: 'get',
     path: '/metrics',
     tags: ['System'],
-    summary: 'System Metrics',
+    summary: 'Custom System Metrics',
     description: 'Exposes technical metrics like uptime, memory usage, and request counts.',
     responses: {
       200: {
