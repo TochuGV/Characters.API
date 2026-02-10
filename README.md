@@ -357,8 +357,8 @@ These endpoints are optimized for automated health checks (Docker/Kubernetes) an
 
 | Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/health` | 🟢 Public | **Health Check.** Returns server status and database connectivity. |
-| **GET** | `/metrics` | 🟢 Public | **Custom System Metrics.** Returns process memory, uptime, and request statistics (JSON). |
+| **GET** | `/health` | 🟢 Public | **Health Check.** <br>Returns server status and database connectivity. |
+| **GET** | `/metrics` | 🟢 Public | **Custom System Metrics.** <br>Returns process memory, uptime, and request statistics (JSON). |
 
 ### 2️⃣ Terminal Monitor (CLI)
 A lightweight script to view real-time server stats directly in your console, without external tools.
@@ -370,6 +370,38 @@ A lightweight script to view real-time server stats directly in your console, wi
 ```bash
 npm run monitor
 ```
+
+---
+
+## 🧪 Testing
+
+The project includes a comprehensive integration test suite covering all critical API functionality and edge cases.
+
+### 📋 Test Files
+
+| File | Focus Area |
+| :--- | :--- |
+| `auth.test.js` | Authentication & Authorization |
+| `character.test.js` | Character CRUD Operations |
+| `movie.test.js` | Movie CRUD Operations & Associations |
+| `system.test.js` | Health & Metrics Endpoints |
+
+### ▶️ Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode (auto-rerun on changes)
+npm run test:watch
+
+# Run specific test file
+npm run test:run -- auth.test.js
+```
+
+>[!NOTE]
+> Tests run against isolated infrastructure (SQL Server + Redis) automatically managed by Docker Compose.
+> Database cleanup is handled after each test suite.
 
 ---
 
