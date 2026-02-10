@@ -8,11 +8,20 @@
 
 You can run the full application stack (API + DB + Redis) instantly using Docker, without cloning the source code.
 
-### Prerequisites
+### 📋 Prerequisites
 
-- [**Docker**](https://docs.docker.com/get-docker/)
-- [**Docker Compose**](https://docs.docker.com/compose/install/)
-- [**Node.js**](https://nodejs.org/en) (If you want to install for local development)
+You need **[Docker](https://docs.docker.com/get-docker/)** and **[Docker Compose](https://docs.docker.com/compose/install/)** installed. For local development without Docker, you'll also need **[Node.js 22+](https://nodejs.org/)**.
+
+Verify your installation:
+```bash
+# Required for all setups
+docker --version          # Docker version 20.x or higher
+docker-compose --version  # Docker Compose version 2.x or higher
+
+# Required only for local development
+node --version   # v22.x or higher (optional)
+npm --version    # 10.x or higher (optional)
+```
 
 ---
 
@@ -148,6 +157,9 @@ Once all containers are up, you can access:
 | ❤️ **Health Check** | [http://localhost:3000/health](http://localhost:3000/health) |
 | 📊 **Metrics** | [http://localhost:3000/metrics](http://localhost:3000/metrics) |
 | 🔴 **Redis Commander (GUI)** | [http://localhost:8081](http://localhost:8081) |
+
+> [!IMPORTANT] 
+> **Postman Collection** available in `postman/` folder for testing endpoints
 
 #### 🛑 Stop the stack
 
