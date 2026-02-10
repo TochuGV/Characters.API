@@ -1,8 +1,0 @@
-{
-  "BearerAuth": {
-    "type": "apiKey",
-    "in": "cookie",
-    "name": "token",
-    "description": "JWT stored in an HTTP-only cookie."
-  }
-}
