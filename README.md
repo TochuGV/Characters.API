@@ -176,20 +176,24 @@ Once all containers are up, you can access:
 | 📊 **Metrics** | [http://localhost:3000/metrics](http://localhost:3000/metrics) |
 | 🔴 **Redis Commander (GUI)** | [http://localhost:8081](http://localhost:8081) |
 
-> [!IMPORTANT] 
-> **Postman Collection** available in `postman/` folder for testing endpoints
+> [!TIP]
+> Visit **[http://localhost:3000/health](http://localhost:3000/health)** to verify the API is running.  
+> For complete testing, use the interactive **[Swagger UI](http://localhost:3000/api-docs)** or clone the repository to access the **Postman collection**.
 
 #### 🛑 Stop the stack
 
 To stop the containers, run:
 
 ```bash
-# Stop containers and remove network:
+# Stop containers keeping data:
 docker-compose down
 
-# Stop and remove volumes:
+# Complete cleanup:
 docker-compose down -v
 ```
+
+> [!WARNING]
+> The `-v` flag removes all database data, users, and characters. Use only if you want to start fresh.
 
 ---
 
@@ -222,9 +226,18 @@ cd Characters.API
 npm install
 ```
 
-### 3️⃣ Set up the environment variables:
-- Into `server`, rename `.env.example` file to `.env`.
-- Open that file and replace the values with your own:
+### 3️⃣ Set up environment variables:
+
+Create your `.env` file from the example:
+```bash
+cp .env.example .env
+```
+
+> [!TIP]
+> The default values in `.env.example` work out-of-the-box with Docker services.  
+> Only modify them if you need custom ports or different passwords.
+
+**Environment variables overview:**
 
 ![EnvironmentVariables](./assets/images/env-example.png)
 
@@ -247,7 +260,7 @@ npm run prisma:seed
 npm run dev
 ```
 
-✅ The API should now be running on `http://localhost:your_port`.
+✅ The API should now be running on `http://localhost:3000` with auto-reload enabled.
 
 ---
 
@@ -296,17 +309,46 @@ Specific technical solutions implemented to solve common problems:
 A custom **Dual-Layer Caching System** implementing the **Fallback Pattern**:
 1.  **Primary Layer (Redis):** Distributed cache ideal for production environments.
 2.  **Fallback Layer (In-Memory):** If Redis is unavailable or disabled (e.g., local development), the system automatically downgrades to `node-cache` (RAM).
+
 >[!NOTE]
 > This ensures the API remains fast and resilient even if the external cache service fails.
 
 ### 🔄 Idempotency
-To prevent data inconsistency during network retries, **Idempotency** is implemented on critical creation endpoints (`POST`).
-* **Mechanism:** Clients can include a unique `Idempotency-Key` header in the request.
-* **Behavior:** The server caches the response of the first successful operation. Subsequent requests with the same key return the cached result instantly, preventing duplicate resource creation.
+To prevent duplicate resource creation during network retries, **Idempotency** is implemented on critical `POST` endpoints.
+
+**How it works:**<br>
+1️⃣ Client includes a unique `Idempotency-Key` header in the request.<br>
+2️⃣ First request executes normally and response is cached for **24 hours**.<br>
+3️⃣ Subsequent requests with the same key return the cached response instantly.
+
+**Example:**
+```bash
+curl -X POST http://localhost:3000/characters \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Idempotency-Key: char-creation-12345" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Woody",
+    "image": "https://example.com/woody.jpg",
+    "age": 50,
+    "weight": 0.5,
+    "story": "Sheriff Woody Pride is a vintage toy cowboy."
+  }'
+```
+
+> [!NOTE]
+> See [Domain Resources](#-domain-resources) for complete endpoint documentation.
 
 ### 🩺 Observability
-* **Health Checks:** A dedicated `/health` endpoint monitors the uptime and the connectivity status of the Database and Redis.
-* **Custom Metrics:** The `/metrics` endpoint provides real-time insights into memory usage (Heap/RSS) and request throughput without external heavy dependencies.
+
+The API includes built-in monitoring capabilities for production reliability:
+
+- **Health Checks** (`/health`) - Monitors database and cache connectivity
+- **Custom Metrics** (`/metrics`) - Tracks memory usage and request throughput
+- **CLI Monitor** (`npm run monitor`) - Real-time terminal dashboard
+
+> [!NOTE]
+> See [Observability & Monitoring](#-observability--monitoring) section for detailed usage and examples.
 
 ---
 
