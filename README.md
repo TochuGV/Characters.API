@@ -1,31 +1,30 @@
 # 🎭 Characters.API
 
-📌 **Characters.API** is a RESTful API for managing characters and movies, built with **Node.js**, **Express** and **SQL Server**. It includes secure authentication, data validation, performance optimization, enhanced security, and comprehensive API documentation.
+📌 **Characters.API** is a **production-grade** RESTful API for managing characters and movies, built with **Node.js**, **Express**, **Prisma**, and **SQL Server**. It features secure JWT authentication, Redis caching, comprehensive testing, and full Docker containerization.
 
 ---
 
 ## 🚀 Getting Started
 
-You can run the full application stack (API + DB + Redis) instantly using Docker, without cloning the source code.
-
 ### 📋 Prerequisites
 
-You need **[Docker](https://docs.docker.com/get-docker/)** and **[Docker Compose](https://docs.docker.com/compose/install/)** installed. For local development without Docker, you'll also need **[Node.js 22+](https://nodejs.org/)**.
+You need **[Docker](https://docs.docker.com/get-docker/)** and **[Docker Compose](https://docs.docker.com/compose/install/)** installed.
 
 Verify your installation:
 ```bash
 # Required for all setups
 docker --version          # Docker version 20.x or higher
 docker-compose --version  # Docker Compose version 2.x or higher
-
-# Required only for local development
-node --version   # v22.x or higher (optional)
-npm --version    # 10.x or higher (optional)
 ```
+
+> [!NOTE]
+> **[Node.js 22+](https://nodejs.org/)** is only required for local development (see [Local Development](#-local-development-optional)).
 
 ---
 
 ## ⚡ Quick Start (Recommended)
+
+Run the full application stack without cloning the source code using Docker.
 
 ### 1️⃣ Create the compose file:
 
@@ -134,6 +133,10 @@ networks:
     driver: bridge
 ```
 
+> [!WARNING]
+> **Security Notice:** The JWT secrets above (`AccessToken`, `RefreshToken`) are for **testing purposes only**.  
+> For production, use strong random secrets with at least 32 characters.
+
 ### 2️⃣ Run the stack:
 
 Open your terminal in that folder and run:
@@ -142,9 +145,24 @@ Open your terminal in that folder and run:
 docker-compose up -d
 ```
 
+**What happens:**
+- Docker pulls the API image from [**Docker Hub**](https://hub.docker.com/r/tochugv/characters-api)
+- SQL Server starts and initializes
+- Database migrations run automatically
+- Seed data is inserted
+
+**Monitor the startup (Optional):**
+
+Open a second terminal and run:
+```bash
+docker-compose logs -f
+```
+
+Look for: `SQL Server is now ready for client connections`
+
 > [!NOTE]
-> The API image will be pulled automatically from [**Docker Hub**](https://hub.docker.com/r/tochugv/characters-api). <br>
-> First startup takes around 30 seconds while SQL Server initializes and migrations run.
+> First startup: 30-60 seconds. <br>
+> Subsequent starts: ~5 seconds.
 
 ### 3️⃣ Verify it's running:
 
@@ -175,7 +193,21 @@ docker-compose down -v
 
 ---
 
-### 💻 Local Development (Optional)
+## 💻 Local Development (Optional)
+
+> [!NOTE]
+> This section is for developers who want to **modify the source code** and see changes in real-time.  
+> The recommended setup uses Docker for infrastructure (SQL Server + Redis) and runs only the Node.js API locally.
+
+### 📋 Prerequisites for Local Development
+
+You need **[Node.js 22+](https://nodejs.org/)** installed.
+
+Verify your installation:
+```bash
+node --version   # v22.x or higher (optional)
+npm --version    # 10.x or higher (optional)
+```
 
 ### 1️⃣ Clone the repository:
 
