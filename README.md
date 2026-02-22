@@ -14,7 +14,7 @@ Verify your installation:
 ```bash
 # Required for all setups
 docker --version          # Docker version 20.x or higher
-docker-compose --version  # Docker Compose version 2.x or higher
+docker compose version  # Docker Compose version 2.x or higher
 ```
 
 > [!NOTE]
@@ -142,7 +142,7 @@ networks:
 Open your terminal in that folder and run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 **What happens:**
@@ -155,7 +155,7 @@ docker-compose up -d
 
 Open a second terminal and run:
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 Look for: `SQL Server is now ready for client connections`
@@ -186,10 +186,10 @@ To stop the containers, run:
 
 ```bash
 # Stop containers keeping data:
-docker-compose down
+docker compose down
 
 # Complete cleanup:
-docker-compose down -v
+docker compose down -v
 ```
 
 > [!WARNING]
