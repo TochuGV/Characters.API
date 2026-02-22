@@ -403,6 +403,19 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 | **POST** | `/auth/logout` | 🟢 Public | Logout the current user revoking refresh token. |
 | **POST** | `/auth/refresh` | 🟢 Public | Request a new access token using a valid refresh token cookie. |
 
+> [!TIP]
+> **Test Credentials:** The database is seeded with two users for testing:
+> 
+> **Admin User:**
+> - Email: `admin@gmail.com`
+> - Password: `123456`
+> - Role: `ADMIN` (can create/update/delete resources)
+> 
+> **Regular User:**
+> - Email: `user@gmail.com`
+> - Password: `123456`
+> - Role: `USER` (read-only access)
+
 ---
 ## 📚 Domain Resources
 
@@ -416,7 +429,7 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 | Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/characters` | 👤 User | Get all characters. <br><sub>🔍 *Supports filtering by: `name`, `age`, `weight`, `movie`, `page`, `limit`.*</sub> |
+| **GET** | `/characters` | 👤 User | Get all characters. <br><sub>🔍 *Supports filtering by: `name`, `age`, `weight`, `movieId`, `page`, `limit`.*</sub> <br><sub>📝 *Example: `/characters?name=Woody&age=50&page=1&limit=5`*</sub> |
 | **GET** | `/characters/:id` | 👤 User | Get character by ID. |
 | **POST** | `/characters` | 🛡️ Admin | Create a new character. <br><sub>🔄 *Supports **Idempotency**.*</sub> |
 | **PUT** | `/characters/:id` | 🛡️ Admin | Update an existing character. |
@@ -426,7 +439,7 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 | Method | Endpoint | 🔒 Scope | Description |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/movies` | 👤 User | Get all movies. <br><sub>🔍 *Supports filtering by: `title`, `order`, `page`, `limit`.*</sub> |
+| **GET** | `/movies` | 👤 User | Get all movies. <br><sub>🔍 *Supports filtering by: `title`, `order`, `page`, `limit`.*</sub> <br><sub>📝 *Example: `/movies?title=Toy&order=ASC&limit=10`*</sub> |
 | **GET** | `/movies/:id` | 👤 User | Get movie by ID. |
 | **POST** | `/movies` | 🛡️ Admin | Create a new movie. <br><sub>🔄 *Supports **Idempotency**.*</sub> |
 | **PUT** | `/movies/:id` | 🛡️ Admin | Update an existing movie. |
@@ -438,24 +451,108 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 
 Designed for production reliability, the API provides tools to track uptime, resource usage, and connectivity.
 
-### 1️⃣ HTTP Endpoints (DevOps)
-These endpoints are optimized for automated health checks (Docker/Kubernetes) and metric scrapers (Prometheus).
+### 1️⃣ Health Checks (`/health`)
 
-| Method | Endpoint | 🔒 Scope | Description |
-| :--- | :--- | :--- | :--- |
-| **GET** | `/health` | 🟢 Public | **Health Check.** <br>Returns server status and database connectivity. |
-| **GET** | `/metrics` | 🟢 Public | **Custom System Metrics.** <br>Returns process memory, uptime, and request statistics (JSON). |
+Monitors server uptime and service connectivity.
 
-### 2️⃣ Terminal Monitor (CLI)
-A lightweight script to view real-time server stats directly in your console, without external tools.
+**Status codes:**
+- `200 UP` - All systems healthy
+- `200 DEGRADED` - Cache down but database functional
+- `503 DOWN` - Database unavailable (critical)
 
-**How to use:**
-1. Ensure the API is running (`npm run dev` or via Docker).
-2. Open a new terminal window and run:
+**Example response:**
+```json
+{
+  "status": "UP",
+  "timestamp": "2024-02-18T10:30:00.000Z",
+  "uptime": 3600,
+  "services": {
+    "database": {
+      "status": "UP",
+      "latency": "12ms"
+    },
+    "cache": {
+      "status": "UP",
+      "latency": "5ms",
+      "strategy": "Redis"
+    }
+  }
+}
+```
 
+**Usage:**
+```bash
+curl http://localhost:3000/health
+```
+
+---
+
+### 2️⃣ Custom Metrics (`/metrics`)
+
+Real-time performance metrics without external dependencies.
+
+**Example response:**
+```json
+{
+  "status": "success",
+  "data": {
+    "timestamp": "2024-02-18T10:30:00.000Z",
+    "uptime": 3600,
+    "process": {
+      "memoryUsageMB": 150,
+      "heapUsedMB": 80
+    },
+    "http": {
+      "totalRequests": 1234,
+      "requestsByMethod": {
+        "GET": 800,
+        "POST": 250,
+        "PUT": 100,
+        "DELETE": 84
+      },
+      "requestsByStatus": {
+        "2xx": 1000,
+        "4xx": 200,
+        "5xx": 34
+      },
+      "averageResponseTimeMs": 45.67
+    }
+  }
+}
+```
+
+**Usage:**
+```bash
+curl http://localhost:3000/metrics
+```
+
+---
+
+### 3️⃣ Terminal Monitor (CLI)
+
+Real-time monitoring directly in your console:
 ```bash
 npm run monitor
 ```
+
+**Features:**
+- Auto-refresh every 30 seconds
+- Logs saved to `logs/` directory
+- Tracks: requests, response times, memory, database health
+
+**Output:**
+```
+📊 Monitoring Script Started
+========================================
+Metrics log:  ./logs/metrics.log
+Health log:   ./logs/health.log
+Interval:     30s
+Base URL:     http://localhost:3000
+========================================
+```
+
+> [!TIP]
+> Use during load testing to track performance in real-time.
 
 ---
 
