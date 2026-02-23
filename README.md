@@ -13,12 +13,12 @@ You need **[Docker](https://docs.docker.com/get-docker/)** and **[Docker Compose
 Verify your installation:
 ```bash
 # Required for all setups
-docker --version          # Docker version 20.x or higher
+docker --version        # Docker version 20.x or higher
 docker compose version  # Docker Compose version 2.x or higher
 ```
 
 > [!NOTE]
-> **[Node.js 22+](https://nodejs.org/)** is only required for local development (see [Local Development](#-local-development-optional)).
+> **[Node.js 20+](https://nodejs.org/)** (v22 recommended) is only required for local development (see [Local Development](#-local-development-optional)).
 
 ---
 
@@ -155,7 +155,11 @@ docker compose up -d
 
 Open a second terminal and run:
 ```bash
-docker compose logs -f
+# For Unix systems (Linux/macOS) or Git Bash:
+docker compose logs -f sqlserver | grep -i "ready for client connections"
+
+# For Windows (PowerShell):
+docker compose logs -f sqlserver | Select-String "ready for client connections"
 ```
 
 Look for: `SQL Server is now ready for client connections`
@@ -394,6 +398,12 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 | **Access Token** | Header | ⏱️ 15m | Access protected resources via `Authorization: Bearer`. |
 | **Refresh Token** | Cookie (**HttpOnly**) | 🗓️ 7d | Securely obtain new access tokens without re-login. |
 
+**🔄 The Auth Flow in practice:**<br>
+1️⃣ The user logs in via `/auth/login`.<br>
+2️⃣ The API returns an **Access Token** (to use immediately in headers) and secretly sets a **Refresh Token** in a secure, `HttpOnly` cookie.<br>
+3️⃣ The client uses the Access Token for protected requests. After 15 minutes, it expires.<br>
+4️⃣ Instead of forcing the user to log in again, the client calls `/auth/refresh`. The API reads the secure cookie and issues a brand new Access Token.
+
 ### 2️⃣ Auth Endpoints
 
 | Method | Endpoint | 🔒 Scope | Description |
@@ -403,18 +413,17 @@ The API uses a **Hybrid Authentication Strategy** (Stateless JWT + Stateful Cook
 | **POST** | `/auth/logout` | 🟢 Public | Logout the current user revoking refresh token. |
 | **POST** | `/auth/refresh` | 🟢 Public | Request a new access token using a valid refresh token cookie. |
 
+### 👥 User Roles & Permissions
+
+The API implements Role-Based Access Control (RBAC) to protect sensitive operations:
+
+* **USER (👤):** Read-only access. Can view characters and movies.
+* **ADMIN (🛡️):** Full management access. Can create, update, and delete resources. 
+
 > [!TIP]
-> **Test Credentials:** The database is seeded with two users for testing:
-> 
-> **Admin User:**
-> - Email: `admin@gmail.com`
-> - Password: `123456`
-> - Role: `ADMIN` (can create/update/delete resources)
-> 
-> **Regular User:**
-> - Email: `user@gmail.com`
-> - Password: `123456`
-> - Role: `USER` (read-only access)
+> **Test Credentials:**
+> - **Admin:** `admin@gmail.com` / `123456`
+> - **User:** `user@gmail.com` / `123456`
 
 ---
 ## 📚 Domain Resources
@@ -582,7 +591,7 @@ npm run test:watch
 npm run test:run -- auth.test.js
 ```
 
->[!NOTE]
+> [!NOTE]
 > Tests run against isolated infrastructure (SQL Server + Redis) automatically managed by Docker Compose.
 > Database cleanup is handled after each test suite.
 
@@ -592,7 +601,7 @@ npm run test:run -- auth.test.js
 
 ### ☁️ Infrastructure & Database
 - [ ] 🐘 **Migrate to Supabase:** Transition from local **SQL Server** to a managed, cloud-native **PostgreSQL** instance for better scalability and ease of deployment.
-- [ ] ⚡ **Performance Optimization:** Implement a `CircularBuffer` class for `MetricsCollector` to ensure predictable memory usage (constant `O(1)` space complexity).
+- [ ] ⚡ **Performance Optimization:** Implement a `CircularBuffer` class for `MetricsCollector`. This will ensure predictable memory usage (constant `O(1)` space complexity) and prevent potential memory leaks over time when storing thousands of historical metric data points.
 
 ### 🏗️ API & Architecture
 - [ ] 📘 **Migrate to TypeScript:** Refactor the entire codebase from **JavaScript** to **TypeScript** to enhance type safety, maintainability, and developer experience.
